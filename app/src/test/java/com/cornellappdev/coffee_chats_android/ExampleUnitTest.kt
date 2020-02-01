@@ -1,4 +1,4 @@
-package com.example.coffee_chats_android
+package com.cornellappdev.coffee_chats_android
 
 import org.junit.Test
 
