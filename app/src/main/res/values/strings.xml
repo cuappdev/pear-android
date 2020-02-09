@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">coffee-chats-android</string>
+
+    <!--CREATE PROFILE-->
+    <string name="interests_header">What are your interests?</string>
+    <string name="almost_there">Almost there!</string>
+    <string name="clubs_header">What clubs are you in?</string>
+    <string name="get_started">Get started!</string>
+    <string name="go_back">Go back</string>
 </resources>
