@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         val gso = Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
+            .requestIdToken(BuildConfig.web_client_id)
             .build()
 
         // Build a GoogleSignInClient with the options specified by gso.
