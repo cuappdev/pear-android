@@ -2,13 +2,15 @@ package com.cornellappdev.coffee_chats_android
 
 //import android.support.v7.app.AppCompatActivity
 
+//import androidx.test.orchestrator.junit.BundleJUnitUtils.getResult
+
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentActivity
-//import androidx.test.orchestrator.junit.BundleJUnitUtils.getResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -16,24 +18,18 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-//import sun.jvm.hotspot.utilities.IntArray
-
-
-//import sun.jvm.hotspot.utilities.IntArray
-
-
-//import sun.jvm.hotspot.utilities.IntArray
 
 
 
-class MainActivity : AppCompatActivity() {
+
+class SignInActivity : AppCompatActivity() {
 
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     private val RC_SIGN_IN = 10032
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_sign_in)
 
 
         // Configure sign-in to request the user's ID, email address, and basic
@@ -46,17 +42,23 @@ class MainActivity : AppCompatActivity() {
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        // Check for existing Google Sign In account, if the user is already signed in
-// the GoogleSignInAccount will be non-null.
-//        val account = GoogleSignIn.getLastSignedInAccount(this)
-//        updateUI(account)
-
         val signInButton = findViewById<Button>(R.id.sign_in_button)
+
+        val dr =
+            resources.getDrawable(R.drawable.google_icon)
+        dr.setBounds(0, 0, 60, 60) //Left,Top,Right,Bottom
+        signInButton.setCompoundDrawables(dr, null, null, null)
+        signInButton.compoundDrawablePadding = 30
+
         signInButton.setOnClickListener {
             signIn()
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        val account = GoogleSignIn.getLastSignedInAccount(this)
+    }
     private fun signIn() {
         val signInIntent: Intent = mGoogleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
@@ -69,7 +71,7 @@ class MainActivity : AppCompatActivity() {
 // a listener.
             val task =
                 GoogleSignIn.getSignedInAccountFromIntent(data)
-            Log.d("account", task.toString())
+            Log.d("account: task", task.toString())
             handleSignInResult(task)
         }
     }
@@ -82,8 +84,9 @@ class MainActivity : AppCompatActivity() {
             Log.d("account", account.toString())
         } catch (e: ApiException) { // The ApiException status code indicates the detailed failure reason.
 // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.d("account failed", e.toString())
+            Log.w("account error", "signInResult:failed code=" + e.getStatusCode());
 //            updateUI(null)
         }
     }
+
 }

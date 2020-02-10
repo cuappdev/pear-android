@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "34745122713",
+    "firebase_url": "https://coffee-chats-266921.firebaseio.com",
+    "project_id": "coffee-chats-266921",
+    "storage_bucket": "coffee-chats-266921.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:34745122713:android:9d3ce04918a75fc3919d08",
+        "android_client_info": {
+          "package_name": "com.example.coffee_chats_android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "34745122713-4sf6i9ebc8uiehpe9k0ef3sn2v6e4leh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhfJ-KJWbwV8s_VJCv-BU2RXCJdwDQ3lo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "34745122713-4sf6i9ebc8uiehpe9k0ef3sn2v6e4leh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
