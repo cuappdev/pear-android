@@ -26,8 +26,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/demoTop"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:layout_marginTop="80dp"
         android:background="@drawable/rounded_edittext"/>
 
@@ -37,8 +37,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/classSpinner"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/rounded_edittext"
         android:hint="Major"
@@ -51,8 +51,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/majorACTV"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/rounded_edittext"
         android:hint="Hometown"
@@ -65,10 +65,24 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/hometownET"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/rounded_edittext"/>
+    
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Next"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:gravity="center"
+        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:background="@drawable/profile_button_background"
+        style="?android:attr/borderlessButtonStyle"/>
 
 
 
