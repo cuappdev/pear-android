@@ -3,4 +3,8 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="black">#000000</color>
+    <color name="faded_text">#b0b0b0</color>
+    <color name="unselected_interest_or_club">#eeeeee</color>
+    <color name="selected_interest_or_club">#ffdede</color>
 </resources>

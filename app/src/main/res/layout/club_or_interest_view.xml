@@ -1,21 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/club_or_interest_box"
     android:layout_width="match_parent"
-    android:layout_height="75dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="68dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/club_interest_box">
 
     <View android:id="@+id/rounded_rectangle"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignParentTop="true"
-        android:background="#DDDDDD"
-        android:visibility="visible"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="8dp"
+        android:background="@drawable/rounded_corner"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"/>
 
     <TextView
         android:id="@+id/club_or_interest_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:layout_marginStart="10dp"
         app:layout_constraintLeft_toRightOf="@id/rounded_rectangle"/>
+
+    <TextView
+        android:id="@+id/club_or_interest_subtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/faded_text"
+        app:layout_constraintStart_toStartOf="@id/club_or_interest_text"
+        app:layout_constraintTop_toBottomOf="@id/club_or_interest_text"/>
 
 </android.support.constraint.ConstraintLayout>
