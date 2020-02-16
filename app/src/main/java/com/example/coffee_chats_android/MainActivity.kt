@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.fragment_create_profile.*
 class MainActivity : AppCompatActivity() {
     var currentPage = 1
     lateinit var header: TextView
-    lateinit var adapter: ArrayAdapter<String>
+    lateinit var adapter: ClubInterestAdapter
     lateinit var nextButton: Button
     lateinit var backButton: Button
     val interests = arrayOf("Art", "Business", "Design", "Humanities", "Fitness & Sports", "Tech", "More")
@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         backButton.setText(R.string.go_back)
         backButton.setOnClickListener { view -> onBackPage() }
 
-        adapter = ArrayAdapter(this, R.layout.club_or_interest_view, interests)
+        adapter = ClubInterestAdapter(this, interests)
         interestsAndClubs = findViewById(R.id.interests_or_clubs)
 
         updatePage()
@@ -38,13 +38,13 @@ class MainActivity : AppCompatActivity() {
     fun updatePage() {
         when (currentPage) {
             1 -> {
-                adapter = ArrayAdapter(this, R.layout.club_or_interest_view, interests)
+                adapter = ClubInterestAdapter(this, interests)
                 interestsAndClubs.adapter = adapter
                 header.setText(R.string.interests_header)
                 nextButton.setText(R.string.almost_there)
             }
             2 -> {
-                adapter = ArrayAdapter(this, R.layout.club_or_interest_view, clubs)
+                adapter = ClubInterestAdapter(this, clubs)
                 interestsAndClubs.adapter = adapter
                 header.setText(R.string.clubs_header)
                 nextButton.setText(R.string.get_started)
