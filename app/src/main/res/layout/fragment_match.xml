@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background_green">
+
+    <TextView
+        android:layout_marginTop="75dp"
+
+        android:id="@+id/match_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/match_header"
+        android:textSize="24sp"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/match_profile_picture"
+        android:layout_width="105dp"
+        android:layout_height="105dp"
+        android:src="@drawable/ellipse_3"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintTop_toBottomOf="@id/match_header"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/match_name"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="25dp"
+        app:layout_constraintLeft_toRightOf="@id/match_profile_picture"
+        app:layout_constraintTop_toTopOf="@id/match_profile_picture"/>
+
+    <TextView
+        android:id="@+id/match_major"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_green"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="@id/match_name"
+        app:layout_constraintTop_toBottomOf="@id/match_name"/>
+
+    <TextView
+        android:id="@+id/match_origin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_green"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="@id/match_major"
+        app:layout_constraintTop_toBottomOf="@id/match_major"/>
+
+    <TextView
+        android:id="@+id/match_loves"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/match_loves"
+        android:textColor="@color/text_green"
+        android:textSize="17sp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintLeft_toLeftOf="@id/match_profile_picture"
+        app:layout_constraintTop_toBottomOf="@id/match_profile_picture"/>
+
+    <TextView
+        android:id="@+id/match_loves_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="17sp"
+        app:layout_constraintLeft_toLeftOf="@id/match_profile_picture"
+        app:layout_constraintTop_toBottomOf="@id/match_loves"/>
+
+    <TextView
+        android:id="@+id/match_shared_clubs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/match_shared_clubs"
+        android:textColor="@color/text_green"
+        android:textSize="17sp"
+        android:layout_marginTop="25dp"
+        app:layout_constraintLeft_toLeftOf="@id/match_profile_picture"
+        app:layout_constraintTop_toBottomOf="@id/match_loves_text"/>
+    
+    <TextView
+        android:id="@+id/match_shared_clubs_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="17sp"
+        app:layout_constraintLeft_toLeftOf="@id/match_profile_picture"
+        app:layout_constraintTop_toBottomOf="@id/match_shared_clubs"/>
+
+    <TextView
+        android:id="@+id/match_enjoys"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/match_enjoys"
+        android:textColor="@color/text_green"
+        android:textSize="17sp"
+        android:layout_marginTop="25dp"
+        app:layout_constraintLeft_toLeftOf="@id/match_profile_picture"
+        app:layout_constraintTop_toBottomOf="@id/match_shared_clubs_text"/>
+
+    <TextView
+        android:id="@+id/match_enjoys_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="17sp"
+        app:layout_constraintLeft_toLeftOf="@id/match_profile_picture"
+        app:layout_constraintTop_toBottomOf="@id/match_enjoys"/>
+
+    <TextView
+        android:id="@+id/match_clubs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/match_clubs"
+        android:textColor="@color/text_green"
+        android:textSize="17sp"
+        android:layout_marginTop="25dp"
+        app:layout_constraintLeft_toLeftOf="@id/match_profile_picture"
+        app:layout_constraintTop_toBottomOf="@id/match_enjoys_text"/>
+
+    <TextView
+        android:id="@+id/match_clubs_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="17sp"
+        app:layout_constraintLeft_toLeftOf="@id/match_profile_picture"
+        app:layout_constraintTop_toBottomOf="@id/match_clubs"/>
+
+    <Button
+        android:id="@+id/signup_next"
+        android:text="@string/match_reach_out"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:background="@drawable/rounded_button"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textAllCaps="false"
+        android:layout_marginTop="60dp"
+        app:layout_constraintTop_toBottomOf="@id/match_clubs_text"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+</android.support.constraint.ConstraintLayout>

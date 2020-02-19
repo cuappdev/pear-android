@@ -4,7 +4,11 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="black">#000000</color>
-    <color name="faded_text">#b0b0b0</color>
-    <color name="unselected_interest_or_club">#eeeeee</color>
-    <color name="selected_interest_or_club">#ffdede</color>
+    <color name="white">#FFFFFF</color>
+    <color name="faded_text">#B0B0B0</color>
+    <color name="unselected_interest_or_club">#EEEEEE</color>
+    <color name="selected_interest_or_club">#FFDEDE</color>
+    <color name="background_green">#F2F8E8</color>
+    <color name="text_green">#698965</color>
+    <color name="rounded_button">#FFAC5F</color>
 </resources>

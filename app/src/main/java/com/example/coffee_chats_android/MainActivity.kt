@@ -30,38 +30,62 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_create_profile)
+//        setContentView(R.layout.fragment_create_profile)
+        setContentView(R.layout.fragment_match)
 
-        for (i in 0 until interestTitles.size) {
-            interests[i] = ClubOrInterest(interestTitles[i], interestSubtitles[i])
-        }
+        var lovesText = findViewById<TextView>(R.id.match_loves_text)
+        var sharedClubsText = findViewById<TextView>(R.id.match_shared_clubs_text)
+        var enjoysText = findViewById<TextView>(R.id.match_enjoys_text)
+        var clubsText = findViewById<TextView>(R.id.match_clubs_text)
+        var name = findViewById<TextView>(R.id.match_name)
+        var major = findViewById<TextView>(R.id.match_major)
+        var origin = findViewById<TextView>(R.id.match_origin)
 
-        for (i in 0 until clubTitles.size) {
-            clubs[i] = ClubOrInterest(clubTitles[i], "")
-        }
+        var enjoys = findViewById<TextView>(R.id.match_enjoys)
+        var clubs = findViewById<TextView>(R.id.match_clubs)
 
-        header = findViewById(R.id.signup_header)
-        nextButton = findViewById(R.id.signup_next)
-        nextButton.setOnClickListener { view -> onNextPage() }
-        backButton = findViewById(R.id.signup_back)
-        backButton.setText(R.string.go_back)
-        backButton.setOnClickListener { view -> onBackPage() }
+        lovesText.text = "design and tech"
+        sharedClubsText.text = "AppDev"
+        enjoysText.text = "music, reading, and business"
+        clubsText.text = "EzraBox"
 
-        adapter = ClubInterestAdapter(this, interests)
-        interestsAndClubs = findViewById(R.id.interests_or_clubs)
-        interestsAndClubs.adapter = adapter
+        name.text = "Johnathan Anderson"
+        major.text = "Government '20"
+        origin.text = "From Ithaca, NY"
 
-        val selected = resources.getColor(R.color.selected_interest_or_club)
-        val unselected = resources.getColor(R.color.unselected_interest_or_club)
-        interestsAndClubs.setOnItemClickListener { parent, view, position, id ->
-            val selectedView = view.findViewById<ConstraintLayout>(R.id.club_or_interest_box)
-            val drawableBox = selectedView.background
-            interests[position].toggleSelected()
-            if (interests[position].isSelected()) drawableBox.setColorFilter(selected, PorterDuff.Mode.MULTIPLY)
-            else drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
-        }
+        enjoys.text = getString(R.string.match_enjoys, "He")
+        clubs.text = getString(R.string.match_clubs, "He")
 
-        updatePage()
+//        for (i in 0 until interestTitles.size) {
+//            interests[i] = ClubOrInterest(interestTitles[i], interestSubtitles[i])
+//        }
+//
+//        for (i in 0 until clubTitles.size) {
+//            clubs[i] = ClubOrInterest(clubTitles[i], "")
+//        }
+//
+//        header = findViewById(R.id.signup_header)
+//        nextButton = findViewById(R.id.signup_next)
+//        nextButton.setOnClickListener { view -> onNextPage() }
+//        backButton = findViewById(R.id.signup_back)
+//        backButton.setText(R.string.go_back)
+//        backButton.setOnClickListener { view -> onBackPage() }
+//
+//        adapter = ClubInterestAdapter(this, interests)
+//        interestsAndClubs = findViewById(R.id.interests_or_clubs)
+//        interestsAndClubs.adapter = adapter
+//
+//        val selected = resources.getColor(R.color.selected_interest_or_club)
+//        val unselected = resources.getColor(R.color.unselected_interest_or_club)
+//        interestsAndClubs.setOnItemClickListener { parent, view, position, id ->
+//            val selectedView = view.findViewById<ConstraintLayout>(R.id.club_or_interest_box)
+//            val drawableBox = selectedView.background
+//            interests[position].toggleSelected()
+//            if (interests[position].isSelected()) drawableBox.setColorFilter(selected, PorterDuff.Mode.MULTIPLY)
+//            else drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
+//        }
+//
+//        updatePage()
     }
 
     fun updatePage() {
