@@ -5,11 +5,10 @@ package com.cornellappdev.coffee_chats_android
 //import androidx.test.orchestrator.junit.BundleJUnitUtils.getResult
 
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -18,8 +17,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-
-
 
 
 class SignInActivity : AppCompatActivity() {
@@ -49,6 +46,7 @@ class SignInActivity : AppCompatActivity() {
         dr.setBounds(0, 0, 60, 60) //Left,Top,Right,Bottom
         signInButton.setCompoundDrawables(dr, null, null, null)
         signInButton.compoundDrawablePadding = 30
+
 
         signInButton.setOnClickListener {
             signIn()
@@ -80,16 +78,18 @@ class SignInActivity : AppCompatActivity() {
         try {
             val account =
                 completedTask.getResult(ApiException::class.java)
-            // Signed in successfully, show authenticated UI.
-            Log.d("account", account.toString())
             val intent = Intent(this, CreateProfileActivity::class.java)
+            if (account != null) {
+                val personName: String? = account.displayName
+                if (personName != null) {
+                    intent.putExtra("name", personName)
+                }
+            }
             startActivity(intent)
         } catch (e: ApiException) { // The ApiException status code indicates the detailed failure reason.
 // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w("account error", "signInResult:failed code=" + e.getStatusCode());
-            val intent = Intent(this, CreateProfileActivity::class.java)
-            startActivity(intent)
-//            updateUI(null)
+            Toast.makeText(applicationContext, "Sign-in failed", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -1,6 +1,7 @@
 package com.cornellappdev.coffee_chats_android
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_create_profile.*
@@ -13,6 +14,11 @@ class CreateProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_profile)
+
+        val name: String? = intent.extras.getString("name")
+        if (name != null) {
+            demoTop.text = getString(R.string.demographics_header, name)
+        } else demoTop.text = getString(R.string.demographics_header_no_name)
 
         // Initializing the class spinner
         val classArray = ArrayList<String>()

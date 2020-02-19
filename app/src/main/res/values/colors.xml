@@ -7,4 +7,7 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="onboardingSecondary">#FFDEDE</color>
+    <color name="faded_text">#b0b0b0</color>
+    <color name="unselected_interest_or_club">#eeeeee</color>
+    <color name="selected_interest_or_club">#ffdede</color>
 </resources>
