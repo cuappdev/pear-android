@@ -8,10 +8,10 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.cornellappdev.coffee_chats_android.Models.ClubOrInterest
+import com.cornellappdev.coffee_chats_android.models.ClubOrInterest
 import kotlinx.android.synthetic.main.fragment_create_profile.*
 
-class MainActivity : AppCompatActivity() {
+class ClubInterestActivity : AppCompatActivity() {
     var currentPage = 1
     lateinit var header: TextView
     lateinit var adapter: ClubInterestAdapter
@@ -42,7 +42,18 @@ class MainActivity : AppCompatActivity() {
         createProfileFragment.rootView.setBackgroundColor(resources.getColor(
             R.color.background_green))
 
-        for (i in 0 until interestTitles.size) {
+        header = findViewById(R.id.signup_header)
+        nextButton = findViewById(R.id.signup_next)
+        nextButton.setOnClickListener { view -> onNextPage() }
+        backButton = findViewById(R.id.signup_back)
+        backButton.setText(R.string.go_back)
+        backButton.setOnClickListener { view -> onBackPage() }
+
+        // nextButton is disabled until user has chosen at least one interest
+        nextButton.isEnabled = false
+        nextButton.isClickable = false
+
+        for (i in interestTitles.indices) {
             interests[i] =
                 ClubOrInterest(
                     interestTitles[i],
@@ -50,20 +61,13 @@ class MainActivity : AppCompatActivity() {
                 )
         }
 
-        for (i in 0 until clubTitles.size) {
+        for (i in clubTitles.indices) {
             clubs[i] =
                 ClubOrInterest(
                     clubTitles[i],
                     ""
                 )
         }
-
-        header = findViewById(R.id.signup_header)
-        nextButton = findViewById(R.id.signup_next)
-        nextButton.setOnClickListener { view -> onNextPage() }
-        backButton = findViewById(R.id.signup_back)
-        backButton.setText(R.string.go_back)
-        backButton.setOnClickListener { view -> onBackPage() }
 
         adapter = ClubInterestAdapter(
             this,
@@ -73,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         interestsAndClubs = findViewById(R.id.interests_or_clubs)
         interestsAndClubs.adapter = adapter
 
-        val selected = resources.getColor(R.color.onboardingSecondary)
+        val selected = resources.getColor(R.color.onboardingButtonEnabled)
         val unselected = resources.getColor(R.color.onboarding_fields)
         interestsAndClubs.setOnItemClickListener { parent, view, position, id ->
             val selectedView = view.findViewById<ConstraintLayout>(R.id.club_or_interest_box)

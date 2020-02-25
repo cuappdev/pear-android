@@ -17,7 +17,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" android:theme="@style/noAnimTheme"></activity>
+        <activity android:name=".ClubInterestActivity" android:theme="@style/noAnimTheme"></activity>
 
     </application>
 

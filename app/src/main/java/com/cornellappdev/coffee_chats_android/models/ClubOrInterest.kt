@@ -1,4 +1,4 @@
-package com.cornellappdev.coffee_chats_android.Models
+package com.cornellappdev.coffee_chats_android.models
 
 class ClubOrInterest {
     private var text: String

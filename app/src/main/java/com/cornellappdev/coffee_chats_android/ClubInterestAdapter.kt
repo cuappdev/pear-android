@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.cornellappdev.coffee_chats_android.Models.ClubOrInterest
+import com.cornellappdev.coffee_chats_android.models.ClubOrInterest
 
 
 class ClubInterestAdapter(private val mContext: Context, list: Array<ClubOrInterest>, club: Boolean) :
@@ -34,7 +34,7 @@ class ClubInterestAdapter(private val mContext: Context, list: Array<ClubOrInter
         val clubOrInterestSubtext = listItem!!.findViewById<TextView>(R.id.club_or_interest_subtext)
         clubOrInterestSubtext.setText(currentClubInterest.getSubtext())
 
-        val selected = context.resources.getColor(R.color.onboardingSecondary)
+        val selected = context.resources.getColor(R.color.onboardingButtonEnabled)
         val unselected = context.resources.getColor(R.color.onboarding_fields)
         val layout = listItem!!.findViewById<ConstraintLayout>(R.id.club_or_interest_box)
         val drawableBox = layout.background

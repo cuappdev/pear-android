@@ -2,10 +2,12 @@ package com.cornellappdev.coffee_chats_android
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.View
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
+import com.cornellappdev.coffee_chats_android.models.InternalStorage
+import com.cornellappdev.coffee_chats_android.models.UserProfile
 import kotlinx.android.synthetic.main.activity_create_profile.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -17,10 +19,17 @@ class CreateProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_profile)
 
-        if (intent.extras != null) {
-            val name: String? = intent.extras.getString("name")
-            if (name != null) demoTop.text = getString(R.string.demographics_header, name)
-        } else demoTop.text = getString(R.string.demographics_header_no_name)
+        // tries to retrieve User Profile from internal storage
+        var profile = InternalStorage.readObject(this, "profile") as UserProfile
+        demoTop.text = getString(R.string.demographics_header, profile.userName)
+
+        // nextButton is disabled until user has filled out all required info
+        nextButton.isEnabled = false
+        nextButton.isClickable = false
+
+        // variables to keep track if editTexts are filled out
+        var majorFilled = false
+        var hometownFilled = false
 
         // Initializing the class spinner
         val classArray = ArrayList<String>()
@@ -65,8 +74,46 @@ class CreateProfileActivity : AppCompatActivity() {
         )
         pronounSpinner.adapter = pronounAdapter
 
+        // monitor changes in major editText and enable button if both major and hometown != empty
+        majorACTV.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                           count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int,
+                                       before: Int, count: Int) {
+                majorFilled = s.toString().trim().isNotEmpty()
+                if (majorFilled && hometownFilled) {
+                    nextButton.isEnabled = true
+                    nextButton.isClickable = true
+                }
+            }
+        })
+
+        // monitor changes in major editText and enable button if both major and hometown != empty
+        hometownET.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                           count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int,
+                                       before: Int, count: Int) {
+                hometownFilled = s.toString().trim().isNotEmpty()
+                if (majorFilled && hometownFilled) {
+                    nextButton.isEnabled = true
+                    nextButton.isClickable = true
+                }
+            }
+        })
+
         nextButton.setOnClickListener{
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, ClubInterestActivity::class.java)
             startActivity(intent)
         }
     }

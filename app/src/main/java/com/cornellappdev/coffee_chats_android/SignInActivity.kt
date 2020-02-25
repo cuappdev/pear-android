@@ -10,6 +10,8 @@ import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.cornellappdev.coffee_chats_android.models.InternalStorage
+import com.cornellappdev.coffee_chats_android.models.UserProfile
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -81,8 +83,10 @@ class SignInActivity : AppCompatActivity() {
             val intent = Intent(this, CreateProfileActivity::class.java)
             if (account != null) {
                 val personName: String? = account.displayName
-                if (personName != null) {
-                    intent.putExtra("name", personName)
+                val personEmail: String? = account.email
+                if (personName != null && personEmail != null) {
+                    var profile = UserProfile(personName, personEmail)
+                    InternalStorage.writeObject(this, "profile", profile as Object)
                 }
             }
             startActivity(intent)
