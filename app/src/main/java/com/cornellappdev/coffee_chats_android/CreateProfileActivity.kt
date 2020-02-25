@@ -17,9 +17,9 @@ class CreateProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_profile)
 
-        val name: String? = intent.extras.getString("name")
-        if (name != null) {
-            demoTop.text = getString(R.string.demographics_header, name)
+        if (intent.extras != null) {
+            val name: String? = intent.extras.getString("name")
+            if (name != null) demoTop.text = getString(R.string.demographics_header, name)
         } else demoTop.text = getString(R.string.demographics_header_no_name)
 
         // Initializing the class spinner

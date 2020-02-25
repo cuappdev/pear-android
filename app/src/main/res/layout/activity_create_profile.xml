@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.cornellappdev.coffee_chats_android.CreateProfileActivity">
+    tools:context="com.cornellappdev.coffee_chats_android.CreateProfileActivity"
+    android:background="@color/background_green">
 
     <TextView
         android:id="@+id/demoTop"

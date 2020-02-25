@@ -1,5 +1,6 @@
 package com.cornellappdev.coffee_chats_android
 
+import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.widget.Button
@@ -8,6 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.cornellappdev.coffee_chats_android.Models.ClubOrInterest
+import kotlinx.android.synthetic.main.fragment_create_profile.*
 
 class MainActivity : AppCompatActivity() {
     var currentPage = 1
@@ -37,6 +39,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_create_profile)
+        createProfileFragment.rootView.setBackgroundColor(resources.getColor(
+            R.color.background_green))
 
         for (i in 0 until interestTitles.size) {
             interests[i] =
@@ -63,13 +67,14 @@ class MainActivity : AppCompatActivity() {
 
         adapter = ClubInterestAdapter(
             this,
-            interests
+            interests,
+            false
         )
         interestsAndClubs = findViewById(R.id.interests_or_clubs)
         interestsAndClubs.adapter = adapter
 
-        val selected = resources.getColor(R.color.selected_interest_or_club)
-        val unselected = resources.getColor(R.color.unselected_interest_or_club)
+        val selected = resources.getColor(R.color.onboardingSecondary)
+        val unselected = resources.getColor(R.color.onboarding_fields)
         interestsAndClubs.setOnItemClickListener { parent, view, position, id ->
             val selectedView = view.findViewById<ConstraintLayout>(R.id.club_or_interest_box)
             val drawableBox = selectedView.background
@@ -87,7 +92,8 @@ class MainActivity : AppCompatActivity() {
                 adapter =
                     ClubInterestAdapter(
                         this,
-                        interests
+                        interests,
+                        false
                     )
                 interestsAndClubs.adapter = adapter
                 header.setText(R.string.interests_header)
@@ -97,7 +103,8 @@ class MainActivity : AppCompatActivity() {
                 adapter =
                     ClubInterestAdapter(
                         this,
-                        clubs
+                        clubs,
+                        true
                     )
                 interestsAndClubs.adapter = adapter
                 header.setText(R.string.clubs_header)
@@ -114,6 +121,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onBackPage() {
+        if (currentPage == 1) {
+            val intent = Intent(this, CreateProfileActivity::class.java)
+            startActivity(intent)
+        }
+
         if (currentPage > 1) {
             currentPage -= 1
             updatePage()

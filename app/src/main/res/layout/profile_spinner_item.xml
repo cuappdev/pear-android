@@ -7,4 +7,5 @@
     android:gravity="left"
     android:textColor="@color/black"
     android:padding="10dp"
+    android:background="@drawable/rounded_edittext"
     />
