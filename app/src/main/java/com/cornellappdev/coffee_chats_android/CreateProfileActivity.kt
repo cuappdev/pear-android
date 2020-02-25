@@ -19,30 +19,35 @@ class CreateProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_profile)
 
-        // tries to retrieve User Profile from internal storage
-        var profile = InternalStorage.readObject(this, "profile") as UserProfile
-        demoTop.text = getString(R.string.demographics_header, profile.userName)
-
-        // nextButton is disabled until user has filled out all required info
-        nextButton.isEnabled = false
-        nextButton.isClickable = false
-
         // variables to keep track if editTexts are filled out
         var majorFilled = false
         var hometownFilled = false
 
+        // tries to retrieve User Profile from internal storage
+        var profile = InternalStorage.readObject(this, "profile") as UserProfile
+        demoTop.text = getString(R.string.demographics_header, profile.userName)
+        if (profile.hometown.isNotEmpty())  {
+            hometownET.setText(profile.hometown)
+            hometownFilled = true
+        }
+        if (profile.major.isNotEmpty()) {
+            majorACTV.setText(profile.major)
+            majorFilled = true
+        }
+
+        // nextButton is disabled until user has filled out all required info
+        if (!hometownFilled || !majorFilled) {
+            nextButton.isEnabled = false
+            nextButton.isClickable = false
+        }
+
         // Initializing the class spinner
         val classArray = ArrayList<String>()
-        val year = Calendar.getInstance().get(Calendar.YEAR)
+        var year = Calendar.getInstance().get(Calendar.YEAR)
         val month = Calendar.getInstance().get(Calendar.MONTH)
-        if (month <= 6) {
-            for (i in 0..4) {
-                classArray.add("Class of " + (year + i))
-            }
-        } else {
-            for (i in 1..5) {
-                classArray.add("Class of " + (year + i))
-            }
+        if (month >= 6) year++  // sets minimum graduation year to next year
+        for (i in 0..4) {
+            classArray.add("Class of " + (year + i))
         }
 
         val classArrayAdapter: ArrayAdapter<String> = ArrayAdapter(
@@ -51,6 +56,7 @@ class CreateProfileActivity : AppCompatActivity() {
             classArray
         )
         classSpinner.adapter = classArrayAdapter
+        if (profile.classOf != 0) classSpinner.setSelection(profile.classOf - year)
 
         // Initializing the major AutoCompleteTextView
         val majors = arrayOf(
@@ -73,6 +79,12 @@ class CreateProfileActivity : AppCompatActivity() {
             pronoun
         )
         pronounSpinner.adapter = pronounAdapter
+        when (profile.pronoun) {
+            "He" -> pronounSpinner.setSelection(0)
+            "She" -> pronounSpinner.setSelection(1)
+            "They" -> pronounSpinner.setSelection(2)
+            else -> pronounSpinner.setSelection(0)
+        }
 
         // monitor changes in major editText and enable button if both major and hometown != empty
         majorACTV.addTextChangedListener(object : TextWatcher {
@@ -113,6 +125,13 @@ class CreateProfileActivity : AppCompatActivity() {
         })
 
         nextButton.setOnClickListener{
+            // update profile in internal storage
+            profile.classOf = classSpinner.selectedItemPosition + year
+            profile.major = majorACTV.text.toString()
+            profile.hometown = hometownET.text.toString()
+            profile.pronoun = pronounSpinner.selectedItem.toString()
+            InternalStorage.writeObject(this, "profile", profile as Object)
+
             val intent = Intent(this, ClubInterestActivity::class.java)
             startActivity(intent)
         }
