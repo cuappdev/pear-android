@@ -15,4 +15,12 @@
     <string name="match_enjoys">%1$s also enjoys...</string>
     <string name="match_clubs">%1$s is also part of...</string>
     <string name="match_reach_out">Reach Out!</string>
+
+    <!--NO MATCH PAGE-->
+    <string name="no_match_header">Meet your new Pear next Sunday</string>
+    <string name="no_match_subheader">
+        In the meantime, tell me when you\'re
+        usually free to make meeting up easier!
+    </string>
+    <string name="no_match_availability">Enter availability</string>
 </resources>
