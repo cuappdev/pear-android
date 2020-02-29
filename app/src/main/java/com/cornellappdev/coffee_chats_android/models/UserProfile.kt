@@ -14,6 +14,6 @@ class UserProfile(val userName: String, val userEmail: String): Serializable{
     var pronoun = ""
 
     // interests and clubs
-    lateinit var interest: Array<String>
-    lateinit var clubs: Array<String>
+    var interests = arrayListOf<String>()
+    var clubs = arrayListOf<String>()
 }
