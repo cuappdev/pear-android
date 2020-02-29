@@ -24,6 +24,10 @@ class ClubOrInterest {
         selected = !selected
     }
 
+    fun setSelected() {
+        selected = true
+    }
+
     fun isSelected() : Boolean {
         return selected
     }
