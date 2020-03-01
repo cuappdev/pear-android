@@ -52,7 +52,7 @@ class ClubInterestActivity : AppCompatActivity() {
             resources.getColor(R.color.background_green)
         )
 
-        selected = resources.getColor(R.color.onboardingButtonEnabled)
+        selected = resources.getColor(R.color.onboardingListSelected)
         unselected = resources.getColor(R.color.onboarding_fields)
 
         currentPage = 1
@@ -160,6 +160,14 @@ class ClubInterestActivity : AppCompatActivity() {
                         drawableBox.setColorFilter(selected, PorterDuff.Mode.MULTIPLY)
                     else drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
                 }
+
+                if (profile.interests.size == 0) {
+                    nextButton.isEnabled = false
+                    nextButton.isClickable = false
+                } else {
+                    nextButton.isEnabled = true
+                    nextButton.isClickable = true
+                }
             }
             2 -> {
                 adapter =
@@ -181,6 +189,13 @@ class ClubInterestActivity : AppCompatActivity() {
                     if (club.isSelected())
                         drawableBox.setColorFilter(selected, PorterDuff.Mode.MULTIPLY)
                     else drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
+                }
+                if (profile.clubs.size == 0) {
+                    nextButton.isEnabled = false
+                    nextButton.isClickable = false
+                } else {
+                    nextButton.isEnabled = true
+                    nextButton.isClickable = true
                 }
             }
         }

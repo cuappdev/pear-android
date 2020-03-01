@@ -43,7 +43,9 @@
         android:background="@drawable/rounded_edittext"
         android:hint="Major"
         android:textSize="20sp"
-        android:padding="10dp"/>
+        android:padding="10dp"
+        android:singleLine="true"
+        android:imeOptions="actionNext"/>
 
     <EditText
         android:id="@+id/hometownET"
@@ -57,7 +59,9 @@
         android:background="@drawable/rounded_edittext"
         android:hint="Hometown"
         android:textSize="20sp"
-        android:padding="10dp"/>
+        android:padding="10dp"
+        android:singleLine="true"
+        android:imeOptions="actionNext"/>
 
     <Spinner
         android:id="@+id/pronounSpinner"

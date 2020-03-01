@@ -27,6 +27,7 @@ class CreateProfileActivity : AppCompatActivity() {
         // tries to retrieve User Profile from internal storage
         var profile = InternalStorage.readObject(this, "profile") as UserProfile
         demoTop.text = getString(R.string.demographics_header, profile.userName)
+        Log.d("CreateProfileActivity", profile.userName)
         if (profile.hometown.isNotEmpty())  {
             hometownET.setText(profile.hometown)
             hometownFilled = true
@@ -72,7 +73,7 @@ class CreateProfileActivity : AppCompatActivity() {
 
         // Initializing the pronoun spinner
         val pronoun = arrayOf(
-            "He", "She", "They"
+            "He/Him/His", "She/Her/Hers", "They/Them/Theirs"
         )
         val pronounAdapter: ArrayAdapter<String> = ArrayAdapter(
             this,
