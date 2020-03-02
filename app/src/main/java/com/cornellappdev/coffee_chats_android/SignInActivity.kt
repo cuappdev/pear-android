@@ -95,16 +95,33 @@ class SignInActivity : AppCompatActivity() {
                 val personName: String? = account.displayName
                 val personEmail: String? = account.email
                 if (personName != null && personEmail != null) {
-                    var profile = UserProfile(personName, personEmail)
-                    InternalStorage.writeObject(this, "profile", profile as Object)
+                    val index = personEmail.indexOf('@')
+                    val domain: String? = if (index == -1) null else personEmail.substring(index + 1)
+                    Log.d("domain", domain);
+                    if (domain != null && domain.equals("cornell.edu")) {
+                        Log.d("domain", "1");
+                        var profile = UserProfile(personName, personEmail)
+                        InternalStorage.writeObject(this, "profile", profile as Object)
+                        startActivity(intent)
+                    } else {
+                        Log.d("domain", "2");
+                        Toast.makeText(applicationContext, "Please sign in using a Cornell account", Toast.LENGTH_LONG).show();
+                        signOut()
+                    }
                 }
             }
-            startActivity(intent)
+
         } catch (e: ApiException) { // The ApiException status code indicates the detailed failure reason.
 // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w("account error", "signInResult:failed code=" + e.getStatusCode());
-            Toast.makeText(applicationContext, "Sign-in failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(applicationContext, "Sign-in failed", Toast.LENGTH_LONG).show();
         }
     }
 
+    private fun signOut() {
+        mGoogleSignInClient.signOut()
+            .addOnCompleteListener(this) {
+                // ...
+            }
+    }
 }

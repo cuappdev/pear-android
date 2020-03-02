@@ -6,13 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.cornellappdev.coffee_chats_android.models.ClubOrInterest
 
 
 class ClubInterestAdapter(private val mContext: Context, list: Array<ClubOrInterest>, club: Boolean) :
-    ArrayAdapter<ClubOrInterest?>(mContext, 0, list) {
+    ArrayAdapter<ClubOrInterest?>(mContext, 0, list), Filterable {
     private var clubInterestList = list
     private var isClubView = club
     override fun getView(
@@ -47,5 +49,29 @@ class ClubInterestAdapter(private val mContext: Context, list: Array<ClubOrInter
     init {
         clubInterestList = list
         isClubView = club
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(p0: CharSequence?): FilterResults {
+                val queryString = p0?.toString()?.toLowerCase()
+                val filterResults = Filter.FilterResults()
+                filterResults.values =
+                    if (queryString == null || queryString.isEmpty()) {
+                        clubInterestList
+                    } else {
+                        clubInterestList.filter {
+                            it.getText().toLowerCase().contains(queryString)
+                        }.toTypedArray()
+                    }
+                return filterResults
+            }
+
+            override fun publishResults(p0: CharSequence?, p1: FilterResults?) {
+                clubInterestList = p1!!.values as Array<ClubOrInterest>
+                notifyDataSetChanged()
+            }
+
+        }
     }
 }

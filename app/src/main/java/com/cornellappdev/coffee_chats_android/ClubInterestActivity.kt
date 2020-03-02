@@ -1,11 +1,15 @@
 package com.cornellappdev.coffee_chats_android
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.util.AttributeSet
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ListView
+import android.widget.SearchView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -13,6 +17,7 @@ import com.cornellappdev.coffee_chats_android.models.ClubOrInterest
 import com.cornellappdev.coffee_chats_android.models.InternalStorage
 import com.cornellappdev.coffee_chats_android.models.UserProfile
 import kotlinx.android.synthetic.main.fragment_create_profile.*
+import java.util.Locale.filter
 
 
 class ClubInterestActivity : AppCompatActivity() {
@@ -137,9 +142,13 @@ class ClubInterestActivity : AppCompatActivity() {
         updatePage()
     }
 
+    override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
+        return super.onCreateView(name, context, attrs)
+    }
     fun updatePage() {
         when (currentPage) {
             1 -> {
+                clubSearch.visibility = View.GONE
                 adapter =
                     ClubInterestAdapter(
                         this,
@@ -151,7 +160,8 @@ class ClubInterestActivity : AppCompatActivity() {
                 header.setText(R.string.interests_header)
                 nextButton.setText(R.string.almost_there)
 
-                for (i in 0 until interestsAndClubs.count) {
+                for (i in 0 until adapter.count) {
+                    Log.d("ClubInterestActivity", "current page = 1")
                     val v = interestsAndClubs.adapter.getView(i, null, interestsAndClubs)
                     val drawableBox = v.background
                     val interest = interests[i]
@@ -170,6 +180,7 @@ class ClubInterestActivity : AppCompatActivity() {
                 }
             }
             2 -> {
+                clubSearch.visibility = View.VISIBLE
                 adapter =
                     ClubInterestAdapter(
                         this,
@@ -178,10 +189,29 @@ class ClubInterestActivity : AppCompatActivity() {
                     )
                 interestsAndClubs.adapter = adapter
 
+                // initialize searchview
+                clubSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+                    override fun onQueryTextChange(newText: String): Boolean {
+                        Log.d("ClubInterestActivity", "newText: $newText")
+                        adapter.filter.filter(newText)
+                        Log.d("ClubInterestActivity", "count: " + adapter.count)
+                        return true
+                    }
+
+                    override fun onQueryTextSubmit(query: String): Boolean {
+                        return false
+                    }
+
+                })
+
+
+
                 header.setText(R.string.clubs_header)
                 nextButton.setText(R.string.get_started)
 
-                for (i in 0 until interestsAndClubs.count) {
+                Log.d("ClubInterestActivity", "count: " + adapter.count)
+                for (i in 0 until adapter.count) {
                     val v = interestsAndClubs.adapter.getView(i, null, interestsAndClubs)
                     val drawableBox = v.background
                     val club = clubs[i]
