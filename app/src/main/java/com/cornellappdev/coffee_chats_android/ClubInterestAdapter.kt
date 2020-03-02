@@ -2,6 +2,7 @@ package com.cornellappdev.coffee_chats_android
 
 import android.content.Context
 import android.graphics.PorterDuff
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,29 +50,5 @@ class ClubInterestAdapter(private val mContext: Context, list: Array<ClubOrInter
     init {
         clubInterestList = list
         isClubView = club
-    }
-
-    override fun getFilter(): Filter {
-        return object : Filter() {
-            override fun performFiltering(p0: CharSequence?): FilterResults {
-                val queryString = p0?.toString()?.toLowerCase()
-                val filterResults = Filter.FilterResults()
-                filterResults.values =
-                    if (queryString == null || queryString.isEmpty()) {
-                        clubInterestList
-                    } else {
-                        clubInterestList.filter {
-                            it.getText().toLowerCase().contains(queryString)
-                        }.toTypedArray()
-                    }
-                return filterResults
-            }
-
-            override fun publishResults(p0: CharSequence?, p1: FilterResults?) {
-                clubInterestList = p1!!.values as Array<ClubOrInterest>
-                notifyDataSetChanged()
-            }
-
-        }
     }
 }

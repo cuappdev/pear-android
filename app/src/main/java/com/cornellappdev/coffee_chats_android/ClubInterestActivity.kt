@@ -191,21 +191,24 @@ class ClubInterestActivity : AppCompatActivity() {
 
                 // initialize searchview
                 clubSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-
                     override fun onQueryTextChange(newText: String): Boolean {
-                        Log.d("ClubInterestActivity", "newText: $newText")
-                        adapter.filter.filter(newText)
-                        Log.d("ClubInterestActivity", "count: " + adapter.count)
+                        var outputArr = clubs
+                        if (!newText.isBlank()) {
+                            val filtered = clubs.filter {
+                                it.getText().toLowerCase().contains(newText.toLowerCase())
+                            }.toTypedArray()
+                            outputArr = filtered
+                        }
+                        adapter = ClubInterestAdapter(applicationContext, outputArr, true)
+                        interestsAndClubs.adapter = adapter
+
                         return true
                     }
 
                     override fun onQueryTextSubmit(query: String): Boolean {
                         return false
                     }
-
                 })
-
-
 
                 header.setText(R.string.clubs_header)
                 nextButton.setText(R.string.get_started)
