@@ -161,7 +161,6 @@ class ClubInterestActivity : AppCompatActivity() {
                 nextButton.setText(R.string.almost_there)
 
                 for (i in 0 until adapter.count) {
-                    Log.d("ClubInterestActivity", "current page = 1")
                     val v = interestsAndClubs.adapter.getView(i, null, interestsAndClubs)
                     val drawableBox = v.background
                     val interest = interests[i]
@@ -213,7 +212,6 @@ class ClubInterestActivity : AppCompatActivity() {
                 header.setText(R.string.clubs_header)
                 nextButton.setText(R.string.get_started)
 
-                Log.d("ClubInterestActivity", "count: " + adapter.count)
                 for (i in 0 until adapter.count) {
                     val v = interestsAndClubs.adapter.getView(i, null, interestsAndClubs)
                     val drawableBox = v.background

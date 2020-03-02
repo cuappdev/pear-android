@@ -81,7 +81,6 @@ class SignInActivity : AppCompatActivity() {
 // a listener.
             val task =
                 GoogleSignIn.getSignedInAccountFromIntent(data)
-            Log.d("account: task", task.toString())
             handleSignInResult(task)
         }
     }
@@ -97,14 +96,11 @@ class SignInActivity : AppCompatActivity() {
                 if (personName != null && personEmail != null) {
                     val index = personEmail.indexOf('@')
                     val domain: String? = if (index == -1) null else personEmail.substring(index + 1)
-                    Log.d("domain", domain);
                     if (domain != null && domain.equals("cornell.edu")) {
-                        Log.d("domain", "1");
                         var profile = UserProfile(personName, personEmail)
                         InternalStorage.writeObject(this, "profile", profile as Object)
                         startActivity(intent)
                     } else {
-                        Log.d("domain", "2");
                         Toast.makeText(applicationContext, "Please sign in using a Cornell account", Toast.LENGTH_LONG).show();
                         signOut()
                     }
