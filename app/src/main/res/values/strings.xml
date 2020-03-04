@@ -9,4 +9,6 @@
     <string name="go_back">Go back</string>
     <string name="demographics_header">"Hi %1$s!\nLet's get to know you better."</string>
     <string name="demographics_header_no_name">"Hi!\nLet's get to know you better."</string>
+    <string name="scheduling_place_header">Where do you prefer?</string>
+    <string name="scheduling_place_subtitle">pick three</string>
 </resources>
