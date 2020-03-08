@@ -9,4 +9,14 @@
     <string name="go_back">Go back</string>
     <string name="demographics_header">"Hi %1$s!\nLet's get to know you better."</string>
     <string name="demographics_header_no_name">"Hi!\nLet's get to know you better."</string>
+
+    <!--SCHEDULING-->
+    <string name="scheduling_free">When are you free?</string>
+    <string name="scheduling_finish">Finish</string>
+    <string name="sat_sun">S</string>
+    <string name="mon">M</string>
+    <string name="tues">T</string>
+    <string name="wed">W</string>
+    <string name="thurs">Th</string>
+    <string name="fri">F</string>
 </resources>

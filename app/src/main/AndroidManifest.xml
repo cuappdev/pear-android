@@ -18,6 +18,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ClubInterestActivity" android:theme="@style/noAnimTheme"></activity>
+        <activity android:name=".SchedulingActivity" android:theme="@style/noAnimTheme"></activity>
 
     </application>
 
