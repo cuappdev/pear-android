@@ -29,7 +29,8 @@
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
         android:layout_marginTop="80dp"
-        android:background="@drawable/rounded_edittext"/>
+        android:background="@drawable/rounded_edittext"
+        android:popupBackground="@color/white"/>
 
     <AutoCompleteTextView
         android:id="@+id/majorACTV"
@@ -42,10 +43,12 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/rounded_edittext"
         android:hint="Major"
+        android:textColorHint="@color/signInGrey"
         android:textSize="20sp"
         android:padding="10dp"
         android:singleLine="true"
-        android:imeOptions="actionNext"/>
+        android:imeOptions="actionNext"
+        android:textColor="@color/black"/>
 
     <EditText
         android:id="@+id/hometownET"
@@ -58,10 +61,12 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/rounded_edittext"
         android:hint="Hometown"
+        android:textColorHint="@color/signInGrey"
         android:textSize="20sp"
         android:padding="10dp"
         android:singleLine="true"
-        android:imeOptions="actionNext"/>
+        android:imeOptions="actionNext"
+        android:textColor="@color/black"/>
 
     <Spinner
         android:id="@+id/pronounSpinner"
@@ -72,7 +77,8 @@
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/rounded_edittext"/>
+        android:background="@drawable/rounded_edittext"
+        android:popupBackground="@color/white"/>
     
     <Button
         android:id="@+id/nextButton"
