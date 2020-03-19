@@ -16,8 +16,9 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
-    <style name="searchViewTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="android:textColorHint">@color/black</item>
+    <style name="searchViewTheme" parent="Widget.AppCompat.Light.SearchView">
+        <item name="android:textColorHint">@color/searchHint</item>
+        <item name="android:editTextColor">@color/black</item>
     </style>
 
 </resources>

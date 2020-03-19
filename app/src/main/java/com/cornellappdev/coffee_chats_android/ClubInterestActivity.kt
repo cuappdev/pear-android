@@ -5,19 +5,14 @@ import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.ListView
-import android.widget.SearchView
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.cornellappdev.coffee_chats_android.models.ClubOrInterest
 import com.cornellappdev.coffee_chats_android.models.InternalStorage
 import com.cornellappdev.coffee_chats_android.models.UserProfile
 import kotlinx.android.synthetic.main.fragment_create_profile.*
-import java.util.Locale.filter
 
 
 class ClubInterestActivity : AppCompatActivity() {
@@ -180,6 +175,14 @@ class ClubInterestActivity : AppCompatActivity() {
             }
             2 -> {
                 clubSearch.visibility = View.VISIBLE
+                clubSearch.queryHint = "Search"
+                val searchImgId =
+                    resources.getIdentifier("android:id/search_button", null, null)
+                val searchIcon: ImageView =
+                    clubSearch.findViewById(searchImgId)
+                searchIcon.setColorFilter(
+                    resources.getColor(R.color.searchHint),
+                    PorterDuff.Mode.DARKEN);
                 adapter =
                     ClubInterestAdapter(
                         this,

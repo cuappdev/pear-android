@@ -27,8 +27,10 @@
         app:layout_constraintRight_toRightOf="parent"
         android:background="@drawable/rounded_edittext"
         android:hint="Search"
-        android:theme="@style/searchViewTheme"
-        android:iconifiedByDefault="false"/>
+        android:searchIcon="@drawable/search_icon"
+        android:searchHintIcon="@drawable/search_icon"
+        android:iconifiedByDefault="false"
+        android:theme="@style/searchViewTheme"/>
 
     <ListView
         android:id="@+id/interests_or_clubs"
