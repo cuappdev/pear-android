@@ -19,4 +19,7 @@
     <string name="wed">W</string>
     <string name="thurs">Th</string>
     <string name="fri">F</string>
+    <string name="morning">Morning</string>
+    <string name="afternoon">Afternoon</string>
+    <string name="evening">Evening</string>
 </resources>
