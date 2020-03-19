@@ -1,11 +1,10 @@
 package com.cornellappdev.coffee_chats_android
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
+import android.graphics.Rect
 import android.os.Bundle
-import android.util.AttributeSet
-import android.util.Log
+import android.view.TouchDelegate
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -14,15 +13,14 @@ import com.cornellappdev.coffee_chats_android.models.ClubOrInterest
 import com.cornellappdev.coffee_chats_android.models.InternalStorage
 import com.cornellappdev.coffee_chats_android.models.UserProfile
 import kotlinx.android.synthetic.main.fragment_create_profile.*
-import org.w3c.dom.Text
-
 
 class ClubInterestActivity : AppCompatActivity() {
     var currentPage = 1
     lateinit var header: TextView
     lateinit var adapter: ClubInterestAdapter
     lateinit var nextButton: Button
-    lateinit var backButton: Button
+    lateinit var backButton: ImageButton
+    lateinit var addLaterButton: Button
     lateinit var profile: UserProfile
     val interestTitles = arrayOf("Art", "Business", "Design", "Humanities", "Fitness & Sports", "Tech", "More")
     val interestSubtitles =  arrayOf("painting crafts, embroidery", "finance, entrepreneurship, VC", "UX/UI, graphic, print",
@@ -64,9 +62,23 @@ class ClubInterestActivity : AppCompatActivity() {
         header = findViewById(R.id.signup_header)
         nextButton = findViewById(R.id.signup_next)
         nextButton.setOnClickListener { onNextPage() }
-        backButton = findViewById(R.id.signup_back)
-        backButton.setText(R.string.go_back)
+        addLaterButton = findViewById(R.id.add_later)
+        addLaterButton.visibility = View.INVISIBLE
+        backButton = findViewById(R.id.back_button)
         backButton.setOnClickListener { onBackPage() }
+        // incease the hit area of back button
+        val parent =
+            backButton.parent as View // button: the view you want to enlarge hit area
+
+        parent.post {
+            val rect = Rect()
+            backButton.getHitRect(rect)
+            rect.top -= 100 // increase top hit area
+            rect.left -= 100 // increase left hit area
+            rect.bottom += 100 // increase bottom hit area
+            rect.right += 100 // increase right hit area
+            parent.touchDelegate = TouchDelegate(rect, backButton)
+        }
 
         // nextButton is disabled until user has chosen at least one interest
         nextButton.isEnabled = false
@@ -148,6 +160,7 @@ class ClubInterestActivity : AppCompatActivity() {
 
                 header.setText(R.string.interests_header)
                 nextButton.setText(R.string.almost_there)
+                addLaterButton.visibility = View.INVISIBLE
 
                 for (i in 0 until adapter.count) {
                     val v = interestsAndClubs.adapter.getView(i, null, interestsAndClubs)
@@ -172,6 +185,7 @@ class ClubInterestActivity : AppCompatActivity() {
             2 -> {
                 clubSearch.visibility = View.VISIBLE
                 clubSearch.queryHint = "Search"
+
                 val searchImgId =
                     resources.getIdentifier("android:id/search_button", null, null)
                 val searchIcon: ImageView =
@@ -182,6 +196,7 @@ class ClubInterestActivity : AppCompatActivity() {
                 adapter = ClubInterestAdapter(
                     this, clubs, true
                 )
+
                 interestsAndClubs.adapter = adapter
 
                 // initialize searchview
@@ -221,6 +236,7 @@ class ClubInterestActivity : AppCompatActivity() {
 
                 header.setText(R.string.clubs_header)
                 nextButton.setText(R.string.get_started)
+                addLaterButton.visibility = View.VISIBLE
 
                 for (i in 0 until adapter.count) {
                     val v = interestsAndClubs.adapter.getView(i, null, interestsAndClubs)
