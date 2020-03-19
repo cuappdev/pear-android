@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import com.cornellappdev.coffee_chats_android.models.ClubOrInterest
 import com.cornellappdev.coffee_chats_android.models.InternalStorage
 import com.cornellappdev.coffee_chats_android.models.UserProfile
 import kotlinx.android.synthetic.main.fragment_create_profile.*
+import org.w3c.dom.Text
 
 
 class ClubInterestActivity : AppCompatActivity() {
@@ -26,7 +28,6 @@ class ClubInterestActivity : AppCompatActivity() {
     val interestSubtitles =  arrayOf("painting crafts, embroidery", "finance, entrepreneurship, VC", "UX/UI, graphic, print",
                                         "history, politics", "working out, outdoors, basketball", "random technology", "there is more")
     val clubTitles = arrayOf("AppDev", "DTI", "Guac Magazine", "GCC", "CVC", "CVS")
-    lateinit var selectedView: ConstraintLayout
 
     lateinit var interestsAndClubs: ListView
     var selected = 0
@@ -76,7 +77,6 @@ class ClubInterestActivity : AppCompatActivity() {
 
             for (j in profile.interests.indices) {
                 if (interestTitles[i] == profile.interests[j]) {
-                    interests[i].setSelected()
                     nextButton.isEnabled = true
                     nextButton.isClickable = true
                     break
@@ -89,7 +89,6 @@ class ClubInterestActivity : AppCompatActivity() {
 
             for (j in profile.clubs.indices) {
                 if (clubTitles[i] == profile.clubs[j]) {
-                    clubs[i].setSelected()
                     nextButton.isEnabled = true
                     nextButton.isClickable = true
                     break
@@ -104,13 +103,13 @@ class ClubInterestActivity : AppCompatActivity() {
         interestsAndClubs.setOnItemClickListener { parent, view, position, id ->
             val selectedView = view.findViewById<ConstraintLayout>(R.id.club_or_interest_box)
             val drawableBox = selectedView.background
-            val currObj = if (currentPage == 1) interests[position] else clubs[position]
+            val nameView = view.findViewById<TextView>(R.id.club_or_interest_text)
+            val name = nameView.text.toString()
 
-            currObj.toggleSelected()
-            if (currObj.isSelected()) {
+            if (!profile.interests.contains(name) && !profile.clubs.contains(name)) {
+                if (currentPage == 1) profile.interests.add(name) else profile.clubs.add(name)
+
                 drawableBox.setColorFilter(selected, PorterDuff.Mode.MULTIPLY)
-                if (currentPage == 1) profile.interests.add(currObj.getText())
-                else profile.clubs.add(currObj.getText())
 
                 if (!nextButton.isEnabled) {
                     nextButton.isEnabled = true
@@ -118,15 +117,16 @@ class ClubInterestActivity : AppCompatActivity() {
                 }
             } else {
                 drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
+
                 if (currentPage == 1) {
-                    profile.interests.remove(currObj.getText())
-                    if (profile.interests.size == 0) {
+                    profile.interests.remove(name)
+                    if (profile.interests.isEmpty()) {
                         nextButton.isEnabled = false
                         nextButton.isClickable = false
                     }
                 } else {
-                    profile.clubs.remove(currObj.getText())
-                    if (profile.clubs.size == 0) {
+                    profile.clubs.remove(name)
+                    if (profile.clubs.isEmpty()) {
                         nextButton.isEnabled = false
                         nextButton.isClickable = false
                     }
@@ -137,19 +137,13 @@ class ClubInterestActivity : AppCompatActivity() {
         updatePage()
     }
 
-    override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
-        return super.onCreateView(name, context, attrs)
-    }
     fun updatePage() {
         when (currentPage) {
             1 -> {
                 clubSearch.visibility = View.GONE
-                adapter =
-                    ClubInterestAdapter(
-                        this,
-                        interests,
-                        false
-                    )
+                adapter = ClubInterestAdapter(
+                    this, interests, false
+                )
                 interestsAndClubs.adapter = adapter
 
                 header.setText(R.string.interests_header)
@@ -158,14 +152,16 @@ class ClubInterestActivity : AppCompatActivity() {
                 for (i in 0 until adapter.count) {
                     val v = interestsAndClubs.adapter.getView(i, null, interestsAndClubs)
                     val drawableBox = v.background
-                    val interest = interests[i]
+                    val nameView = v.findViewById<TextView>(R.id.club_or_interest_text)
+                    val name = nameView.text.toString()
 
-                    if (interest.isSelected())
+                    if (profile.interests.contains(name))
                         drawableBox.setColorFilter(selected, PorterDuff.Mode.MULTIPLY)
-                    else drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
+                    else
+                        drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
                 }
 
-                if (profile.interests.size == 0) {
+                if (profile.interests.isEmpty()) {
                     nextButton.isEnabled = false
                     nextButton.isClickable = false
                 } else {
@@ -181,14 +177,11 @@ class ClubInterestActivity : AppCompatActivity() {
                 val searchIcon: ImageView =
                     clubSearch.findViewById(searchImgId)
                 searchIcon.setColorFilter(
-                    resources.getColor(R.color.searchHint),
-                    PorterDuff.Mode.DARKEN);
-                adapter =
-                    ClubInterestAdapter(
-                        this,
-                        clubs,
-                        true
-                    )
+                    resources.getColor(R.color.searchHint), PorterDuff.Mode.DARKEN
+                )
+                adapter = ClubInterestAdapter(
+                    this, clubs, true
+                )
                 interestsAndClubs.adapter = adapter
 
                 // initialize searchview
@@ -197,12 +190,26 @@ class ClubInterestActivity : AppCompatActivity() {
                         var outputArr = clubs
                         if (!newText.isBlank()) {
                             val filtered = clubs.filter {
-                                it.getText().toLowerCase().contains(newText.toLowerCase())
+                                it.text.toLowerCase().contains(newText.toLowerCase())
                             }.toTypedArray()
                             outputArr = filtered
                         }
                         adapter = ClubInterestAdapter(applicationContext, outputArr, true)
                         interestsAndClubs.adapter = adapter
+                        for (i in 0 until adapter.count) {
+                            val v = interestsAndClubs.adapter.getView(
+                                i, null, interestsAndClubs
+                            )
+                            val drawableBox = v.background
+                            val nameView = v.findViewById<TextView>(R.id.club_or_interest_text)
+                            val name = nameView.text.toString()
+
+                            if (profile.clubs.contains(name))
+                                drawableBox.setColorFilter(selected, PorterDuff.Mode.MULTIPLY)
+                            else
+                                drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
+                        }
+//                        interestsAndClubs.adapter = adapter
 
                         return true
                     }
@@ -218,13 +225,16 @@ class ClubInterestActivity : AppCompatActivity() {
                 for (i in 0 until adapter.count) {
                     val v = interestsAndClubs.adapter.getView(i, null, interestsAndClubs)
                     val drawableBox = v.background
-                    val club = clubs[i]
+                    val nameView = v.findViewById<TextView>(R.id.club_or_interest_text)
+                    val name = nameView.text.toString()
 
-                    if (club.isSelected())
+                    if (profile.clubs.contains(name))
                         drawableBox.setColorFilter(selected, PorterDuff.Mode.MULTIPLY)
-                    else drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
+                    else
+                        drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
                 }
-                if (profile.clubs.size == 0) {
+
+                if (profile.clubs.isEmpty()) {
                     nextButton.isEnabled = false
                     nextButton.isClickable = false
                 } else {
@@ -236,18 +246,18 @@ class ClubInterestActivity : AppCompatActivity() {
     }
 
     fun onNextPage() {
+        InternalStorage.writeObject(this, "profile", profile as Object)
+
         if (currentPage == 1) {
             currentPage += 1
             updatePage()
-        } else if (currentPage == 2) {
-            InternalStorage.writeObject(this, "profile", profile as Object)
-            // here fire up an intent to go to the page after onboarding
         }
     }
 
     fun onBackPage() {
+        InternalStorage.writeObject(this, "profile", profile as Object)
+
         if (currentPage == 1) {
-            InternalStorage.writeObject(this, "profile", profile as Object)
             val intent = Intent(this, CreateProfileActivity::class.java)
             startActivity(intent)
         } else if (currentPage == 2) {

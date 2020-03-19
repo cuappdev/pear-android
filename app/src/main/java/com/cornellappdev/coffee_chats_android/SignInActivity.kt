@@ -60,18 +60,18 @@ class SignInActivity : AppCompatActivity() {
         val account = GoogleSignIn.getLastSignedInAccount(this)
     }
     private fun signIn() {
-//        val personName: String? = "Preston"
-//        val personEmail: String? = "pwr36@cornell.edu"
-//        if (personName != null && personEmail != null) {
-//            var profile = UserProfile(personName, personEmail)
-//            InternalStorage.writeObject(this, "profile", profile as Object)
-//        }
-//
-//        val intent = Intent(this, CreateProfileActivity::class.java) // added to bypass sign in
-//        startActivity(intent)
+        val personName: String? = "Preston"
+        val personEmail: String? = "pwr36@cornell.edu"
+        if (personName != null && personEmail != null) {
+            var profile = UserProfile(personName, personEmail)
+            InternalStorage.writeObject(this, "profile", profile as Object)
+        }
 
-        val signInIntent: Intent = mGoogleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
+        val intent = Intent(this, CreateProfileActivity::class.java) // added to bypass sign in
+        startActivity(intent)
+
+//        val signInIntent: Intent = mGoogleSignInClient.signInIntent
+//        startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
