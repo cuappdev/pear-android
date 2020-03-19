@@ -65,7 +65,7 @@
         android:textSize="20sp"
         android:padding="10dp"
         android:singleLine="true"
-        android:imeOptions="actionNext"
+        android:imeOptions="actionDone"
         android:textColor="@color/black"/>
 
     <Spinner
