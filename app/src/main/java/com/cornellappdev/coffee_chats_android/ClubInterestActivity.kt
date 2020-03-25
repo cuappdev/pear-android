@@ -25,7 +25,7 @@ class ClubInterestActivity : AppCompatActivity() {
     lateinit var profile: UserProfile
     val interestTitles = arrayOf("Art", "Business", "Design", "Humanities", "Fitness & Sports", "Tech", "More")
     val interestSubtitles =  arrayOf("painting crafts, embroidery", "finance, entrepreneurship, VC", "UX/UI, graphic, print",
-                                        "history, politics", "working out, outdoors, basketball", "random technology", "there is more")
+        "history, politics", "working out, outdoors, basketball", "random technology", "there is more")
     val clubTitles = arrayOf("AppDev", "DTI", "Guac Magazine", "GCC", "CVC", "CVS")
 
     lateinit var interestsAndClubs: ListView
