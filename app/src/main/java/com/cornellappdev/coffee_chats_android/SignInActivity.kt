@@ -91,7 +91,7 @@ class SignInActivity : AppCompatActivity() {
                 completedTask.getResult(ApiException::class.java)
             val intent = Intent(this, CreateProfileActivity::class.java)
             if (account != null) {
-                val personName: String? = account.displayName
+                val personName: String? = account.givenName
                 val personEmail: String? = account.email
                 if (personName != null && personEmail != null) {
                     val index = personEmail.indexOf('@')

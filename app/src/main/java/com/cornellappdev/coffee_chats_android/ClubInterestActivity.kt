@@ -1,12 +1,12 @@
 package com.cornellappdev.coffee_chats_android
 
-import android.R.attr.button
 import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.os.Bundle
 import android.util.AttributeSet
+import android.util.Log
 import android.view.TouchDelegate
 import android.view.View
 import android.widget.*
@@ -49,6 +49,7 @@ class ClubInterestActivity : AppCompatActivity() {
         )
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_create_profile)
@@ -59,7 +60,17 @@ class ClubInterestActivity : AppCompatActivity() {
         selected = resources.getColor(R.color.onboardingListSelected)
         unselected = resources.getColor(R.color.onboarding_fields)
 
-        currentPage = 1
+        if(intent.getIntExtra("page", 1) == 1) {
+            Log.d("page", "1")
+            currentPage = 1
+            createProfileFragment.setBackgroundResource(R.drawable.onboarding_background_2)
+        } else {
+            Log.d("page", "2")
+            currentPage = 2
+            createProfileFragment.setBackgroundResource(R.drawable.onboarding_background_3)
+
+        }
+
 
         // reads in user profile
         profile = InternalStorage.readObject(this, "profile") as UserProfile
@@ -121,8 +132,9 @@ class ClubInterestActivity : AppCompatActivity() {
 
         interestsAndClubs.setOnItemClickListener { parent, view, position, id ->
             val selectedView = view.findViewById<ConstraintLayout>(R.id.club_or_interest_box)
+            val selectedText = selectedView.findViewById<TextView>(R.id.club_or_interest_text).text
             val drawableBox = selectedView.background
-            val currObj = if (currentPage == 1) interests[position] else clubs[position]
+            val currObj = if (currentPage == 1) interests[position] else clubs[clubTitles.indexOf(selectedText)]
 
             currObj.toggleSelected()
             if (currObj.isSelected()) {
@@ -250,8 +262,11 @@ class ClubInterestActivity : AppCompatActivity() {
 
     fun onNextPage() {
         if (currentPage == 1) {
-            currentPage += 1
-            updatePage()
+            InternalStorage.writeObject(this, "profile", profile as Object)
+            val intent = Intent(this, ClubInterestActivity::class.java)
+            intent.putExtra("page", 2)
+            startActivity(intent)
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         } else if (currentPage == 2) {
             InternalStorage.writeObject(this, "profile", profile as Object)
             // here fire up an intent to go to the page after onboarding
@@ -261,11 +276,15 @@ class ClubInterestActivity : AppCompatActivity() {
     fun onBackPage() {
         if (currentPage == 1) {
             InternalStorage.writeObject(this, "profile", profile as Object)
-            val intent = Intent(this, CreateProfileActivity::class.java)
-            startActivity(intent)
+            finish()
         } else if (currentPage == 2) {
             currentPage -= 1
-            updatePage()
+            finish()
         }
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
     }
 }

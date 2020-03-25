@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.cornellappdev.coffee_chats_android.CreateProfileActivity"
-    android:background="@color/background_green">
+    android:background="@drawable/onboarding_background_1">
 
     <TextView
         android:id="@+id/demoTop"
@@ -26,9 +26,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/demoTop"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="40dp"
         android:background="@drawable/rounded_edittext"
         android:popupBackground="@color/white"/>
 
@@ -38,8 +38,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/classSpinner"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/rounded_edittext"
         android:hint="Major"
@@ -56,8 +56,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/majorACTV"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/rounded_edittext"
         android:hint="Hometown"
@@ -74,8 +74,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/hometownET"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/rounded_edittext"
         android:popupBackground="@color/white"/>

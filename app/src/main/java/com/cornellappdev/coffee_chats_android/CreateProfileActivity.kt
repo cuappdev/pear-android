@@ -135,6 +135,8 @@ class CreateProfileActivity : AppCompatActivity() {
 
             val intent = Intent(this, ClubInterestActivity::class.java)
             startActivity(intent)
+            intent.putExtra("page", 1)
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
     }
 }
