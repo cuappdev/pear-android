@@ -291,6 +291,7 @@ class ClubInterestActivity : AppCompatActivity() {
             InternalStorage.writeObject(this, "profile", profile as Object)
             finish()
         } else if (currentPage == 2) {
+            InternalStorage.writeObject(this, "profile", profile as Object)
             currentPage -= 1
             finish()
         }
