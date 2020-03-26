@@ -16,7 +16,9 @@
         app:layout_constraintRight_toRightOf="parent"
         android:text="@string/welcome_header"
         android:textSize="24sp"
-        android:layout_marginTop="100dp"/>
+        android:layout_marginTop="100dp"
+        android:fontFamily="@font/circular_bold"
+        android:textColor="@color/black"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -25,14 +27,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="227dp">
+        android:layout_marginTop="207dp">
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="146dp"
-            android:src="@drawable/ellipse"
-            android:layout_marginBottom="50dp"/>
+            android:layout_height="170dp"
+            android:layout_marginBottom="30dp"
+            android:src="@drawable/ic_sign_in_logo"/>
 
         <Button
             android:id="@+id/sign_in_button"
