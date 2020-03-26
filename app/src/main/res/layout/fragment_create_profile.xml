@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/createProfileFragment">
+    android:id="@+id/createProfileFragment"
+    android:background="@color/background_green">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -42,7 +43,7 @@
 
 
     <SearchView
-        android:id="@+id/clubSearch"
+        android:id="@+id/club_search"
         android:layout_width="300dp"
         android:layout_marginTop="20dp"
         android:layout_height="wrap_content"
@@ -67,7 +68,7 @@
         android:divider="@android:color/transparent"
         android:dividerHeight="12.0sp"
         android:scrollbars="none"
-        app:layout_constraintTop_toBottomOf="@id/clubSearch"
+        app:layout_constraintTop_toBottomOf="@id/club_search"
         app:layout_constraintBottom_toTopOf="@id/signup_next"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>

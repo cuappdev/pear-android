@@ -9,7 +9,7 @@
     <View android:id="@+id/rounded_rectangle"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:background="@drawable/rounded_corner"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

@@ -1,9 +1,5 @@
 package com.cornellappdev.coffee_chats_android
 
-//import android.support.v7.app.AppCompatActivity
-
-//import androidx.test.orchestrator.junit.BundleJUnitUtils.getResult
-
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -29,7 +25,6 @@ class SignInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
-
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -60,7 +55,7 @@ class SignInActivity : AppCompatActivity() {
         val account = GoogleSignIn.getLastSignedInAccount(this)
     }
     private fun signIn() {
-        // Use the following code instead if can't sign in
+        // The code below is for testing. Use it instead if you can't sign in
 //        val personName: String? = "Preston"
 //        val personEmail: String? = "pwr36@cornell.edu"
 //        if (personName != null && personEmail != null) {

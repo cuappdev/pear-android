@@ -8,7 +8,7 @@
     android:background="@drawable/onboarding_background_1">
 
     <TextView
-        android:id="@+id/demoTop"
+        android:id="@+id/demographicsHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
@@ -24,7 +24,7 @@
         android:id="@+id/classSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/demoTop"
+        app:layout_constraintTop_toBottomOf="@id/demographicsHeader"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
@@ -52,7 +52,7 @@
         android:fontFamily="@font/circular_book"/>
 
     <EditText
-        android:id="@+id/hometownET"
+        android:id="@+id/hometownEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/majorACTV"
@@ -74,7 +74,7 @@
         android:id="@+id/pronounSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/hometownET"
+        app:layout_constraintTop_toBottomOf="@id/hometownEditText"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
@@ -94,6 +94,7 @@
         android:layout_marginBottom="50dp"
         android:layout_marginLeft="100dp"
         android:layout_marginRight="100dp"
+        android:textColor="@color/white"
         android:background="@drawable/profile_button_background"
         style="?android:attr/borderlessButtonStyle"/>
 

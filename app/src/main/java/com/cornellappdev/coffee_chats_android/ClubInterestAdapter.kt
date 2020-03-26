@@ -39,8 +39,9 @@ class ClubInterestAdapter(private val mContext: Context, list: Array<ClubOrInter
         val unselected = context.resources.getColor(R.color.onboarding_fields)
         val layout = listItem!!.findViewById<ConstraintLayout>(R.id.club_or_interest_box)
         val drawableBox = layout.background
-        if (currentClubInterest.isSelected()) drawableBox.setColorFilter(selected, PorterDuff.Mode.MULTIPLY)
-        else drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
+        if (currentClubInterest.isSelected()) {
+            drawableBox.setColorFilter(selected, PorterDuff.Mode.MULTIPLY)
+        } else drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
 
         return listItem
     }

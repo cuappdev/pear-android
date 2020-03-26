@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.cornellappdev.coffee_chats_android.models.InternalStorage
@@ -26,9 +25,9 @@ class CreateProfileActivity : AppCompatActivity() {
 
         // tries to retrieve User Profile from internal storage
         var profile = InternalStorage.readObject(this, "profile") as UserProfile
-        demoTop.text = getString(R.string.demographics_header, profile.userName)
+        demographicsHeader.text = getString(R.string.demographics_header, profile.userName)
         if (profile.hometown.isNotEmpty())  {
-            hometownET.setText(profile.hometown)
+            hometownEditText.setText(profile.hometown)
             hometownFilled = true
         }
         if (profile.major.isNotEmpty()) {
@@ -110,7 +109,7 @@ class CreateProfileActivity : AppCompatActivity() {
         })
 
         // monitor changes in major editText and enable button if both major and hometown != empty
-        hometownET.addTextChangedListener(object : TextWatcher {
+        hometownEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
             }
 
@@ -135,7 +134,7 @@ class CreateProfileActivity : AppCompatActivity() {
             // update profile in internal storage
             profile.classOf = classSpinner.selectedItemPosition + year
             profile.major = majorACTV.text.toString()
-            profile.hometown = hometownET.text.toString()
+            profile.hometown = hometownEditText.text.toString()
             profile.pronoun = pronounSpinner.selectedItem.toString()
             InternalStorage.writeObject(this, "profile", profile as Object)
 

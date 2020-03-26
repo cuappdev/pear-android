@@ -15,7 +15,6 @@ class ClubOrInterest {
         return text
     }
 
-
     fun getSubtext() : String {
         return subtext
     }

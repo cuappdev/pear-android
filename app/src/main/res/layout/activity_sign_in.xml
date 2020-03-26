@@ -8,7 +8,7 @@
     android:background="@color/background_green">
 
     <TextView
-        android:id="@+id/welcomeTextView"
+        android:id="@+id/welcome_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -30,7 +30,7 @@
         android:layout_marginTop="207dp">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/pear_logo"
             android:layout_width="match_parent"
             android:layout_height="170dp"
             android:layout_marginBottom="30dp"
