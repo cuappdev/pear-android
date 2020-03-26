@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="68dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/club_interest_box">
+    android:background="@drawable/rounded_edittext">
 
 
     <View android:id="@+id/rounded_rectangle"
@@ -29,12 +29,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:fontFamily="@font/circular_book"/>
 
     <TextView
         android:id="@+id/club_or_interest_subtext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/circular_book"
         android:textSize="12sp"
         android:textColor="@color/faded_text"
         app:layout_constraintStart_toStartOf="@id/club_or_interest_text"

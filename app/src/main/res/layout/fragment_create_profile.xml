@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:id="@+id/header_layout">
+        android:id="@+id/header_layout"
+        android:paddingBottom="20dp">
 
         <ImageButton
             android:id="@+id/back_button"
@@ -33,7 +34,8 @@
             android:layout_marginTop="60dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent"
+            android:fontFamily="@font/circular_medium"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -42,7 +44,7 @@
     <SearchView
         android:id="@+id/clubSearch"
         android:layout_width="300dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/header_layout"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -77,6 +79,8 @@
         android:textSize="20sp"
         android:background="@drawable/profile_button_background"
         android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:fontFamily="@font/circular_medium"
         android:layout_marginBottom="0dp"
         style="?android:attr/borderlessButtonStyle"
         app:layout_constraintBottom_toTopOf="@id/add_later"
@@ -92,6 +96,7 @@
         android:text="@string/add_later_button"
         android:textSize="16sp"
         android:textColor="@color/faded_text"
+        android:fontFamily="@font/circular_book"
         android:layout_marginBottom="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

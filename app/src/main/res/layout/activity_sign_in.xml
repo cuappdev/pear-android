@@ -17,7 +17,7 @@
         android:text="@string/welcome_header"
         android:textSize="24sp"
         android:layout_marginTop="100dp"
-        android:fontFamily="@font/circular_bold"
+        android:fontFamily="@font/circular_medium"
         android:textColor="@color/black"/>
 
     <LinearLayout
@@ -43,8 +43,11 @@
             android:layout_height="wrap_content"
             android:padding="15dp"
             android:text="Sign in with Google"
-            android:textColor="@color/black"
-            android:stateListAnimator="@null"/>
+            android:textColor="#767676"
+            android:stateListAnimator="@null"
+            android:textAllCaps="false"
+            android:fontFamily="@font/roboto_medium"
+            android:textSize="16sp"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

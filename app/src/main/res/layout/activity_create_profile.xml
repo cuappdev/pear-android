@@ -14,7 +14,7 @@
         android:layout_marginTop="80dp"
         android:textSize="25sp"
         android:gravity="center"
-        android:fontFamily="sans-serif-medium"
+        android:fontFamily="@font/circular_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -28,7 +28,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:background="@drawable/rounded_edittext"
         android:popupBackground="@color/white"/>
 
@@ -43,12 +43,13 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/rounded_edittext"
         android:hint="Major"
-        android:textColorHint="@color/signInGrey"
+        android:textColorHint="@color/faded_text"
         android:textSize="20sp"
         android:padding="10dp"
         android:singleLine="true"
         android:imeOptions="actionNext"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:fontFamily="@font/circular_book"/>
 
     <EditText
         android:id="@+id/hometownET"
@@ -61,12 +62,13 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/rounded_edittext"
         android:hint="Hometown"
-        android:textColorHint="@color/signInGrey"
+        android:textColorHint="@color/faded_text"
         android:textSize="20sp"
         android:padding="10dp"
         android:singleLine="true"
         android:imeOptions="actionDone"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:fontFamily="@font/circular_book"/>
 
     <Spinner
         android:id="@+id/pronounSpinner"

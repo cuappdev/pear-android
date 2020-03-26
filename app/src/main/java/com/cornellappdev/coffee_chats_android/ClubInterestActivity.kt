@@ -207,7 +207,6 @@ class ClubInterestActivity : AppCompatActivity() {
                 )
 
                 interestsAndClubs.adapter = adapter
-
                 // initialize searchview
                 clubSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextChange(newText: String): Boolean {

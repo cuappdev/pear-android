@@ -102,6 +102,9 @@ class CreateProfileActivity : AppCompatActivity() {
                 if (majorFilled && hometownFilled) {
                     nextButton.isEnabled = true
                     nextButton.isClickable = true
+                } else {
+                    nextButton.isEnabled = false
+                    nextButton.isClickable = false
                 }
             }
         })
@@ -121,6 +124,9 @@ class CreateProfileActivity : AppCompatActivity() {
                 if (majorFilled && hometownFilled) {
                     nextButton.isEnabled = true
                     nextButton.isClickable = true
+                } else {
+                    nextButton.isEnabled = false
+                    nextButton.isClickable = false
                 }
             }
         })
