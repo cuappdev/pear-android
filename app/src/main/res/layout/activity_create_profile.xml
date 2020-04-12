@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.cornellappdev.coffee_chats_android.CreateProfileActivity"
+    android:background="@drawable/onboarding_background_1">
+
+    <TextView
+        android:id="@+id/demographicsHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:fontFamily="@font/circular_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"/>
+
+    <Spinner
+        android:id="@+id/classSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/demographicsHeader"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/rounded_edittext"
+        android:popupBackground="@color/white"/>
+
+    <AutoCompleteTextView
+        android:id="@+id/majorACTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/classSpinner"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_edittext"
+        android:hint="Major"
+        android:textColorHint="@color/faded_text"
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:singleLine="true"
+        android:imeOptions="actionNext"
+        android:textColor="@color/black"
+        android:fontFamily="@font/circular_book"/>
+
+    <EditText
+        android:id="@+id/hometownEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/majorACTV"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_edittext"
+        android:hint="Hometown"
+        android:textColorHint="@color/faded_text"
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:singleLine="true"
+        android:imeOptions="actionDone"
+        android:textColor="@color/black"
+        android:fontFamily="@font/circular_book"/>
+
+    <Spinner
+        android:id="@+id/pronounSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/hometownEditText"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_edittext"
+        android:popupBackground="@color/white"/>
+    
+    <Button
+        android:id="@+id/nextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Next"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:gravity="center"
+        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:textColor="@color/white"
+        android:background="@drawable/profile_button_background"
+        style="?android:attr/borderlessButtonStyle"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
