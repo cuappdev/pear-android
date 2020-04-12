@@ -16,7 +16,11 @@ import kotlinx.android.synthetic.main.fragment_create_profile.*
 
 
 class ClubInterestActivity : AppCompatActivity() {
-    var currentPage = 1       // currentPage is either 1 (interests) or 2 (clubs)
+    enum class CurrentPage {
+        INTERESTS,
+        CLUBS
+    }
+    var currentPage: CurrentPage = CurrentPage.INTERESTS
     lateinit var adapter: ClubInterestAdapter
     lateinit var profile: UserProfile
     val interestTitles = arrayOf("Art", "Business", "Design", "Humanities", "Fitness & Sports", "Tech", "More")
@@ -43,10 +47,10 @@ class ClubInterestActivity : AppCompatActivity() {
         unselected = resources.getColor(R.color.onboarding_fields)
 
         if(intent.getIntExtra("page", 1) == 1) {
-            currentPage = 1
+            currentPage = CurrentPage.INTERESTS
             createProfileFragment.setBackgroundResource(R.drawable.onboarding_background_2)
         } else {
-            currentPage = 2
+            currentPage = CurrentPage.CLUBS
             createProfileFragment.setBackgroundResource(R.drawable.onboarding_background_3)
         }
 
@@ -100,11 +104,11 @@ class ClubInterestActivity : AppCompatActivity() {
             val selectedView = view.findViewById<ConstraintLayout>(R.id.club_or_interest_box)
             val selectedText = selectedView.findViewById<TextView>(R.id.club_or_interest_text).text
             val drawableBox = selectedView.background
-            val currObj = if (currentPage == 1) interests[position] else clubs[clubTitles.indexOf(selectedText)]
+            val currObj = if (currentPage == CurrentPage.INTERESTS) interests[position] else clubs[clubTitles.indexOf(selectedText)]
             currObj.toggleSelected()
             if (currObj.isSelected()) {
                 drawableBox.setColorFilter(selected, PorterDuff.Mode.MULTIPLY)
-                if (currentPage == 1) profile.interests.add(currObj.getText())
+                if (currentPage == CurrentPage.INTERESTS) profile.interests.add(currObj.getText())
                 else profile.clubs.add(currObj.getText())
 
                 if (!signup_next.isEnabled) {
@@ -113,7 +117,7 @@ class ClubInterestActivity : AppCompatActivity() {
             } else {
                 drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
 
-                if (currentPage == 1) {
+                if (currentPage == CurrentPage.INTERESTS) {
                     profile.interests.remove(selectedText)
                     if (profile.interests.isEmpty()) {
                         signup_next.isEnabled = false
@@ -132,7 +136,7 @@ class ClubInterestActivity : AppCompatActivity() {
 
     fun updatePage() {
         when (currentPage) {
-            1 -> {
+            CurrentPage.INTERESTS -> {
                 club_search.visibility = View.GONE
                 adapter = ClubInterestAdapter(
                     this, interests, false
@@ -157,7 +161,7 @@ class ClubInterestActivity : AppCompatActivity() {
 
                 signup_next.isEnabled = profile.interests.isNotEmpty()
             }
-            2 -> {
+            CurrentPage.CLUBS -> {
                 club_search.visibility = View.VISIBLE
                 club_search.queryHint = "Search"
 
@@ -231,13 +235,13 @@ class ClubInterestActivity : AppCompatActivity() {
     fun onNextPage() {
         InternalStorage.writeObject(this, "profile", profile as Object)
 
-        if (currentPage == 1) {
+        if (currentPage == CurrentPage.INTERESTS) {
             InternalStorage.writeObject(this, "profile", profile as Object)
             val intent = Intent(this, ClubInterestActivity::class.java)
             intent.putExtra("page", 2)
             startActivity(intent)
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
-        } else if (currentPage == 2) {
+        } else if (currentPage == CurrentPage.CLUBS) {
             InternalStorage.writeObject(this, "profile", profile as Object)
             // here fire up an intent to go to the page after onboarding
         }
@@ -246,12 +250,12 @@ class ClubInterestActivity : AppCompatActivity() {
     fun onBackPage() {
         InternalStorage.writeObject(this, "profile", profile as Object)
 
-        if (currentPage == 1) {
+        if (currentPage == CurrentPage.INTERESTS) {
             InternalStorage.writeObject(this, "profile", profile as Object)
             finish()
-        } else if (currentPage == 2) {
+        } else if (currentPage == CurrentPage.CLUBS) {
             InternalStorage.writeObject(this, "profile", profile as Object)
-            currentPage -= 1
+            currentPage = CurrentPage.INTERESTS
             finish()
         }
     }
