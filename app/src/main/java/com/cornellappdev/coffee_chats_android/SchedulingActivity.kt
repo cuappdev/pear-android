@@ -61,14 +61,6 @@ class SchedulingActivity : AppCompatActivity() {
                     timeTextView.background = getDrawable(R.drawable.unselected_rounded_time_option)
                 }
             }
-
-//            if (daySelectedIndex > -1) {
-//                dayAdapter.selectedPositions.remove(position)
-//                daySelectedTextView.background = getDrawable(R.drawable.unselected_scheduling_circle_button)
-//            } else {
-//                dayAdapter.selectedPositions.add(position)
-//                daySelectedTextView.background = getDrawable(R.drawable.selected_scheduling_circle_button)
-//            }
         }
 
         time_gridview.onItemClickListener = OnItemClickListener { parent, v, position, id ->

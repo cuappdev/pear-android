@@ -4,16 +4,6 @@
 
     <solid android:color="@color/rounded_button" />
 
-    <stroke
-        android:width="2dp"
-        android:color="@color/rounded_button" />
-
-    <padding
-        android:bottom="3dp"
-        android:left="3dp"
-        android:right="3dp"
-        android:top="3dp" />
-
     <corners android:radius="25dp" />
 
 </shape>

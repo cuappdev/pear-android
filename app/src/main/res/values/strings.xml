@@ -2,13 +2,15 @@
     <string name="app_name">coffee-chats-android</string>
 
     <!--CREATE PROFILE-->
+    <string name="welcome_header">Welcome to Pear</string>
     <string name="interests_header">What do you love?</string>
-    <string name="almost_there">Almost there!</string>
+    <string name="almost_there">Almost there</string>
     <string name="clubs_header">What are you a part of?</string>
     <string name="get_started">Ready for Pear</string>
     <string name="go_back">Go back</string>
     <string name="demographics_header">"Hi %1$s!\nLet's get to know you better."</string>
     <string name="demographics_header_no_name">"Hi!\nLet's get to know you better."</string>
+    <string name="add_later_button">I\'ll add later</string>
 
     <!--SCHEDULING-->
     <string name="scheduling_free">When are you free?</string>
@@ -38,4 +40,6 @@
         usually free to make meeting up easier!
     </string>
     <string name="no_match_availability">Enter availability</string>
+
+
 </resources>

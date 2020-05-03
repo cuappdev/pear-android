@@ -2,12 +2,10 @@ package com.cornellappdev.coffee_chats_android
 
 import android.content.Context
 import android.graphics.PorterDuff
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -41,8 +39,9 @@ class ClubInterestAdapter(private val mContext: Context, list: Array<ClubOrInter
         val unselected = context.resources.getColor(R.color.onboarding_fields)
         val layout = listItem!!.findViewById<ConstraintLayout>(R.id.club_or_interest_box)
         val drawableBox = layout.background
-        if (currentClubInterest.isSelected()) drawableBox.setColorFilter(selected, PorterDuff.Mode.MULTIPLY)
-        else drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
+        if (currentClubInterest.isSelected()) {
+            drawableBox.setColorFilter(selected, PorterDuff.Mode.MULTIPLY)
+        } else drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
 
         return listItem
     }

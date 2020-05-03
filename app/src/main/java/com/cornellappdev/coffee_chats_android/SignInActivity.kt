@@ -26,7 +26,6 @@ class SignInActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
 
-
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         val gso = Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -56,18 +55,19 @@ class SignInActivity : AppCompatActivity() {
         val account = GoogleSignIn.getLastSignedInAccount(this)
     }
     private fun signIn() {
-        val personName: String? = "Preston"
-        val personEmail: String? = "pwr36@cornell.edu"
-        if (personName != null && personEmail != null) {
-            var profile = UserProfile(personName, personEmail)
-            InternalStorage.writeObject(this, "profile", profile as Object)
-        }
+        // The code below is for testing. Use it instead if you can't sign in
+//        val personName: String? = "Preston"
+//        val personEmail: String? = "pwr36@cornell.edu"
+//        if (personName != null && personEmail != null) {
+//            var profile = UserProfile(personName, personEmail)
+//            InternalStorage.writeObject(this, "profile", profile as Object)
+//        }
+//
+//        val intent = Intent(this, CreateProfileActivity::class.java) // added to bypass sign in
+//        startActivity(intent)
 
-        val intent = Intent(this, SchedulingActivity::class.java) // added to bypass sign in
-        startActivity(intent)
-
-//        val signInIntent: Intent = mGoogleSignInClient.signInIntent
-//        startActivityForResult(signInIntent, RC_SIGN_IN)
+        val signInIntent: Intent = mGoogleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -87,7 +87,7 @@ class SignInActivity : AppCompatActivity() {
                 completedTask.getResult(ApiException::class.java)
             val intent = Intent(this, CreateProfileActivity::class.java)
             if (account != null) {
-                val personName: String? = account.displayName
+                val personName: String? = account.givenName
                 val personEmail: String? = account.email
                 if (personName != null && personEmail != null) {
                     val index = personEmail.indexOf('@')
