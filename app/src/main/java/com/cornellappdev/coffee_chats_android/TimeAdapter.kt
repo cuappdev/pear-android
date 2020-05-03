@@ -1,0 +1,38 @@
+package com.cornellappdev.coffee_chats_android
+
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.BaseAdapter
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
+
+
+class TimeAdapter(private val mContext: Context,
+                    private val times: Array<kotlin.String>
+): BaseAdapter() {
+
+    var selectedPositions = mutableListOf<Int>()
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        val inflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val timeView:View = inflater.inflate(R.layout.time_option_item, null)
+        val timeButton = timeView.findViewById<TextView>(R.id.time_option_text)
+        timeButton.text = times[position]
+        return timeView
+    }
+
+    override fun getItem(position: Int): Any {
+        return times[position]
+    }
+
+    override fun getItemId(position: Int): Long {
+        return 0
+    }
+
+    override fun getCount(): Int {
+        return times.size
+    }
+
+}
