@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.android.synthetic.main.activity_scheduling.*
 import android.widget.AdapterView.OnItemClickListener
+import kotlinx.android.synthetic.main.activity_scheduling.back_button
+import kotlinx.android.synthetic.main.fragment_create_profile.*
 
 
 class SchedulingActivity : AppCompatActivity() {
@@ -35,6 +37,7 @@ class SchedulingActivity : AppCompatActivity() {
             selectedTimes[day] = mutableListOf<String>()
         }
 
+        back_button.setOnClickListener { finish() }
 
         var previousDot: ImageView? = null
         day_selection.onItemClickListener = OnItemClickListener { parent, v, position, id ->
