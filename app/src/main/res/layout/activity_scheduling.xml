@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:fontFamily="sans-serif-medium"/>
+        android:fontFamily="@font/circular_medium"/>
 
     <GridView
         android:id="@+id/day_selection"
@@ -44,7 +44,7 @@
         app:layout_constraintTop_toBottomOf="@id/day_selection"
         android:layout_marginTop="5dp"
         android:textSize="20dp"
-        android:fontFamily="sans-serif"
+        android:fontFamily="@font/circular_book"
         android:textColor="@color/black"
         />
 
@@ -71,7 +71,8 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/afternoon_header"
             android:gravity="center"
-            android:textSize="16dp"/>
+            android:textSize="16dp"
+            android:fontFamily="@font/circular_book"/>
 
         <TextView
             android:id="@+id/afternoon_header"
@@ -83,7 +84,8 @@
             app:layout_constraintLeft_toRightOf="@id/morning_header"
             app:layout_constraintRight_toLeftOf="@id/evening_header"
             android:gravity="center"
-            android:textSize="16dp"/>
+            android:textSize="16dp"
+            android:fontFamily="@font/circular_book"/>
 
         <TextView
             android:id="@+id/evening_header"
@@ -95,7 +97,8 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toRightOf="@id/afternoon_header"
             android:gravity="center"
-            android:textSize="16dp"/>
+            android:textSize="16dp"
+            android:fontFamily="@font/circular_book"/>
 
         <GridView
             android:id="@+id/time_gridview"
@@ -120,6 +123,7 @@
         android:textSize="20sp"
         android:background="@drawable/profile_button_background"
         android:textAllCaps="false"
+        android:fontFamily="@font/circular_medium"
         android:layout_marginBottom="60dp"
         style="?android:attr/borderlessButtonStyle"
         app:layout_constraintBottom_toBottomOf="parent"

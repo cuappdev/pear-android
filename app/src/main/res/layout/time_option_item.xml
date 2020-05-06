@@ -15,6 +15,7 @@
         android:background="@drawable/time_option_background"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
-        android:elevation="3dp"/>
+        android:elevation="3dp"
+        android:fontFamily="@font/circular_book"/>
 
 </LinearLayout>
