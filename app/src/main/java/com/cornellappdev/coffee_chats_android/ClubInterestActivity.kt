@@ -6,7 +6,9 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.TouchDelegate
 import android.view.View
-import android.widget.*
+import android.widget.ImageView
+import android.widget.SearchView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.cornellappdev.coffee_chats_android.adapters.ClubInterestAdapter
@@ -252,8 +254,9 @@ class ClubInterestActivity : AppCompatActivity() {
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         } else if (currentPage == CurrentPage.CLUBS) {
             InternalStorage.writeObject(this, "profile", profile as Object)
-            // here fire up an intent to go to the page after onboarding
+            // onboarding done, clear all activities on top of MainActivity and launch MainActivity
             val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             startActivity(intent)
         }
     }
