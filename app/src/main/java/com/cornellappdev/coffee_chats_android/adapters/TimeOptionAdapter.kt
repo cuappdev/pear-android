@@ -1,14 +1,11 @@
-package com.cornellappdev.coffee_chats_android
+package com.cornellappdev.coffee_chats_android.adapters
 
 import android.content.Context
-import android.graphics.PorterDuff
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.constraintlayout.widget.ConstraintLayout
-import com.cornellappdev.coffee_chats_android.models.ClubOrInterest
+import com.cornellappdev.coffee_chats_android.R
 
 
 class TimeOptionAdapter(private val mContext: Context, list: Array<String>) :

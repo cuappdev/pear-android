@@ -7,8 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.android.synthetic.main.activity_scheduling.*
 import android.widget.AdapterView.OnItemClickListener
+import com.cornellappdev.coffee_chats_android.adapters.DayAdapter
+import com.cornellappdev.coffee_chats_android.adapters.TimeOptionAdapter
 import kotlinx.android.synthetic.main.activity_scheduling.back_button
-import kotlinx.android.synthetic.main.fragment_create_profile.*
 
 
 class SchedulingActivity : AppCompatActivity() {
@@ -27,9 +28,17 @@ class SchedulingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scheduling)
 
-        val timeAdapter = TimeOptionAdapter(this, times)
+        val timeAdapter =
+            TimeOptionAdapter(
+                this,
+                times
+            )
         time_gridview.adapter = timeAdapter
-        var dayAdapter = DayAdapter(this, days)
+        var dayAdapter =
+            DayAdapter(
+                this,
+                days
+            )
         day_selection.adapter = dayAdapter
 
         day_header.text = "Every Sunday"        // Sunday by default

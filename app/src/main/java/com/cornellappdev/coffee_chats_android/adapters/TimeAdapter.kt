@@ -1,13 +1,12 @@
-package com.cornellappdev.coffee_chats_android
+package com.cornellappdev.coffee_chats_android.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
+import com.cornellappdev.coffee_chats_android.R
 
 
 class TimeAdapter(private val mContext: Context,
@@ -22,7 +21,10 @@ class TimeAdapter(private val mContext: Context,
         if (convertView == null) {
             val inflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             timeView = inflater.inflate(R.layout.time_option_item, null)
-            viewHolder = ViewHolder(timeView)
+            viewHolder =
+                ViewHolder(
+                    timeView
+                )
             timeView.tag = viewHolder
         } else {
             timeView = convertView

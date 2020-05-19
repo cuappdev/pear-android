@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.cornellappdev.coffee_chats_android.adapters.ClubInterestAdapter
 import com.cornellappdev.coffee_chats_android.models.ClubOrInterest
 import com.cornellappdev.coffee_chats_android.models.InternalStorage
 import com.cornellappdev.coffee_chats_android.models.UserProfile
@@ -139,9 +140,10 @@ class ClubInterestActivity : AppCompatActivity() {
         when (currentPage) {
             CurrentPage.INTERESTS -> {
                 club_search.visibility = View.GONE
-                adapter = ClubInterestAdapter(
-                    this, interests, false
-                )
+                adapter =
+                    ClubInterestAdapter(
+                        this, interests, false
+                    )
                 interests_or_clubs.adapter = adapter
 
                 signup_header.setText(R.string.interests_header)
@@ -173,9 +175,10 @@ class ClubInterestActivity : AppCompatActivity() {
                 searchIcon.setColorFilter(
                     resources.getColor(R.color.searchHint), PorterDuff.Mode.DARKEN
                 )
-                adapter = ClubInterestAdapter(
-                    this, clubs, true
-                )
+                adapter =
+                    ClubInterestAdapter(
+                        this, clubs, true
+                    )
 
                 interests_or_clubs.adapter = adapter
                 // initialize searchview
@@ -188,7 +191,12 @@ class ClubInterestActivity : AppCompatActivity() {
                             }.toTypedArray()
                             outputArr = filtered
                         }
-                        adapter = ClubInterestAdapter(applicationContext, outputArr, true)
+                        adapter =
+                            ClubInterestAdapter(
+                                applicationContext,
+                                outputArr,
+                                true
+                            )
                         interests_or_clubs.adapter = adapter
                         for (i in 0 until adapter.count) {
                             val v = interests_or_clubs.adapter.getView(
