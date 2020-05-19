@@ -50,14 +50,18 @@ class SchedulingActivity : AppCompatActivity() {
 
         var previousDot: ImageView? = null
         day_selection.onItemClickListener = OnItemClickListener { parent, v, position, id ->
-//            val daySelectedIndex = dayAdapter.selectedPositions.indexOf(position)
-            val daySelectedView = day_selection.getChildAt(position) as ConstraintLayout
-            val daySelectedTextView = daySelectedView.getChildAt(0) as TextView
-            val daySelectedDot = daySelectedView.getChildAt(1) as ImageView
+
+            val daySelectedView = v as ConstraintLayout
+            val daySelectedDot = daySelectedView.getChildAt(1) as ImageView //day indicator (small dot)
+
             val sundaySelectedView = day_selection.getChildAt(0) as ConstraintLayout
-            val sundaySelectedDot = sundaySelectedView.getChildAt(1) as ImageView
+            val sundaySelectedDot = sundaySelectedView.getChildAt(1) as ImageView //small dot below Sunday
+
+            //hide Sunday indicator when the first day is clicked
             if (previousDot == null) sundaySelectedDot.visibility = View.INVISIBLE
+            //or hide the indicator of the last clicked day when a new day is clicked
             if (previousDot != null) previousDot!!.visibility = View.INVISIBLE
+
             daySelectedDot.visibility = View.VISIBLE
             previousDot = daySelectedDot
             day_header.text = "Every " + daysFullName[position]
@@ -76,7 +80,7 @@ class SchedulingActivity : AppCompatActivity() {
         }
 
         time_gridview.onItemClickListener = OnItemClickListener { parent, v, position, id ->
-            val timeSelectedView = time_gridview.getChildAt(position) as LinearLayout
+            val timeSelectedView = v as LinearLayout
             val timeSelectedTextView = timeSelectedView.getChildAt(0) as TextView
             val timeSelectedIndex = selectedTimes[currDay]!!.indexOf(timeSelectedTextView.text.toString())
             if (timeSelectedIndex > -1) {

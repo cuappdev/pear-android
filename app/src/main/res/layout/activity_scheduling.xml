@@ -61,7 +61,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/day_selection"
         android:layout_marginTop="5dp"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:fontFamily="@font/circular_book"
         android:textColor="@color/black"
         />
@@ -89,7 +89,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/afternoon_header"
             android:gravity="center"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:fontFamily="@font/circular_book"/>
 
         <TextView
@@ -102,7 +102,7 @@
             app:layout_constraintLeft_toRightOf="@id/morning_header"
             app:layout_constraintRight_toLeftOf="@id/evening_header"
             android:gravity="center"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:fontFamily="@font/circular_book"/>
 
         <TextView
@@ -115,7 +115,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toRightOf="@id/afternoon_header"
             android:gravity="center"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:fontFamily="@font/circular_book"/>
 
         <GridView
