@@ -60,6 +60,7 @@ class ClubInterestActivity : AppCompatActivity() {
 
         signup_next.setOnClickListener { onNextPage() }
         add_later.visibility = View.INVISIBLE
+        add_later.setOnClickListener { onNextPage() }
         back_button.setOnClickListener { onBackPage() }
         // incease the hit area of back button
         val parent =

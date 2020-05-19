@@ -16,10 +16,19 @@ class TimeAdapter(private val mContext: Context,
 
     var selectedPositions = mutableListOf<Int>()
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val inflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val timeView:View = inflater.inflate(R.layout.time_option_item, null)
-        val timeButton = timeView.findViewById<TextView>(R.id.time_option_text)
-        timeButton.text = times[position]
+        val viewHolder: ViewHolder
+        val timeView: View
+
+        if (convertView == null) {
+            val inflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            timeView = inflater.inflate(R.layout.time_option_item, null)
+            viewHolder = ViewHolder(timeView)
+            timeView.tag = viewHolder
+        } else {
+            timeView = convertView
+            viewHolder = timeView.tag as ViewHolder
+        }
+        viewHolder.timeButton.text = times[position]
         return timeView
     }
 
@@ -35,4 +44,7 @@ class TimeAdapter(private val mContext: Context,
         return times.size
     }
 
+    private class ViewHolder(view: View?) {
+        val timeButton = view?.findViewById(R.id.time_option_text) as TextView
+    }
 }

@@ -14,9 +14,6 @@ class MainActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_no_match)
 
-        // /data/user/0/com.example.coffee_chats_android/files
-//        Log.d("file directory", filesDir.toString())
-
         try {
             InternalStorage.readObject(this, "profile") as UserProfile
         } catch (e: Exception) {

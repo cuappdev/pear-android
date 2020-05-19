@@ -14,14 +14,21 @@ class DayAdapter(private val mContext: Context,
                     private val days: Array<String>
 ): BaseAdapter() {
 
-//    var selectedPositions = mutableListOf<Int>()
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val inflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val dayView:View = inflater.inflate(R.layout.time_scheduling_day_layout, null)
-        val dayTextView = dayView.findViewById<TextView>(R.id.day_button)
-        dayTextView.text = days[position]
-        val dayDot = dayView.findViewById<ImageView>(R.id.day_dot)
-        if (position == 0) dayDot.visibility = View.VISIBLE
+        val viewHolder: ViewHolder
+        val dayView: View
+
+        if (convertView == null) {
+            val inflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            dayView = inflater.inflate(R.layout.time_scheduling_day_layout, null)
+            viewHolder = ViewHolder(dayView)
+            dayView.tag = viewHolder
+        } else {
+            dayView = convertView
+            viewHolder = dayView.tag as ViewHolder
+        }
+        viewHolder.dayTextView.text = days[position]
+        if (position == 0) viewHolder.dayDot.visibility = View.VISIBLE
         return dayView
     }
 
@@ -37,4 +44,8 @@ class DayAdapter(private val mContext: Context,
         return days.size
     }
 
+    private class ViewHolder(view: View?) {
+        val dayTextView = view?.findViewById(R.id.day_button) as TextView
+        val dayDot = view?.findViewById(R.id.day_dot) as ImageView
+    }
 }
