@@ -46,8 +46,10 @@
     <Button
         android:id="@+id/no_match_availability"
         android:text="@string/no_match_availability"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
         android:background="@drawable/rounded_button"
         android:textColor="@color/white"
         android:textSize="20sp"
