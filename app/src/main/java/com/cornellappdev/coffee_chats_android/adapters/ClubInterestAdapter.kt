@@ -1,4 +1,4 @@
-package com.cornellappdev.coffee_chats_android
+package com.cornellappdev.coffee_chats_android.adapters
 
 import android.content.Context
 import android.graphics.PorterDuff
@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.Filterable
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.models.ClubOrInterest
 
 
@@ -21,24 +22,28 @@ class ClubInterestAdapter(private val mContext: Context, list: Array<ClubOrInter
         convertView: View?,
         parent: ViewGroup
     ): View {
-        var listItem = convertView
-        if (isClubView) {
-            if (listItem == null) listItem =
-                LayoutInflater.from(mContext).inflate(R.layout.club_view, parent, false)
+        val viewHolder: ViewHolder
+        var listItem: View
+        if (convertView == null) {
+            if (isClubView) {
+                listItem = LayoutInflater.from(mContext).inflate(R.layout.club_view, parent, false)
+            } else {
+                listItem = LayoutInflater.from(mContext).inflate(R.layout.interest_view, parent, false)
+            }
+            viewHolder = ViewHolder(listItem)
+            listItem.tag = viewHolder
         } else {
-            if (listItem == null) listItem =
-                LayoutInflater.from(mContext).inflate(R.layout.interest_view, parent, false)
+            listItem = convertView
+            viewHolder = listItem.tag as ViewHolder
         }
+
         val currentClubInterest = clubInterestList[position]
-        val clubOrInterestText = listItem!!.findViewById<TextView>(R.id.club_or_interest_text)
-        clubOrInterestText.setText(currentClubInterest.getText())
-        val clubOrInterestSubtext = listItem!!.findViewById<TextView>(R.id.club_or_interest_subtext)
-        clubOrInterestSubtext.setText(currentClubInterest.getSubtext())
+        viewHolder.clubOrInterestText.text = currentClubInterest.getText()
+        viewHolder.clubOrInterestSubtext.text = currentClubInterest.getSubtext()
 
         val selected = context.resources.getColor(R.color.onboardingListSelected)
         val unselected = context.resources.getColor(R.color.onboarding_fields)
-        val layout = listItem!!.findViewById<ConstraintLayout>(R.id.club_or_interest_box)
-        val drawableBox = layout.background
+        val drawableBox = viewHolder.layout!!.background
         if (currentClubInterest.isSelected()) {
             drawableBox.setColorFilter(selected, PorterDuff.Mode.MULTIPLY)
         } else drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
@@ -49,5 +54,11 @@ class ClubInterestAdapter(private val mContext: Context, list: Array<ClubOrInter
     init {
         clubInterestList = list
         isClubView = club
+    }
+
+    private class ViewHolder(view: View?) {
+        val clubOrInterestText = view?.findViewById(R.id.club_or_interest_text) as TextView
+        val clubOrInterestSubtext = view?.findViewById(R.id.club_or_interest_subtext) as TextView
+        val layout = view?.findViewById<ConstraintLayout>(R.id.club_or_interest_box)
     }
 }

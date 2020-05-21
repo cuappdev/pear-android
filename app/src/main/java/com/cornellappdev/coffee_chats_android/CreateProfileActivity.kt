@@ -60,7 +60,7 @@ class CreateProfileActivity : AppCompatActivity() {
 
         // Initializing the major AutoCompleteTextView
         val majors = arrayOf(
-             "Communication", "Cognitive Science", "Computer Science"
+            "Communication", "Cognitive Science", "Computer Science"
         )
         val majorAdapter: ArrayAdapter<String> = ArrayAdapter(
             this,

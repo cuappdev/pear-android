@@ -16,6 +16,7 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
+
     <style name="searchViewTheme" parent="Widget.AppCompat.Light.SearchView">
         <item name="android:textColorHint">@color/searchHint</item>
         <item name="android:editTextColor">@color/black</item>

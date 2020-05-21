@@ -6,9 +6,12 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.TouchDelegate
 import android.view.View
-import android.widget.*
+import android.widget.ImageView
+import android.widget.SearchView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.cornellappdev.coffee_chats_android.adapters.ClubInterestAdapter
 import com.cornellappdev.coffee_chats_android.models.ClubOrInterest
 import com.cornellappdev.coffee_chats_android.models.InternalStorage
 import com.cornellappdev.coffee_chats_android.models.UserProfile
@@ -60,6 +63,7 @@ class ClubInterestActivity : AppCompatActivity() {
 
         signup_next.setOnClickListener { onNextPage() }
         add_later.visibility = View.INVISIBLE
+        add_later.setOnClickListener { onNextPage() }
         back_button.setOnClickListener { onBackPage() }
         // incease the hit area of back button
         val parent =
@@ -138,9 +142,10 @@ class ClubInterestActivity : AppCompatActivity() {
         when (currentPage) {
             CurrentPage.INTERESTS -> {
                 club_search.visibility = View.GONE
-                adapter = ClubInterestAdapter(
-                    this, interests, false
-                )
+                adapter =
+                    ClubInterestAdapter(
+                        this, interests, false
+                    )
                 interests_or_clubs.adapter = adapter
 
                 signup_header.setText(R.string.interests_header)
@@ -172,9 +177,10 @@ class ClubInterestActivity : AppCompatActivity() {
                 searchIcon.setColorFilter(
                     resources.getColor(R.color.searchHint), PorterDuff.Mode.DARKEN
                 )
-                adapter = ClubInterestAdapter(
-                    this, clubs, true
-                )
+                adapter =
+                    ClubInterestAdapter(
+                        this, clubs, true
+                    )
 
                 interests_or_clubs.adapter = adapter
                 // initialize searchview
@@ -187,7 +193,12 @@ class ClubInterestActivity : AppCompatActivity() {
                             }.toTypedArray()
                             outputArr = filtered
                         }
-                        adapter = ClubInterestAdapter(applicationContext, outputArr, true)
+                        adapter =
+                            ClubInterestAdapter(
+                                applicationContext,
+                                outputArr,
+                                true
+                            )
                         interests_or_clubs.adapter = adapter
                         for (i in 0 until adapter.count) {
                             val v = interests_or_clubs.adapter.getView(
@@ -243,7 +254,10 @@ class ClubInterestActivity : AppCompatActivity() {
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         } else if (currentPage == CurrentPage.CLUBS) {
             InternalStorage.writeObject(this, "profile", profile as Object)
-            // here fire up an intent to go to the page after onboarding
+            // onboarding done, clear all activities on top of MainActivity and launch MainActivity
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            startActivity(intent)
         }
     }
 
