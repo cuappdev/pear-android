@@ -1,5 +1,6 @@
 package com.cornellappdev.coffee_chats_android
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.*
@@ -47,6 +48,11 @@ class SchedulingActivity : AppCompatActivity() {
         }
 
         back_button.setOnClickListener { finish() }
+
+        scheduling_finish.setOnClickListener {
+            val intent = Intent(this, SchedulingPlaceActivity::class.java)
+            startActivity(intent)
+        }
 
         var previousDot: ImageView? = null
         day_selection.onItemClickListener = OnItemClickListener { parent, v, position, id ->
