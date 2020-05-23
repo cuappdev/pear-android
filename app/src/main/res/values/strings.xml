@@ -2,8 +2,9 @@
     <string name="app_name">coffee-chats-android</string>
 
     <!--CREATE PROFILE-->
+    <string name="welcome_header">Welcome to Pear</string>
     <string name="interests_header">What do you love?</string>
-    <string name="almost_there">Almost there!</string>
+    <string name="almost_there">Almost there</string>
     <string name="clubs_header">What are you a part of?</string>
     <string name="get_started">Ready for Pear</string>
     <string name="go_back">Go back</string>
@@ -11,4 +12,36 @@
     <string name="demographics_header_no_name">"Hi!\nLet's get to know you better."</string>
     <string name="scheduling_place_header">Where do you prefer?</string>
     <string name="scheduling_place_subtitle">pick three</string>
+    <string name="add_later_button">I\'ll add later</string>
+
+    <!--SCHEDULING-->
+    <string name="scheduling_free">When are you free?</string>
+    <string name="scheduling_finish">Next</string>
+    <string name="sat_sun">S</string>
+    <string name="mon">M</string>
+    <string name="tues">T</string>
+    <string name="wed">W</string>
+    <string name="thurs">Th</string>
+    <string name="fri">F</string>
+    <string name="morning">Morning</string>
+    <string name="afternoon">Afternoon</string>
+    <string name="evening">Evening</string>
+
+    <!--MATCH PAGE-->
+    <string name="match_header">Meet your Pear</string>
+    <string name="match_loves">You both love...</string>
+    <string name="match_shared_clubs">You\'re both part of...</string>
+    <string name="match_enjoys">%1$s also enjoys...</string>
+    <string name="match_clubs">%1$s is also part of...</string>
+    <string name="match_reach_out">Reach Out!</string>
+
+    <!--NO MATCH PAGE-->
+    <string name="no_match_header">Meet your new Pear next Sunday</string>
+    <string name="no_match_subheader">
+        In the meantime, tell me when you\'re
+        usually free to make meeting up easier!
+    </string>
+    <string name="no_match_availability">Enter Availability</string>
+
+
 </resources>

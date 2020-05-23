@@ -1,9 +1,5 @@
 package com.cornellappdev.coffee_chats_android
 
-//import android.support.v7.app.AppCompatActivity
-
-//import androidx.test.orchestrator.junit.BundleJUnitUtils.getResult
-
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -29,10 +25,6 @@ class SignInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
-
-        // FOR TESTING ONLY
-        val testingIntent = Intent(this, SchedulingPlaceActivity::class.java) // added to bypass sign in
-        startActivity(testingIntent)
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -63,6 +55,7 @@ class SignInActivity : AppCompatActivity() {
         val account = GoogleSignIn.getLastSignedInAccount(this)
     }
     private fun signIn() {
+        // The code below is for testing. Use it instead if you can't sign in
 //        val personName: String? = "Preston"
 //        val personEmail: String? = "pwr36@cornell.edu"
 //        if (personName != null && personEmail != null) {
@@ -94,7 +87,7 @@ class SignInActivity : AppCompatActivity() {
                 completedTask.getResult(ApiException::class.java)
             val intent = Intent(this, CreateProfileActivity::class.java)
             if (account != null) {
-                val personName: String? = account.displayName
+                val personName: String? = account.givenName
                 val personEmail: String? = account.email
                 if (personName != null && personEmail != null) {
                     val index = personEmail.indexOf('@')
@@ -111,7 +104,7 @@ class SignInActivity : AppCompatActivity() {
             }
 
         } catch (e: ApiException) { // The ApiException status code indicates the detailed failure reason.
-// Please refer to the GoogleSignInStatusCodes class reference for more information.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w("account error", "signInResult:failed code=" + e.getStatusCode());
             Toast.makeText(applicationContext, "Sign-in failed", Toast.LENGTH_LONG).show();
         }
