@@ -255,7 +255,7 @@ class ClubInterestActivity : AppCompatActivity() {
         } else if (currentPage == CurrentPage.CLUBS) {
             InternalStorage.writeObject(this, "profile", profile as Object)
             // onboarding done, clear all activities on top of MainActivity and launch MainActivity
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, SchedulingActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             startActivity(intent)
         }

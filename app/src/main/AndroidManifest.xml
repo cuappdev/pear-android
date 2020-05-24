@@ -9,15 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
-        <activity android:name=".SchedulingPlaceActivity"></activity>
         <activity android:name=".CreateProfileActivity" android:theme="@style/noAnimTheme"></activity>
         <activity android:name=".SignInActivity" android:theme="@style/noAnimTheme"></activity>
         <activity android:name=".ClubInterestActivity" android:theme="@style/noAnimTheme"></activity>
-        <activity android:name=".SchedulingActivity" android:theme="@style/noAnimTheme"></activity>
-        <activity android:name=".MainActivity" android:theme="@style/noAnimTheme">
+        <activity android:name=".SchedulingActivity" android:theme="@style/noAnimTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

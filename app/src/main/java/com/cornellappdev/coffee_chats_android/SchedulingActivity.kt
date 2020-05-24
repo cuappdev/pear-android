@@ -1,120 +1,100 @@
 package com.cornellappdev.coffee_chats_android
 
+import android.app.PendingIntent.getActivity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
+import com.cornellappdev.coffee_chats_android.models.InternalStorage
+import com.cornellappdev.coffee_chats_android.models.UserProfile
 import kotlinx.android.synthetic.main.activity_scheduling.*
-import android.widget.AdapterView.OnItemClickListener
-import com.cornellappdev.coffee_chats_android.adapters.DayAdapter
-import com.cornellappdev.coffee_chats_android.adapters.TimeOptionAdapter
-import kotlinx.android.synthetic.main.activity_scheduling.back_button
 
 
-class SchedulingActivity : AppCompatActivity() {
-    var currDay: String = "Sunday"
-    lateinit var currDayTextView: TextView
-    private val days = arrayOf("Su", "M", "Tu", "W", "Th", "F", "Sa")
-    private val daysFullName = arrayOf("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
-        "Friday", "Saturday")
-    private val times = arrayOf("9:00", "1:00", "5:00", "9:30", "1:30", "5:30", "10:00", "2:00",
-    "6:00", "10:30", "2:30", "6:30", "11:00", "3:00", "7:00", "11:30", "3:30", "7:30", "12:00",
-    "4:00", "8:00", "12:30", "4:30", "8:30")
-    var selectedTimes  = HashMap<String, MutableList<String>>()
-    var selectedDays = mutableSetOf<String>()
-
+class SchedulingActivity:
+    AppCompatActivity(),
+    SchedulingTimeFragment.OnFilledOutListener,
+    SchedulingPlaceFragment.OnFilledOutListener {
+    var nextButton: Button? = null
+    var backButton: ImageButton? = null
+    var page = 0        // 0: no match; 1: time scheduling; 2: place scheduling
+    val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scheduling)
 
-        val timeAdapter =
-            TimeOptionAdapter(
-                this,
-                times
-            )
-        time_gridview.adapter = timeAdapter
-        var dayAdapter =
-            DayAdapter(
-                this,
-                days
-            )
-        day_selection.adapter = dayAdapter
-
-        day_header.text = "Every Sunday"        // Sunday by default
-        for (day in daysFullName) {
-            selectedTimes[day] = mutableListOf<String>()
-        }
-
-        back_button.setOnClickListener { finish() }
-
-        scheduling_finish.setOnClickListener {
-            val intent = Intent(this, SchedulingPlaceActivity::class.java)
+        try {
+            InternalStorage.readObject(this, "profile") as UserProfile
+        } catch (e: Exception) {
+            // no profile, meaning this app is used for the first time
+            val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
+            overridePendingTransition(0, 0)
         }
 
-        var previousDot: ImageView? = null
-        day_selection.onItemClickListener = OnItemClickListener { parent, v, position, id ->
+        // add fragment to body_fragment
+        ft.add(body_fragment.id, NoMatchFragment())
+        ft.commit()
 
-            val daySelectedView = v as ConstraintLayout
-            val daySelectedDot = daySelectedView.getChildAt(1) as ImageView //day indicator (small dot)
+        back_button.setOnClickListener { onBackPage() }
+        back_button.visibility = View.GONE
 
-            val sundaySelectedView = day_selection.getChildAt(0) as ConstraintLayout
-            val sundaySelectedDot = sundaySelectedView.getChildAt(1) as ImageView //small dot below Sunday
+        scheduling_finish.setOnClickListener {onNextPage()}
 
-            //hide Sunday indicator when the first day is clicked
-            if (previousDot == null) sundaySelectedDot.visibility = View.INVISIBLE
-            //or hide the indicator of the last clicked day when a new day is clicked
-            if (previousDot != null) previousDot!!.visibility = View.INVISIBLE
+        nextButton = findViewById(R.id.scheduling_finish)
+        backButton = findViewById(R.id.back_button)
+    }
 
-            daySelectedDot.visibility = View.VISIBLE
-            previousDot = daySelectedDot
-            day_header.text = "Every " + daysFullName[position]
-            currDay = daysFullName[position]
-            // update the time gridview to reflect selected time slots
-            for (i in times.indices) {
-                val timeView = time_gridview.getChildAt(i) as LinearLayout
-                val timeTextView = timeView.getChildAt(0) as TextView
-
-                if (selectedTimes[currDay]!!.contains(times[i])) {
-                    timeTextView.background = getDrawable(R.drawable.selected_rounded_time_option)
-                } else {
-                    timeTextView.background = getDrawable(R.drawable.unselected_rounded_time_option)
-                }
-            }
+    override fun onAttachFragment(fragment: Fragment) {
+        if (fragment is SchedulingTimeFragment) {
+            fragment.setOnFilledOutListener(this)
+        } else if (fragment is SchedulingPlaceFragment) {
+            fragment.setOnFilledOutListener(this)
         }
+    }
 
-        time_gridview.onItemClickListener = OnItemClickListener { parent, v, position, id ->
-            val timeSelectedView = v as LinearLayout
-            val timeSelectedTextView = timeSelectedView.getChildAt(0) as TextView
-            val timeSelectedIndex = selectedTimes[currDay]!!.indexOf(timeSelectedTextView.text.toString())
-            if (timeSelectedIndex > -1) {
-                selectedTimes[currDay]!!.remove(timeSelectedTextView.text.toString())
-                timeSelectedTextView.background = getDrawable(R.drawable.unselected_rounded_time_option)
-                // change the day button to white if no time is selected for current day
-                if (selectedTimes[currDay]!!.size == 0) {
-                    selectedDays.remove(currDay)
-                    val currDayIndex = daysFullName.indexOf(currDay)
-                    val daySelectedView = day_selection.getChildAt(currDayIndex) as ConstraintLayout
-                    currDayTextView = daySelectedView.getChildAt(0) as TextView
-                    currDayTextView.background = getDrawable(R.drawable.unselected_scheduling_circle_button)
-                }
-                if (selectedDays.isEmpty()) scheduling_finish.isEnabled = false
-            } else {
-                selectedTimes[currDay]!!.add(timeSelectedTextView.text.toString())
-                selectedDays.add(currDay)
-                timeSelectedTextView.background = getDrawable(R.drawable.selected_rounded_time_option)
-                // change day button to highlighted
-                val currDayIndex = daysFullName.indexOf(currDay)
-                val daySelectedView = day_selection.getChildAt(currDayIndex) as ConstraintLayout
-                currDayTextView = daySelectedView.getChildAt(0) as TextView
-                currDayTextView.background = getDrawable(R.drawable.selected_scheduling_circle_button)
-                // enable finish button
-                scheduling_finish.isEnabled = true
-            }
+    override fun onFilledOut() {
+        nextButton!!.isEnabled = true
+    }
+
+    override fun onSelectionEmpty() {
+        nextButton!!.isEnabled = false
+    }
+
+    private fun onBackPage() {
+        page--
+        supportFragmentManager.popBackStack()
+        if (page == 0) {
+            backButton!!.visibility = View.GONE
+            scheduling_header.text = getString(R.string.no_match_header)
+            nextButton!!.text = getString(R.string.no_match_availability)
+            nextButton!!.isEnabled = true
+            nextButton!!.setPadding(100,0,100,0)
+        } else if (page == 1) {
+            scheduling_header.text = getString(R.string.scheduling_time_header)
+            scheduling_finish.isEnabled = false
         }
+    }
 
-
+    private fun onNextPage() {
+        if (page == 2) return
+        back_button.visibility = View.VISIBLE
+        if (page < 2) page++
+        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+        nextButton!!.text = getString(R.string.scheduling_finish)
+        nextButton!!.isEnabled = false
+        nextButton!!.setPadding(180, 0, 180, 0)
+        if (page == 1) {
+            scheduling_header.text = getString(R.string.scheduling_time_header)
+            ft.replace(body_fragment.id, SchedulingTimeFragment())
+        } else {
+            scheduling_header.text = getString(R.string.scheduling_place_header)
+            ft.replace(body_fragment.id, SchedulingPlaceFragment())
+        }
+        ft.addToBackStack("ft")
+        ft.commit()
     }
 }
