@@ -18,8 +18,4 @@ class NoMatchFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_no_match, parent, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-    }
-
 }

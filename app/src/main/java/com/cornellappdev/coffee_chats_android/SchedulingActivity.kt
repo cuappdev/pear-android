@@ -1,6 +1,5 @@
 package com.cornellappdev.coffee_chats_android
 
-import android.app.PendingIntent.getActivity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -27,6 +26,7 @@ class SchedulingActivity:
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scheduling)
 
+        // Determine if the app should show scheduling page or sign-in
         try {
             profile = InternalStorage.readObject(this, "profile") as UserProfile
         } catch (e: Exception) {
@@ -77,6 +77,7 @@ class SchedulingActivity:
         } else if (page == 1) {
             scheduling_header.text = getString(R.string.scheduling_time_header)
             scheduling_finish.isEnabled = false
+            profile = InternalStorage.readObject(this, "profile") as UserProfile
             for ((day, selectedTimes) in profile.availableTimes) {
                 if (selectedTimes.isNotEmpty()) nextButton.isEnabled = true
             }
@@ -94,12 +95,14 @@ class SchedulingActivity:
         if (page == 1) {
             scheduling_header.text = getString(R.string.scheduling_time_header)
             ft.replace(body_fragment.id, SchedulingTimeFragment())
+            profile = InternalStorage.readObject(this, "profile") as UserProfile
             for ((day, selectedTimes) in profile.availableTimes) {
                 if (selectedTimes.isNotEmpty()) nextButton.isEnabled = true
             }
         } else {
             scheduling_header.text = getString(R.string.scheduling_place_header)
             ft.replace(body_fragment.id, SchedulingPlaceFragment())
+            profile = InternalStorage.readObject(this, "profile") as UserProfile
             if (profile.preferredLocations.isNotEmpty()) nextButton.isEnabled = true
         }
         ft.addToBackStack("ft")

@@ -251,7 +251,7 @@ class ClubInterestActivity : AppCompatActivity() {
             startActivity(intent)
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         } else if (currentPage == CurrentPage.CLUBS) {
-            // onboarding done, clear all activities on top of MainActivity and launch MainActivity
+            // onboarding done, clear all activities on top of SchedulingActivity and launch SchedulingActivity
             val intent = Intent(this, SchedulingActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             startActivity(intent)

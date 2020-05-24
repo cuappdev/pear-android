@@ -1,7 +1,6 @@
 package com.cornellappdev.coffee_chats_android
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,6 @@ import com.cornellappdev.coffee_chats_android.adapters.DayAdapter
 import com.cornellappdev.coffee_chats_android.adapters.TimeOptionAdapter
 import com.cornellappdev.coffee_chats_android.models.InternalStorage
 import com.cornellappdev.coffee_chats_android.models.UserProfile
-import kotlinx.android.synthetic.main.activity_scheduling.*
 import kotlinx.android.synthetic.main.fragment_scheduling_time.*
 
 
