@@ -1,6 +1,7 @@
 package com.cornellappdev.coffee_chats_android
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,12 +14,14 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.cornellappdev.coffee_chats_android.adapters.DayAdapter
 import com.cornellappdev.coffee_chats_android.adapters.TimeOptionAdapter
+import com.cornellappdev.coffee_chats_android.models.InternalStorage
+import com.cornellappdev.coffee_chats_android.models.UserProfile
 import kotlinx.android.synthetic.main.activity_scheduling.*
 import kotlinx.android.synthetic.main.fragment_scheduling_time.*
 
 
 class SchedulingTimeFragment : Fragment() {
-    var currDay: String = "Sunday"
+    var currDay: String = "Su"
     lateinit var currDayTextView: TextView
     private val days = arrayOf("Su", "M", "Tu", "W", "Th", "F", "Sa")
     private val daysFullName = arrayOf("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
@@ -26,7 +29,6 @@ class SchedulingTimeFragment : Fragment() {
     private val times = arrayOf("9:00", "1:00", "5:00", "9:30", "1:30", "5:30", "10:00", "2:00",
     "6:00", "10:30", "2:30", "6:30", "11:00", "3:00", "7:00", "11:30", "3:30", "7:30", "12:00",
     "4:00", "8:00", "12:30", "4:30", "8:30")
-    var selectedTimes  = HashMap<String, MutableList<String>>()
     var selectedDays = mutableSetOf<String>()
 
     override fun onCreateView(
@@ -39,23 +41,31 @@ class SchedulingTimeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        var profile = InternalStorage.readObject(context!!, "profile") as UserProfile
+        // initialize [profile.availableTimes] HashMap and selectedDays based on existing profile
+        for (day in days) {
+            if (profile.availableTimes[day] == null) {
+                profile.availableTimes[day] = mutableListOf()
+            }
+            if (profile.availableTimes[day]!!.size != 0) selectedDays.add(day)
+        }
+        InternalStorage.writeObject(context!!, "profile", profile as Object)
+
         val timeAdapter =
             TimeOptionAdapter(
                 context!!,
-                times
+                times,
+                profile.availableTimes["Su"]!!
             )
         time_gridview.adapter = timeAdapter
         var dayAdapter =
             DayAdapter(
                 context!!,
-                days
+                days,
+                selectedDays!!
             )
         day_selection.adapter = dayAdapter
-
         day_header.text = "Every Sunday"        // Sunday by default
-        for (day in daysFullName) {
-            selectedTimes[day] = mutableListOf<String>()
-        }
 
         var previousDot: ImageView? = null
         day_selection.onItemClickListener = OnItemClickListener { parent, v, position, id ->
@@ -74,13 +84,13 @@ class SchedulingTimeFragment : Fragment() {
             daySelectedDot.visibility = View.VISIBLE
             previousDot = daySelectedDot
             day_header.text = "Every " + daysFullName[position]
-            currDay = daysFullName[position]
+            currDay = days[position]
             // update the time gridview to reflect selected time slots
             for (i in times.indices) {
                 val timeView = time_gridview.getChildAt(i) as LinearLayout
                 val timeTextView = timeView.getChildAt(0) as TextView
 
-                if (selectedTimes[currDay]!!.contains(times[i])) {
+                if (profile.availableTimes[currDay]!!.contains(times[i])) {
                     timeTextView.background = getDrawable(context!!, R.drawable.selected_rounded_time_option)
                 } else {
                     timeTextView.background = getDrawable(context!!, R.drawable.unselected_rounded_time_option)
@@ -91,25 +101,27 @@ class SchedulingTimeFragment : Fragment() {
         time_gridview.onItemClickListener = OnItemClickListener { parent, v, position, id ->
             val timeSelectedView = v as LinearLayout
             val timeSelectedTextView = timeSelectedView.getChildAt(0) as TextView
-            val timeSelectedIndex = selectedTimes[currDay]!!.indexOf(timeSelectedTextView.text.toString())
+            val timeSelectedIndex = profile.availableTimes[currDay]!!.indexOf(timeSelectedTextView.text.toString())
             if (timeSelectedIndex > -1) {
-                selectedTimes[currDay]!!.remove(timeSelectedTextView.text.toString())
+                profile.availableTimes[currDay]!!.remove(timeSelectedTextView.text.toString())
+                InternalStorage.writeObject(context!!, "profile", profile as Object)
                 timeSelectedTextView.background = getDrawable(context!!, R.drawable.unselected_rounded_time_option)
                 // change the day button to white if no time is selected for current day
-                if (selectedTimes[currDay]!!.size == 0) {
+                if (profile.availableTimes[currDay]!!.size == 0) {
                     selectedDays.remove(currDay)
-                    val currDayIndex = daysFullName.indexOf(currDay)
+                    val currDayIndex = days.indexOf(currDay)
                     val daySelectedView = day_selection.getChildAt(currDayIndex) as ConstraintLayout
                     currDayTextView = daySelectedView.getChildAt(0) as TextView
                     currDayTextView.background = getDrawable(context!!, R.drawable.unselected_scheduling_circle_button)
                 }
                 if (selectedDays.isEmpty()) callback!!.onSelectionEmpty()
             } else {
-                selectedTimes[currDay]!!.add(timeSelectedTextView.text.toString())
+                profile.availableTimes[currDay]!!.add(timeSelectedTextView.text.toString())
+                InternalStorage.writeObject(context!!, "profile", profile as Object)
                 selectedDays.add(currDay)
                 timeSelectedTextView.background = getDrawable(context!!, R.drawable.selected_rounded_time_option)
                 // change day button to highlighted
-                val currDayIndex = daysFullName.indexOf(currDay)
+                val currDayIndex = days.indexOf(currDay)
                 val daySelectedView = day_selection.getChildAt(currDayIndex) as ConstraintLayout
                 currDayTextView = daySelectedView.getChildAt(0) as TextView
                 currDayTextView.background = getDrawable(context!!, R.drawable.selected_scheduling_circle_button)

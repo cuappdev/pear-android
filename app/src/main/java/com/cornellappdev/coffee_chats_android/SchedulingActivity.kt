@@ -18,16 +18,17 @@ class SchedulingActivity:
     AppCompatActivity(),
     SchedulingTimeFragment.OnFilledOutListener,
     SchedulingPlaceFragment.OnFilledOutListener {
-    var nextButton: Button? = null
-    var backButton: ImageButton? = null
+    lateinit var nextButton: Button
+    lateinit var backButton: ImageButton
+    lateinit var profile: UserProfile
     var page = 0        // 0: no match; 1: time scheduling; 2: place scheduling
-    val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+    private val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scheduling)
 
         try {
-            InternalStorage.readObject(this, "profile") as UserProfile
+            profile = InternalStorage.readObject(this, "profile") as UserProfile
         } catch (e: Exception) {
             // no profile, meaning this app is used for the first time
             val intent = Intent(this, SignInActivity::class.java)
@@ -57,22 +58,22 @@ class SchedulingActivity:
     }
 
     override fun onFilledOut() {
-        nextButton!!.isEnabled = true
+        nextButton.isEnabled = true
     }
 
     override fun onSelectionEmpty() {
-        nextButton!!.isEnabled = false
+        nextButton.isEnabled = false
     }
 
     private fun onBackPage() {
         page--
         supportFragmentManager.popBackStack()
         if (page == 0) {
-            backButton!!.visibility = View.GONE
+            backButton.visibility = View.GONE
             scheduling_header.text = getString(R.string.no_match_header)
-            nextButton!!.text = getString(R.string.no_match_availability)
-            nextButton!!.isEnabled = true
-            nextButton!!.setPadding(100,0,100,0)
+            nextButton.text = getString(R.string.no_match_availability)
+            nextButton.isEnabled = true
+            nextButton.setPadding(100,0,100,0)
         } else if (page == 1) {
             scheduling_header.text = getString(R.string.scheduling_time_header)
             scheduling_finish.isEnabled = false
@@ -84,9 +85,9 @@ class SchedulingActivity:
         back_button.visibility = View.VISIBLE
         if (page < 2) page++
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-        nextButton!!.text = getString(R.string.scheduling_finish)
-        nextButton!!.isEnabled = false
-        nextButton!!.setPadding(180, 0, 180, 0)
+        nextButton.text = getString(R.string.scheduling_finish)
+        nextButton.isEnabled = false
+        nextButton.setPadding(180, 0, 180, 0)
         if (page == 1) {
             scheduling_header.text = getString(R.string.scheduling_time_header)
             ft.replace(body_fragment.id, SchedulingTimeFragment())

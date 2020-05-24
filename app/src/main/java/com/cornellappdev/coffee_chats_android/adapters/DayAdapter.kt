@@ -7,11 +7,13 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import com.cornellappdev.coffee_chats_android.R
 
 
 class DayAdapter(private val mContext: Context,
-                    private val days: Array<String>
+                    private val days: Array<String>,
+                 private val selected: MutableSet<String>
 ): BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -29,6 +31,17 @@ class DayAdapter(private val mContext: Context,
         }
         viewHolder.dayTextView.text = days[position]
         if (position == 0) viewHolder.dayDot.visibility = View.VISIBLE
+        if (selected.contains(days[position])) {
+            viewHolder.dayTextView.background = AppCompatResources.getDrawable(
+                mContext,
+                R.drawable.selected_scheduling_circle_button
+            )
+        } else {
+            viewHolder.dayTextView.background = AppCompatResources.getDrawable(
+                mContext,
+                R.drawable.unselected_scheduling_circle_button
+            )
+        }
         return dayView
     }
 
