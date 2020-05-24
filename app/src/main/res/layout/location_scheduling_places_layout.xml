@@ -4,7 +4,8 @@
     android:background="@drawable/location_scheduling_places_unselected"
     android:layout_width="150dp"
     android:layout_height="43dp"
-    android:layout_margin="10dp">
+    android:layout_margin="10dp"
+    android:id="@+id/place_scheduling_view">
     <TextView
         android:id="@+id/placeTextView"
         android:layout_width="wrap_content"

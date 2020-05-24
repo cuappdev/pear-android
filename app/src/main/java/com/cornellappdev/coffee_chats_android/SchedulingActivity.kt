@@ -77,6 +77,9 @@ class SchedulingActivity:
         } else if (page == 1) {
             scheduling_header.text = getString(R.string.scheduling_time_header)
             scheduling_finish.isEnabled = false
+            for ((day, selectedTimes) in profile.availableTimes) {
+                if (selectedTimes.isNotEmpty()) nextButton.isEnabled = true
+            }
         }
     }
 
@@ -91,9 +94,13 @@ class SchedulingActivity:
         if (page == 1) {
             scheduling_header.text = getString(R.string.scheduling_time_header)
             ft.replace(body_fragment.id, SchedulingTimeFragment())
+            for ((day, selectedTimes) in profile.availableTimes) {
+                if (selectedTimes.isNotEmpty()) nextButton.isEnabled = true
+            }
         } else {
             scheduling_header.text = getString(R.string.scheduling_place_header)
             ft.replace(body_fragment.id, SchedulingPlaceFragment())
+            if (profile.preferredLocations.isNotEmpty()) nextButton.isEnabled = true
         }
         ft.addToBackStack("ft")
         ft.commit()

@@ -9,6 +9,8 @@ import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.cornellappdev.coffee_chats_android.adapters.PlacesAdapter
+import com.cornellappdev.coffee_chats_android.models.InternalStorage
+import com.cornellappdev.coffee_chats_android.models.UserProfile
 import kotlinx.android.synthetic.main.fragment_scheduling_place.*
 
 
@@ -27,44 +29,47 @@ class SchedulingPlaceFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        var profile = InternalStorage.readObject(context!!, "profile") as UserProfile
         var campusAdapter =
             PlacesAdapter(
                 context!!,
-                campusPlaces
+                campusPlaces,
+                profile.preferredLocations
             )
         campusGridView.adapter = campusAdapter
         var collegetownAdapter =
             PlacesAdapter(
                 context!!,
-                collegetownPlaces
+                collegetownPlaces,
+                profile.preferredLocations
             )
         collegetownGridView.adapter = collegetownAdapter
 
         campusGridView.onItemClickListener = OnItemClickListener { parent, v, position, id ->
-            var campusSelectedIndex = campusAdapter.selectedPositions.indexOf(position)
             var campusSelectedPlace = campusGridView.getChildAt(position) as ConstraintLayout
-            if (campusSelectedIndex > -1) {
-                campusAdapter.selectedPositions.remove(position)
+            if (profile.preferredLocations.contains(campusPlaces[position])) {
+                profile.preferredLocations.remove(campusPlaces[position])
+                InternalStorage.writeObject(context!!, "profile", profile as Object)
                 campusSelectedPlace.background = getDrawable(context!!, R.drawable.location_scheduling_places_unselected)
-                if (collegetownAdapter.selectedPositions.isEmpty() && campusAdapter.selectedPositions.isEmpty())
-                    callback!!.onSelectionEmpty()
+                if (profile.preferredLocations.isEmpty()) callback!!.onSelectionEmpty()
             } else {
-                campusAdapter.selectedPositions.add(position)
+                profile.preferredLocations.add(campusPlaces[position])
+                InternalStorage.writeObject(context!!, "profile", profile as Object)
                 campusSelectedPlace.background = getDrawable(context!!, R.drawable.location_scheduling_places_selected)
                 callback!!.onFilledOut()
             }
         }
 
         collegetownGridView.onItemClickListener = OnItemClickListener { parent, v, position, id ->
-            var ctownSelectedIndex = collegetownAdapter.selectedPositions.indexOf(position)
             var ctownSelectedPlace = collegetownGridView.getChildAt(position) as ConstraintLayout
-            if (ctownSelectedIndex > -1) {
-                collegetownAdapter.selectedPositions.remove(position)
+            if (profile.preferredLocations.contains(collegetownPlaces[position])) {
+                profile.preferredLocations.remove(collegetownPlaces[position])
+                InternalStorage.writeObject(context!!, "profile", profile as Object)
                 ctownSelectedPlace.background = getDrawable(context!!, R.drawable.location_scheduling_places_unselected)
-                if (collegetownAdapter.selectedPositions.isEmpty() && campusAdapter.selectedPositions.isEmpty())
-                    callback!!.onSelectionEmpty()
+                if (profile.preferredLocations.isEmpty()) callback!!.onSelectionEmpty()
             } else {
-                collegetownAdapter.selectedPositions.add(position)
+                profile.preferredLocations.add(collegetownPlaces[position])
+                InternalStorage.writeObject(context!!, "profile", profile as Object)
                 ctownSelectedPlace.background = getDrawable(context!!, R.drawable.location_scheduling_places_selected)
                 callback!!.onFilledOut()
             }
