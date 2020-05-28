@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="Campus"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:textColor="@color/black"
         android:fontFamily="@font/circular_medium"
         />
@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="Collegetown"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:textColor="@color/black"
         android:fontFamily="@font/circular_medium"
         />

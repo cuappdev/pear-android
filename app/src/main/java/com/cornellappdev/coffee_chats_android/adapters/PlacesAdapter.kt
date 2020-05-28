@@ -17,18 +17,25 @@ class PlacesAdapter(private val mContext: Context,
 ): BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val inflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val placeView:View = inflater.inflate(R.layout.location_scheduling_places_layout, null)
-        val placeTextView = placeView.findViewById<TextView>(R.id.placeTextView)
-        val placeSchedulingView = placeView.findViewById<ConstraintLayout>(R.id.place_scheduling_view)
-        placeTextView.text = places[position]
+        val viewHolder: ViewHolder
+        val placeView:View
+        if (convertView == null) {
+            placeView = LayoutInflater.from(mContext).inflate(R.layout.location_scheduling_places_layout, parent, false)
+            viewHolder = ViewHolder(placeView)
+            placeView.tag = viewHolder
+        } else {
+            placeView = convertView
+            viewHolder = placeView.tag as ViewHolder
+        }
+
+        viewHolder.placeTextView!!.text = places[position]
         if (selected.contains(places[position])) {
-            placeSchedulingView.background = AppCompatResources.getDrawable(
+            viewHolder.placeSchedulingView!!.background = AppCompatResources.getDrawable(
                 mContext,
                 R.drawable.location_scheduling_places_selected
             )
         } else {
-            placeSchedulingView.background = AppCompatResources.getDrawable(
+            viewHolder.placeSchedulingView!!.background = AppCompatResources.getDrawable(
                 mContext,
                 R.drawable.location_scheduling_places_unselected
             )
@@ -46,6 +53,11 @@ class PlacesAdapter(private val mContext: Context,
 
     override fun getCount(): Int {
         return places.size
+    }
+
+    private class ViewHolder(view: View?) {
+        val placeTextView = view?.findViewById<TextView>(R.id.placeTextView)
+        val placeSchedulingView = view?.findViewById<ConstraintLayout>(R.id.place_scheduling_view)
     }
 
 }
