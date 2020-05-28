@@ -245,17 +245,14 @@ class ClubInterestActivity : AppCompatActivity() {
 
     fun onNextPage() {
         InternalStorage.writeObject(this, "profile", profile as Object)
-
         if (currentPage == CurrentPage.INTERESTS) {
-            InternalStorage.writeObject(this, "profile", profile as Object)
             val intent = Intent(this, ClubInterestActivity::class.java)
             intent.putExtra("page", 2)
             startActivity(intent)
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         } else if (currentPage == CurrentPage.CLUBS) {
-            InternalStorage.writeObject(this, "profile", profile as Object)
-            // onboarding done, clear all activities on top of MainActivity and launch MainActivity
-            val intent = Intent(this, MainActivity::class.java)
+            // onboarding done, clear all activities on top of SchedulingActivity and launch SchedulingActivity
+            val intent = Intent(this, SchedulingActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             startActivity(intent)
         }
@@ -263,12 +260,9 @@ class ClubInterestActivity : AppCompatActivity() {
 
     fun onBackPage() {
         InternalStorage.writeObject(this, "profile", profile as Object)
-
         if (currentPage == CurrentPage.INTERESTS) {
-            InternalStorage.writeObject(this, "profile", profile as Object)
             finish()
         } else if (currentPage == CurrentPage.CLUBS) {
-            InternalStorage.writeObject(this, "profile", profile as Object)
             currentPage = CurrentPage.INTERESTS
             finish()
         }

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <GridView
+        android:id="@+id/day_selection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:numColumns="7"
+        android:descendantFocusability="blocksDescendants"
+        >
+
+    </GridView>
+
+    <TextView
+        android:id="@+id/day_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/day_selection"
+        android:layout_marginTop="5dp"
+        android:textSize="20sp"
+        android:fontFamily="@font/circular_book"
+        android:textColor="@color/black"
+        />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/scheduling_times"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/day_header"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:foregroundGravity="top">
+
+        <TextView
+            android:id="@+id/morning_header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/morning"
+            android:textColor="@color/faded_text"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/afternoon_header"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:fontFamily="@font/circular_book"/>
+
+        <TextView
+            android:id="@+id/afternoon_header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/afternoon"
+            android:textColor="@color/faded_text"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/morning_header"
+            app:layout_constraintRight_toLeftOf="@id/evening_header"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:fontFamily="@font/circular_book"/>
+
+        <TextView
+            android:id="@+id/evening_header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/evening"
+            android:textColor="@color/faded_text"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/afternoon_header"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:fontFamily="@font/circular_book"/>
+
+        <GridView
+            android:id="@+id/time_gridview"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/morning_header"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:numColumns="3"
+            android:stretchMode="columnWidth"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,7 +13,7 @@
     <string name="add_later_button">I\'ll add later</string>
 
     <!--SCHEDULING-->
-    <string name="scheduling_free">When are you free?</string>
+    <string name="scheduling_time_header">When are you free?</string>
     <string name="scheduling_finish">Next</string>
     <string name="sat_sun">S</string>
     <string name="mon">M</string>
@@ -24,6 +24,8 @@
     <string name="morning">Morning</string>
     <string name="afternoon">Afternoon</string>
     <string name="evening">Evening</string>
+    <string name="scheduling_place_header">Where do you prefer?</string>
+    <string name="scheduling_place_subtitle">pick three</string>
 
     <!--MATCH PAGE-->
     <string name="match_header">Meet your Pear</string>
