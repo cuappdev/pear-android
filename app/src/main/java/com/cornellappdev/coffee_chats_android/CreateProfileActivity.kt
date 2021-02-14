@@ -24,7 +24,7 @@ class CreateProfileActivity : AppCompatActivity() {
         var hometownFilled = false
 
         // tries to retrieve User Profile from internal storage
-        var profile = InternalStorage.readObject(this, "profile") as UserProfile
+        val profile = InternalStorage.readObject(this, "profile") as UserProfile
         demographicsHeader.text = getString(R.string.demographics_header, profile.userName)
         if (profile.hometown.isNotEmpty())  {
             hometownEditText.setText(profile.hometown)

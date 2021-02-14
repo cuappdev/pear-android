@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.cornellappdev.coffee_chats_android.models.InternalStorage
 import com.cornellappdev.coffee_chats_android.models.UserProfile
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -38,9 +39,8 @@ class SignInActivity : AppCompatActivity() {
 
         val signInButton = findViewById<Button>(R.id.sign_in_button)
 
-        val dr =
-            resources.getDrawable(R.drawable.google_icon)
-        dr.setBounds(0, 0, 60, 60) //Left,Top,Right,Bottom
+        val dr = ContextCompat.getDrawable(this, R.drawable.google_icon)
+        dr!!.setBounds(0, 0, 60, 60) //Left,Top,Right,Bottom
         signInButton.setCompoundDrawables(dr, null, null, null)
         signInButton.compoundDrawablePadding = 30
 
@@ -92,12 +92,12 @@ class SignInActivity : AppCompatActivity() {
                 if (personName != null && personEmail != null) {
                     val index = personEmail.indexOf('@')
                     val domain: String? = if (index == -1) null else personEmail.substring(index + 1)
-                    if (domain != null && domain.equals("cornell.edu")) {
-                        var profile = UserProfile(personName, personEmail)
+                    if (domain != null && domain == "cornell.edu") {
+                        val profile = UserProfile(personName, personEmail)
                         InternalStorage.writeObject(this, "profile", profile as Object)
                         startActivity(intent)
                     } else {
-                        Toast.makeText(applicationContext, "Please sign in using a Cornell account", Toast.LENGTH_LONG).show();
+                        Toast.makeText(applicationContext, "Please sign in using a Cornell account", Toast.LENGTH_LONG).show()
                         signOut()
                     }
                 }
@@ -105,8 +105,8 @@ class SignInActivity : AppCompatActivity() {
 
         } catch (e: ApiException) { // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w("account error", "signInResult:failed code=" + e.getStatusCode());
-            Toast.makeText(applicationContext, "Sign-in failed", Toast.LENGTH_LONG).show();
+            Log.w("account error", "signInResult:failed code=" + e.statusCode)
+            Toast.makeText(applicationContext, "Sign-in failed", Toast.LENGTH_LONG).show()
         }
     }
 

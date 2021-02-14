@@ -12,7 +12,7 @@ import com.cornellappdev.coffee_chats_android.R
 
 
 class PlacesAdapter(private val mContext: Context,
-                    private val places: Array<kotlin.String>,
+                    private val places: Array<String>,
                     private val selected: MutableList<String>
 ): BaseAdapter() {
 

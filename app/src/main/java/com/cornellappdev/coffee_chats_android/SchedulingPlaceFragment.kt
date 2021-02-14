@@ -29,15 +29,15 @@ class SchedulingPlaceFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        var profile = InternalStorage.readObject(context!!, "profile") as UserProfile
-        var campusAdapter =
+        val profile = InternalStorage.readObject(context!!, "profile") as UserProfile
+        val campusAdapter =
             PlacesAdapter(
                 context!!,
                 campusPlaces,
                 profile.preferredLocations
             )
         campusGridView.adapter = campusAdapter
-        var collegetownAdapter =
+        val collegetownAdapter =
             PlacesAdapter(
                 context!!,
                 collegetownPlaces,
@@ -46,7 +46,7 @@ class SchedulingPlaceFragment : Fragment() {
         collegetownGridView.adapter = collegetownAdapter
 
         campusGridView.onItemClickListener = OnItemClickListener { parent, v, position, id ->
-            var campusSelectedPlace = campusGridView.getChildAt(position) as ConstraintLayout
+            val campusSelectedPlace = campusGridView.getChildAt(position) as ConstraintLayout
             if (profile.preferredLocations.contains(campusPlaces[position])) {
                 profile.preferredLocations.remove(campusPlaces[position])
                 InternalStorage.writeObject(context!!, "profile", profile as Object)
@@ -61,7 +61,7 @@ class SchedulingPlaceFragment : Fragment() {
         }
 
         collegetownGridView.onItemClickListener = OnItemClickListener { parent, v, position, id ->
-            var ctownSelectedPlace = collegetownGridView.getChildAt(position) as ConstraintLayout
+            val ctownSelectedPlace = collegetownGridView.getChildAt(position) as ConstraintLayout
             if (profile.preferredLocations.contains(collegetownPlaces[position])) {
                 profile.preferredLocations.remove(collegetownPlaces[position])
                 InternalStorage.writeObject(context!!, "profile", profile as Object)

@@ -11,8 +11,8 @@ import com.cornellappdev.coffee_chats_android.R
 
 class TimeOptionAdapter(private val mContext: Context, list: Array<String>, selected: MutableList<String>) :
     ArrayAdapter<String?>(mContext, 0, list), Filterable {
-    var list = emptyArray<String>()
-    var selected = mutableListOf<String>()
+    private var list = emptyArray<String>()
+    private var selected = mutableListOf<String>()
 
     override fun getView(
         position: Int,

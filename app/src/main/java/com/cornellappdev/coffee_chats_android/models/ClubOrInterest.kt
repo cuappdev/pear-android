@@ -1,15 +1,7 @@
 package com.cornellappdev.coffee_chats_android.models
 
-class ClubOrInterest {
-    private var text: String
-    private var subtext: String
-    private var selected: Boolean
-
-    constructor(text: String, subtext: String) {
-        this.text = text
-        this.subtext = subtext
-        this.selected = false
-    }
+class ClubOrInterest(private var text: String, private var subtext: String) {
+    private var selected: Boolean = false
 
     fun getText() : String {
         return text

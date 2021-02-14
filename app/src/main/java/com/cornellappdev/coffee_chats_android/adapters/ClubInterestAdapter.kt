@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.Filterable
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.models.ClubOrInterest
 
@@ -23,12 +24,12 @@ class ClubInterestAdapter(private val mContext: Context, list: Array<ClubOrInter
         parent: ViewGroup
     ): View {
         val viewHolder: ViewHolder
-        var listItem: View
+        val listItem: View
         if (convertView == null) {
-            if (isClubView) {
-                listItem = LayoutInflater.from(mContext).inflate(R.layout.club_view, parent, false)
+            listItem = if (isClubView) {
+                LayoutInflater.from(mContext).inflate(R.layout.club_view, parent, false)
             } else {
-                listItem = LayoutInflater.from(mContext).inflate(R.layout.interest_view, parent, false)
+                LayoutInflater.from(mContext).inflate(R.layout.interest_view, parent, false)
             }
             viewHolder = ViewHolder(listItem)
             listItem.tag = viewHolder
@@ -41,8 +42,8 @@ class ClubInterestAdapter(private val mContext: Context, list: Array<ClubOrInter
         viewHolder.clubOrInterestText.text = currentClubInterest.getText()
         viewHolder.clubOrInterestSubtext.text = currentClubInterest.getSubtext()
 
-        val selected = context.resources.getColor(R.color.onboardingListSelected)
-        val unselected = context.resources.getColor(R.color.onboarding_fields)
+        val selected = ContextCompat.getColor(context, R.color.onboardingListSelected)
+        val unselected = ContextCompat.getColor(context, R.color.onboarding_fields)
         val drawableBox = viewHolder.layout!!.background
         if (currentClubInterest.isSelected()) {
             drawableBox.setColorFilter(selected, PorterDuff.Mode.MULTIPLY)
