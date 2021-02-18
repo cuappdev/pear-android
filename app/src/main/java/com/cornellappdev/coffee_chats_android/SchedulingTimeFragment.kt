@@ -19,15 +19,15 @@ import kotlinx.android.synthetic.main.fragment_scheduling_time.*
 
 
 class SchedulingTimeFragment : Fragment() {
-    var currDay: String = "Su"
-    lateinit var currDayTextView: TextView
+    private var currDay: String = "Su"
+    private lateinit var currDayTextView: TextView
     private val days = arrayOf("Su", "M", "Tu", "W", "Th", "F", "Sa")
     private val daysFullName = arrayOf("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
         "Friday", "Saturday")
     private val times = arrayOf("9:00", "1:00", "5:00", "9:30", "1:30", "5:30", "10:00", "2:00",
     "6:00", "10:30", "2:30", "6:30", "11:00", "3:00", "7:00", "11:30", "3:30", "7:30", "12:00",
     "4:00", "8:00", "12:30", "4:30", "8:30")
-    var selectedDays = mutableSetOf<String>()
+    private var selectedDays = mutableSetOf<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,7 +39,7 @@ class SchedulingTimeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        var profile = InternalStorage.readObject(context!!, "profile") as UserProfile
+        val profile = InternalStorage.readObject(context!!, "profile") as UserProfile
         // initialize [profile.availableTimes] HashMap and selectedDays based on existing profile
         for (day in days) {
             if (profile.availableTimes[day] == null) {
@@ -56,17 +56,17 @@ class SchedulingTimeFragment : Fragment() {
                 profile.availableTimes["Su"]!!
             )
         time_gridview.adapter = timeAdapter
-        var dayAdapter =
+        val dayAdapter =
             DayAdapter(
                 context!!,
                 days,
-                selectedDays!!
+                selectedDays
             )
         day_selection.adapter = dayAdapter
         day_header.text = "Every Sunday"        // Sunday by default
 
         var previousDot: ImageView? = null
-        day_selection.onItemClickListener = OnItemClickListener { parent, v, position, id ->
+        day_selection.onItemClickListener = OnItemClickListener { _, v, position, _ ->
 
             val daySelectedView = v as ConstraintLayout
             val daySelectedDot = daySelectedView.getChildAt(1) as ImageView //day indicator (small dot)
@@ -96,7 +96,7 @@ class SchedulingTimeFragment : Fragment() {
             }
         }
 
-        time_gridview.onItemClickListener = OnItemClickListener { parent, v, position, id ->
+        time_gridview.onItemClickListener = OnItemClickListener { _, v, _, _ ->
             val timeSelectedView = v as LinearLayout
             val timeSelectedTextView = timeSelectedView.getChildAt(0) as TextView
             val timeSelectedIndex = profile.availableTimes[currDay]!!.indexOf(timeSelectedTextView.text.toString())

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">coffee-chats-android</string>
+    <string name="app_name">Pear</string>
 
     <!--CREATE PROFILE-->
     <string name="welcome_header">Welcome to Pear</string>

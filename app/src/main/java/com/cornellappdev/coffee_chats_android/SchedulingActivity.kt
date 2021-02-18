@@ -17,10 +17,10 @@ class SchedulingActivity:
     AppCompatActivity(),
     SchedulingTimeFragment.OnFilledOutListener,
     SchedulingPlaceFragment.OnFilledOutListener {
-    lateinit var nextButton: Button
-    lateinit var backButton: ImageButton
-    lateinit var profile: UserProfile
-    var page = 0        // 0: no match; 1: time scheduling; 2: place scheduling
+    private lateinit var nextButton: Button
+    private lateinit var backButton: ImageButton
+    private lateinit var profile: UserProfile
+    private var page = 0        // 0: no match; 1: time scheduling; 2: place scheduling
     private val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,7 +78,7 @@ class SchedulingActivity:
             scheduling_header.text = getString(R.string.scheduling_time_header)
             scheduling_finish.isEnabled = false
             profile = InternalStorage.readObject(this, "profile") as UserProfile
-            for ((day, selectedTimes) in profile.availableTimes) {
+            for ((_, selectedTimes) in profile.availableTimes) {
                 if (selectedTimes.isNotEmpty()) nextButton.isEnabled = true
             }
         }
@@ -96,7 +96,7 @@ class SchedulingActivity:
             scheduling_header.text = getString(R.string.scheduling_time_header)
             ft.replace(body_fragment.id, SchedulingTimeFragment())
             profile = InternalStorage.readObject(this, "profile") as UserProfile
-            for ((day, selectedTimes) in profile.availableTimes) {
+            for ((_, selectedTimes) in profile.availableTimes) {
                 if (selectedTimes.isNotEmpty()) nextButton.isEnabled = true
             }
         } else {

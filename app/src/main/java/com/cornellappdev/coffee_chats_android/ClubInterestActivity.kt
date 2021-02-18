@@ -11,6 +11,7 @@ import android.widget.SearchView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import com.cornellappdev.coffee_chats_android.adapters.ClubInterestAdapter
 import com.cornellappdev.coffee_chats_android.models.ClubOrInterest
 import com.cornellappdev.coffee_chats_android.models.InternalStorage
@@ -23,21 +24,21 @@ class ClubInterestActivity : AppCompatActivity() {
         INTERESTS,
         CLUBS
     }
-    var currentPage: CurrentPage = CurrentPage.INTERESTS
+    private var currentPage: CurrentPage = CurrentPage.INTERESTS
     lateinit var adapter: ClubInterestAdapter
     lateinit var profile: UserProfile
-    val interestTitles = arrayOf("Art", "Business", "Design", "Humanities", "Fitness & Sports", "Tech", "More")
-    val interestSubtitles =  arrayOf("painting crafts, embroidery", "finance, entrepreneurship, VC", "UX/UI, graphic, print",
+    private val interestTitles = arrayOf("Art", "Business", "Design", "Humanities", "Fitness & Sports", "Tech", "More")
+    private val interestSubtitles =  arrayOf("painting crafts, embroidery", "finance, entrepreneurship, VC", "UX/UI, graphic, print",
         "history, politics", "working out, outdoors, basketball", "random technology", "there is more")
-    val clubTitles = arrayOf("AppDev", "DTI", "Guac Magazine", "GCC", "CVC", "CVS")
+    private val clubTitles = arrayOf("AppDev", "DTI", "Guac Magazine", "GCC", "CVC", "CVS")
 
     var selected = 0
     var unselected = 0
 
-    var interests : Array<ClubOrInterest> = Array(interestTitles.size) { index ->
+    private var interests : Array<ClubOrInterest> = Array(interestTitles.size) {
         ClubOrInterest("", "")
     }
-    var clubs : Array<ClubOrInterest> = Array(clubTitles.size) { index ->
+    var clubs : Array<ClubOrInterest> = Array(clubTitles.size) {
         ClubOrInterest("", "")
     }
 
@@ -46,8 +47,8 @@ class ClubInterestActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_create_profile)
 
-        selected = resources.getColor(R.color.onboardingListSelected)
-        unselected = resources.getColor(R.color.onboarding_fields)
+        selected = ContextCompat.getColor(this, R.color.onboardingListSelected)
+        unselected = ContextCompat.getColor(this, R.color.onboarding_fields)
 
         if(intent.getIntExtra("page", 1) == 1) {
             currentPage = CurrentPage.INTERESTS
@@ -65,7 +66,7 @@ class ClubInterestActivity : AppCompatActivity() {
         add_later.visibility = View.INVISIBLE
         add_later.setOnClickListener { onNextPage() }
         back_button.setOnClickListener { onBackPage() }
-        // incease the hit area of back button
+        // increase the hit area of back button
         val parent =
             back_button.parent as View // button: the view you want to enlarge hit area
 
@@ -104,7 +105,7 @@ class ClubInterestActivity : AppCompatActivity() {
             }
         }
 
-        interests_or_clubs.setOnItemClickListener { parent, view, position, id ->
+        interests_or_clubs.setOnItemClickListener { _, view, position, _ ->
             val selectedView = view.findViewById<ConstraintLayout>(R.id.club_or_interest_box)
             val selectedText = selectedView.findViewById<TextView>(R.id.club_or_interest_text).text
             val drawableBox = selectedView.background
@@ -138,7 +139,7 @@ class ClubInterestActivity : AppCompatActivity() {
         updatePage()
     }
 
-    fun updatePage() {
+    private fun updatePage() {
         when (currentPage) {
             CurrentPage.INTERESTS -> {
                 club_search.visibility = View.GONE
@@ -175,7 +176,7 @@ class ClubInterestActivity : AppCompatActivity() {
                 val searchIcon: ImageView =
                     club_search.findViewById(searchImgId)
                 searchIcon.setColorFilter(
-                    resources.getColor(R.color.searchHint), PorterDuff.Mode.DARKEN
+                    ContextCompat.getColor(this, R.color.searchHint), PorterDuff.Mode.DARKEN
                 )
                 adapter =
                     ClubInterestAdapter(
@@ -187,7 +188,7 @@ class ClubInterestActivity : AppCompatActivity() {
                 club_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextChange(newText: String): Boolean {
                         var outputArr = clubs
-                        if (!newText.isBlank()) {
+                        if (newText.isNotBlank()) {
                             val filtered = clubs.filter {
                                 it.getText().toLowerCase().contains(newText.toLowerCase())
                             }.toTypedArray()
@@ -243,7 +244,7 @@ class ClubInterestActivity : AppCompatActivity() {
         }
     }
 
-    fun onNextPage() {
+    private fun onNextPage() {
         InternalStorage.writeObject(this, "profile", profile as Object)
         if (currentPage == CurrentPage.INTERESTS) {
             val intent = Intent(this, ClubInterestActivity::class.java)
@@ -258,7 +259,7 @@ class ClubInterestActivity : AppCompatActivity() {
         }
     }
 
-    fun onBackPage() {
+    private fun onBackPage() {
         InternalStorage.writeObject(this, "profile", profile as Object)
         if (currentPage == CurrentPage.INTERESTS) {
             finish()
