@@ -56,7 +56,6 @@ class SchedulingActivity:
                     preferencesHelper.expiresAt = userSession.sessionExpiration.toLong()
                 }
             }
-            User.currentSession = UserSession(preferencesHelper.accessToken!!, preferencesHelper.refreshToken!!, preferencesHelper.expiresAt.toString(), true)
             profile = InternalStorage.readObject(this, "profile") as UserProfile
         } else {
             // prompt user to log in

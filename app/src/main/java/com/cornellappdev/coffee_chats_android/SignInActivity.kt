@@ -116,7 +116,6 @@ class SignInActivity : AppCompatActivity() {
                                 "GOOGLE_AUTH_LOGIN",
                                 "accessToken: ${userSession.accessToken}, refreshToken: ${userSession.refreshToken}, expiresAt: ${userSession.sessionExpiration}"
                             )
-                            User.currentSession = userSession
                             startActivity(intent)
                         }
                     } else {
