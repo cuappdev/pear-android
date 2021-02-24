@@ -8,9 +8,18 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import com.cornellappdev.coffee_chats_android.models.InternalStorage
-import com.cornellappdev.coffee_chats_android.models.UserProfile
+import com.cornellappdev.coffee_chats_android.models.*
+import com.cornellappdev.coffee_chats_android.networking.Endpoint
+import com.cornellappdev.coffee_chats_android.networking.Request
+import com.cornellappdev.coffee_chats_android.networking.refreshSession
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_scheduling.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.*
 
 
 class SchedulingActivity:
@@ -22,15 +31,35 @@ class SchedulingActivity:
     private lateinit var profile: UserProfile
     private var page = 0        // 0: no match; 1: time scheduling; 2: place scheduling
     private val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+    private val preferencesHelper: PreferencesHelper by lazy {
+        PreferencesHelper(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scheduling)
 
         // Determine if the app should show scheduling page or sign-in
-        try {
+        val account = GoogleSignIn.getLastSignedInAccount(this)
+        if (account != null) {
+            val isAccessTokenExpired = Date() >= Date(preferencesHelper.expiresAt * 1000)
+            // refresh session if necessary
+            if (isAccessTokenExpired) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    val refreshSessionEndpoint = Endpoint.refreshSession(preferencesHelper.refreshToken!!)
+                    val typeToken = object : TypeToken<ApiResponse<UserSession>>() {}.type
+                    val userSession = withContext(Dispatchers.IO) {
+                        Request.makeRequest<ApiResponse<UserSession>>(refreshSessionEndpoint.okHttpRequest(), typeToken)
+                    }!!.data
+                    preferencesHelper.accessToken = userSession.accessToken
+                    preferencesHelper.refreshToken = userSession.refreshToken
+                    preferencesHelper.expiresAt = userSession.sessionExpiration.toLong()
+                }
+            }
+            User.currentSession = UserSession(preferencesHelper.accessToken!!, preferencesHelper.refreshToken!!, preferencesHelper.expiresAt.toString(), true)
             profile = InternalStorage.readObject(this, "profile") as UserProfile
-        } catch (e: Exception) {
-            // no profile, meaning this app is used for the first time
+        } else {
+            // prompt user to log in
             val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
             overridePendingTransition(0, 0)
