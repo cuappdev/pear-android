@@ -49,12 +49,17 @@ class SchedulingActivity :
                     val refreshSessionEndpoint =
                         Endpoint.refreshSession(preferencesHelper.refreshToken!!)
                     val typeToken = object : TypeToken<ApiResponse<UserSession>>() {}.type
-                    val userSession = withContext(Dispatchers.IO) {
+                    val response = withContext(Dispatchers.IO) {
                         Request.makeRequest<ApiResponse<UserSession>>(
                             refreshSessionEndpoint.okHttpRequest(),
                             typeToken
                         )
-                    }!!.data
+                    }!!
+                    if (!response.success) {
+                        signIn()
+                        return@launch
+                    }
+                    val userSession = response.data
                     preferencesHelper.accessToken = userSession.accessToken
                     preferencesHelper.refreshToken = userSession.refreshToken
                     preferencesHelper.expiresAt = userSession.sessionExpiration.toLong()
@@ -63,9 +68,7 @@ class SchedulingActivity :
             profile = InternalStorage.readObject(this, "profile") as UserProfile
         } else {
             // prompt user to log in
-            val intent = Intent(this, SignInActivity::class.java)
-            startActivity(intent)
-            overridePendingTransition(0, 0)
+            signIn()
         }
 
         // add fragment to body_fragment
@@ -79,6 +82,11 @@ class SchedulingActivity :
 
         nextButton = findViewById(R.id.scheduling_finish)
         backButton = findViewById(R.id.back_button)
+    }
+
+    private fun signIn() {
+        val intent = Intent(this, SignInActivity::class.java)
+        startActivity(intent)
     }
 
     override fun onAttachFragment(fragment: Fragment) {
