@@ -22,7 +22,7 @@ import kotlinx.coroutines.withContext
 import java.util.*
 
 
-class SchedulingActivity:
+class SchedulingActivity :
     AppCompatActivity(),
     SchedulingTimeFragment.OnFilledOutListener,
     SchedulingPlaceFragment.OnFilledOutListener {
@@ -46,10 +46,14 @@ class SchedulingActivity:
             // refresh session if necessary
             if (isAccessTokenExpired) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    val refreshSessionEndpoint = Endpoint.refreshSession(preferencesHelper.refreshToken!!)
+                    val refreshSessionEndpoint =
+                        Endpoint.refreshSession(preferencesHelper.refreshToken!!)
                     val typeToken = object : TypeToken<ApiResponse<UserSession>>() {}.type
                     val userSession = withContext(Dispatchers.IO) {
-                        Request.makeRequest<ApiResponse<UserSession>>(refreshSessionEndpoint.okHttpRequest(), typeToken)
+                        Request.makeRequest<ApiResponse<UserSession>>(
+                            refreshSessionEndpoint.okHttpRequest(),
+                            typeToken
+                        )
                     }!!.data
                     preferencesHelper.accessToken = userSession.accessToken
                     preferencesHelper.refreshToken = userSession.refreshToken
@@ -71,7 +75,7 @@ class SchedulingActivity:
         back_button.setOnClickListener { onBackPage() }
         back_button.visibility = View.GONE
 
-        scheduling_finish.setOnClickListener {onNextPage()}
+        scheduling_finish.setOnClickListener { onNextPage() }
 
         nextButton = findViewById(R.id.scheduling_finish)
         backButton = findViewById(R.id.back_button)
@@ -101,7 +105,7 @@ class SchedulingActivity:
             scheduling_header.text = getString(R.string.no_match_header)
             nextButton.text = getString(R.string.no_match_availability)
             nextButton.isEnabled = true
-            nextButton.setPadding(100,0,100,0)
+            nextButton.setPadding(100, 0, 100, 0)
         } else if (page == 1) {
             scheduling_header.text = getString(R.string.scheduling_time_header)
             scheduling_finish.isEnabled = false
