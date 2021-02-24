@@ -1,5 +1,6 @@
 package com.cornellappdev.coffee_chats_android.networking
 
+import android.util.Log
 import com.google.gson.Gson
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -14,11 +15,12 @@ import java.lang.reflect.Type
 object Request {
     val httpClient = OkHttpClient()
 
-    suspend inline fun <reified T> makeCall(request: okhttp3.Request, typeToken: Type): T? {
+    suspend inline fun <reified T> makeRequest(request: okhttp3.Request, typeToken: Type): T? {
         val response = httpClient.newCall(request).await()
         val responseBody = response.body
         val responseBodyString = responseBody?.string() ?: ""
-
+        Log.d("BACKEND_RESPONSE_CODE", response.code.toString())
+        Log.d("BACKEND_RESPONSE", responseBodyString)
         val responseBodyJSON = Gson()
 
         return responseBodyJSON.fromJson<T>(responseBodyString, typeToken)
