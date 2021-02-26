@@ -8,12 +8,21 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import com.cornellappdev.coffee_chats_android.models.InternalStorage
-import com.cornellappdev.coffee_chats_android.models.UserProfile
+import com.cornellappdev.coffee_chats_android.models.*
+import com.cornellappdev.coffee_chats_android.networking.Endpoint
+import com.cornellappdev.coffee_chats_android.networking.Request
+import com.cornellappdev.coffee_chats_android.networking.refreshSession
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_scheduling.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.*
 
 
-class SchedulingActivity:
+class SchedulingActivity :
     AppCompatActivity(),
     SchedulingTimeFragment.OnFilledOutListener,
     SchedulingPlaceFragment.OnFilledOutListener {
@@ -22,18 +31,44 @@ class SchedulingActivity:
     private lateinit var profile: UserProfile
     private var page = 0        // 0: no match; 1: time scheduling; 2: place scheduling
     private val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+    private val preferencesHelper: PreferencesHelper by lazy {
+        PreferencesHelper(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scheduling)
 
         // Determine if the app should show scheduling page or sign-in
-        try {
+        val account = GoogleSignIn.getLastSignedInAccount(this)
+        if (account != null) {
+            val isAccessTokenExpired = Date() >= Date(preferencesHelper.expiresAt * 1000)
+            // refresh session if necessary
+            if (isAccessTokenExpired) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    val refreshSessionEndpoint =
+                        Endpoint.refreshSession(preferencesHelper.refreshToken!!)
+                    val typeToken = object : TypeToken<ApiResponse<UserSession>>() {}.type
+                    val response = withContext(Dispatchers.IO) {
+                        Request.makeRequest<ApiResponse<UserSession>>(
+                            refreshSessionEndpoint.okHttpRequest(),
+                            typeToken
+                        )
+                    }!!
+                    if (!response.success) {
+                        signIn()
+                        return@launch
+                    }
+                    val userSession = response.data
+                    preferencesHelper.accessToken = userSession.accessToken
+                    preferencesHelper.refreshToken = userSession.refreshToken
+                    preferencesHelper.expiresAt = userSession.sessionExpiration.toLong()
+                }
+            }
             profile = InternalStorage.readObject(this, "profile") as UserProfile
-        } catch (e: Exception) {
-            // no profile, meaning this app is used for the first time
-            val intent = Intent(this, SignInActivity::class.java)
-            startActivity(intent)
-            overridePendingTransition(0, 0)
+        } else {
+            // prompt user to log in
+            signIn()
         }
 
         // add fragment to body_fragment
@@ -43,10 +78,15 @@ class SchedulingActivity:
         back_button.setOnClickListener { onBackPage() }
         back_button.visibility = View.GONE
 
-        scheduling_finish.setOnClickListener {onNextPage()}
+        scheduling_finish.setOnClickListener { onNextPage() }
 
         nextButton = findViewById(R.id.scheduling_finish)
         backButton = findViewById(R.id.back_button)
+    }
+
+    private fun signIn() {
+        val intent = Intent(this, SignInActivity::class.java)
+        startActivity(intent)
     }
 
     override fun onAttachFragment(fragment: Fragment) {
@@ -73,7 +113,7 @@ class SchedulingActivity:
             scheduling_header.text = getString(R.string.no_match_header)
             nextButton.text = getString(R.string.no_match_availability)
             nextButton.isEnabled = true
-            nextButton.setPadding(100,0,100,0)
+            nextButton.setPadding(100, 0, 100, 0)
         } else if (page == 1) {
             scheduling_header.text = getString(R.string.scheduling_time_header)
             scheduling_finish.isEnabled = false
