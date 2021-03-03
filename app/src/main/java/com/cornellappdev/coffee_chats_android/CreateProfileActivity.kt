@@ -5,13 +5,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.cornellappdev.coffee_chats_android.models.ApiResponse
+import com.cornellappdev.coffee_chats_android.models.Demographics
 import com.cornellappdev.coffee_chats_android.models.User
-import com.cornellappdev.coffee_chats_android.networking.Endpoint
-import com.cornellappdev.coffee_chats_android.networking.Request
-import com.cornellappdev.coffee_chats_android.networking.getAllMajors
-import com.cornellappdev.coffee_chats_android.networking.getUser
+import com.cornellappdev.coffee_chats_android.networking.*
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_create_profile.*
 import kotlinx.coroutines.CoroutineScope
@@ -32,6 +31,21 @@ class CreateProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_profile)
 
+        // Initializing the class spinner
+        val classArray = ArrayList<String>()
+        var year = Calendar.getInstance().get(Calendar.YEAR)
+        val month = Calendar.getInstance().get(Calendar.MONTH)
+        if (month >= 6) year++  // sets minimum graduation year to next year
+        for (i in 0..4) {
+            classArray.add("Class of " + (year + i))
+        }
+        val classArrayAdapter: ArrayAdapter<String> = ArrayAdapter(
+            applicationContext,
+            R.layout.profile_spinner_item,
+            classArray
+        )
+        classSpinner.adapter = classArrayAdapter
+
         CoroutineScope(Dispatchers.Main).launch {
             val getUserEndpoint = Endpoint.getUser()
             val userTypeToken = object : TypeToken<ApiResponse<User>>() {}.type
@@ -41,6 +55,7 @@ class CreateProfileActivity : AppCompatActivity() {
                     userTypeToken
                 )
             }!!.data
+            User.currentUser = user
             demographicsHeader.text = getString(R.string.demographics_header, user.firstName)
             // pre-fills existing user profile information
             if (!user.hometown.isNullOrBlank()) {
@@ -57,20 +72,6 @@ class CreateProfileActivity : AppCompatActivity() {
                 nextButton.isClickable = false
             }
 
-            // Initializing the class spinner
-            val classArray = ArrayList<String>()
-            var year = Calendar.getInstance().get(Calendar.YEAR)
-            val month = Calendar.getInstance().get(Calendar.MONTH)
-            if (month >= 6) year++  // sets minimum graduation year to next year
-            for (i in 0..4) {
-                classArray.add("Class of " + (year + i))
-            }
-            val classArrayAdapter: ArrayAdapter<String> = ArrayAdapter(
-                applicationContext,
-                R.layout.profile_spinner_item,
-                classArray
-            )
-            classSpinner.adapter = classArrayAdapter
             if (!user.graduationYear.isNullOrBlank()) classSpinner.setSelection(
                 Integer.parseInt(
                     user.graduationYear
@@ -154,7 +155,23 @@ class CreateProfileActivity : AppCompatActivity() {
         })
 
         nextButton.setOnClickListener {
-            // TODO: Update profile in backend
+            val pronouns = pronounSpinner.selectedItem as String
+            val graduationYear = (classSpinner.selectedItemPosition + year).toString()
+            val major = majorACTV.text.toString()
+            val hometown = hometownEditText.text.toString()
+            val demographics = Demographics(pronouns, graduationYear, major, hometown, "")
+
+            val updateDemographicsEndpoint = Endpoint.updateDemographics(demographics)
+            val typeToken = object : TypeToken<ApiResponse<Demographics>>() {}.type
+            CoroutineScope(Dispatchers.IO).launch {
+                val updateDemographicsResponse = Request.makeRequest<ApiResponse<Demographics>>(
+                    updateDemographicsEndpoint.okHttpRequest(),
+                    typeToken
+                )
+                if (updateDemographicsResponse == null || !updateDemographicsResponse.success) {
+                    Toast.makeText(applicationContext, "Failed to save information", Toast.LENGTH_LONG).show()
+                }
+            }
 
             val intent = Intent(this, ClubInterestActivity::class.java)
             startActivity(intent)
