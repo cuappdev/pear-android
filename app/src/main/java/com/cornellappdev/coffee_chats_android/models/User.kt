@@ -1,6 +1,6 @@
 package com.cornellappdev.coffee_chats_android.models
 
-class User(
+data class User(
     val netID: String,
     val firstName: String,
     val lastName: String,

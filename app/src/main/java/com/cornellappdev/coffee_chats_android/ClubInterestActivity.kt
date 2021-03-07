@@ -11,13 +11,13 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.cornellappdev.coffee_chats_android.adapters.ClubInterestAdapter
 import com.cornellappdev.coffee_chats_android.models.ApiResponse
 import com.cornellappdev.coffee_chats_android.models.ClubOrInterest
-import com.cornellappdev.coffee_chats_android.models.UserProfile
 import com.cornellappdev.coffee_chats_android.networking.*
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_create_profile.*
@@ -32,12 +32,43 @@ class ClubInterestActivity : AppCompatActivity() {
         INTERESTS,
         GROUPS
     }
+
     private var currentPage: CurrentPage = CurrentPage.INTERESTS
     lateinit var adapter: ClubInterestAdapter
-    private val interestTitles = arrayOf("Art", "Business", "Dance", "Design", "Fashion", "Fitness & Sports", "Food", "Humanities", "Music", "Photography", "Reading", "Sustainability", "Tech", "Travel", "TV & Film")
-    private val interestSubtitles =  arrayOf("painting, crafts, embroidery", "entrepreneurship, finance, VC", "urban, hip hop, ballet, swing",  "UX/UI, graphic, print",
-        "fashion", "working out, outdoors, basketball", "cooking, eating, baking", "history, politics", "instruments, producing, acapella", "digital, analog", "reading", "sustainability", "programming, web/app development", "road, trips, backpacking")
-    private lateinit var clubTitles: List<String>
+    private val interestTitles = arrayOf(
+        "Art",
+        "Business",
+        "Dance",
+        "Design",
+        "Fashion",
+        "Fitness & Sports",
+        "Food",
+        "Humanities",
+        "Music",
+        "Photography",
+        "Reading",
+        "Sustainability",
+        "Tech",
+        "Travel",
+        "TV & Film"
+    )
+    private val interestSubtitles = arrayOf(
+        "painting, crafts, embroidery",
+        "entrepreneurship, finance, VC",
+        "urban, hip hop, ballet, swing",
+        "UX/UI, graphic, print",
+        "fashion",
+        "working out, outdoors, basketball",
+        "cooking, eating, baking",
+        "history, politics",
+        "instruments, producing, acapella",
+        "digital, analog",
+        "reading",
+        "sustainability",
+        "programming, web/app development",
+        "road, trips, backpacking"
+    )
+    private lateinit var clubTitles: Array<String>
 
     private lateinit var userInterests: ArrayList<String>
     private lateinit var userGroups: ArrayList<String>
@@ -45,8 +76,8 @@ class ClubInterestActivity : AppCompatActivity() {
     var selectedColor = 0
     var unselectedColor = 0
 
-    private lateinit var interests : Array<ClubOrInterest>
-    private lateinit var clubs : Array<ClubOrInterest>
+    private lateinit var interests: Array<ClubOrInterest>
+    private lateinit var clubs: Array<ClubOrInterest>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +87,7 @@ class ClubInterestActivity : AppCompatActivity() {
         selectedColor = ContextCompat.getColor(this, R.color.onboardingListSelected)
         unselectedColor = ContextCompat.getColor(this, R.color.onboarding_fields)
 
-        if(intent.getIntExtra("page", 1) == 1) {
+        if (intent.getIntExtra("page", 1) == 1) {
             currentPage = CurrentPage.INTERESTS
             createProfileFragment.setBackgroundResource(R.drawable.onboarding_background_2)
         } else {
@@ -86,64 +117,75 @@ class ClubInterestActivity : AppCompatActivity() {
         signup_next.isEnabled = false
 
         CoroutineScope(Dispatchers.Main).launch {
-            val getUserInterestsEndpoint = Endpoint.getUserInterests()
-            val interestTypeToken = object : TypeToken<ApiResponse<List<String>>>() {}.type
-            userInterests = withContext(Dispatchers.IO) {
-                Request.makeRequest<ApiResponse<List<String>>>(
-                    getUserInterestsEndpoint.okHttpRequest(),
-                    interestTypeToken
-                )
-            }!!.data as ArrayList<String>
-            interests = Array(interestTitles.size) {
-                ClubOrInterest("", "")
-            }
-            for (i in interestTitles.indices) {
-                interests[i] = ClubOrInterest(interestTitles[i], if (i < interestSubtitles.size) interestSubtitles[i] else "")
+            if (currentPage == CurrentPage.INTERESTS) {
+                val getUserInterestsEndpoint = Endpoint.getUserInterests()
+                val interestTypeToken = object : TypeToken<ApiResponse<List<String>>>() {}.type
+                userInterests = withContext(Dispatchers.IO) {
+                    Request.makeRequest<ApiResponse<List<String>>>(
+                        getUserInterestsEndpoint.okHttpRequest(),
+                        interestTypeToken
+                    )
+                }!!.data as ArrayList<String>
+                interests = Array(interestTitles.size) {
+                    ClubOrInterest("", "")
+                }
+                for (i in interestTitles.indices) {
+                    interests[i] = ClubOrInterest(
+                        interestTitles[i],
+                        if (i < interestSubtitles.size) interestSubtitles[i] else ""
+                    )
 
-                for (j in userInterests.indices) {
-                    if (interestTitles[i] == userInterests[j]) {
-                        signup_next.isEnabled = true
-                        break
+                    for (j in userInterests.indices) {
+                        if (interestTitles[i] == userInterests[j]) {
+                            signup_next.isEnabled = true
+                            break
+                        }
+                    }
+                }
+            } else {
+                val getGroupsEndpoint = Endpoint.getAllGroups()
+                val groupTypeToken = object : TypeToken<ApiResponse<List<String>>>() {}.type
+                clubTitles = withContext(Dispatchers.IO) {
+                    Request.makeRequest<ApiResponse<List<String>>>(
+                        getGroupsEndpoint.okHttpRequest(),
+                        groupTypeToken
+                    )!!.data.toTypedArray()
+                }
+                val getUserGroupsEndpoint = Endpoint.getUserGroups()
+                userGroups = withContext(Dispatchers.IO) {
+                    Request.makeRequest<ApiResponse<List<String>>>(
+                        getUserGroupsEndpoint.okHttpRequest(),
+                        groupTypeToken
+                    )
+                }!!.data as ArrayList<String>
+                clubs = Array(clubTitles.size) {
+                    ClubOrInterest("", "")
+                }
+                for (i in clubTitles.indices) {
+                    clubs[i] = ClubOrInterest(clubTitles[i], "")
+
+                    for (j in userGroups.indices) {
+                        if (clubTitles[i] == userGroups[j]) {
+                            signup_next.isEnabled = true
+                            break
+                        }
                     }
                 }
             }
-            val getGroupsEndpoint = Endpoint.getAllGroups()
-            val groupTypeToken = object : TypeToken<ApiResponse<List<String>>>() {}.type
-            clubTitles = withContext(Dispatchers.IO) {
-                Request.makeRequest<ApiResponse<List<String>>>(
-                    getGroupsEndpoint.okHttpRequest(),
-                    groupTypeToken
-                )!!.data
-            }
-            val getUserGroupsEndpoint = Endpoint.getUserGroups()
-            userGroups = withContext(Dispatchers.IO) {
-                Request.makeRequest<ApiResponse<List<String>>>(
-                    getUserGroupsEndpoint.okHttpRequest(),
-                    groupTypeToken
-                )
-            }!!.data as ArrayList<String>
-            clubs = Array(clubTitles.size) {
-                ClubOrInterest("", "")
-            }
-            for (i in clubTitles.indices) {
-                clubs[i] = ClubOrInterest(clubTitles[i], "")
-
-                for (j in userGroups.indices) {
-                    if (clubTitles[i] == userGroups[j]) {
-                        signup_next.isEnabled = true
-                        break
-                    }
-                }
-            }
-
+            updatePage()
             interests_or_clubs.setOnItemClickListener { _, view, position, _ ->
                 val selectedView = view.findViewById<ConstraintLayout>(R.id.club_or_interest_box)
-                val selectedText = selectedView.findViewById<TextView>(R.id.club_or_interest_text).text
+                val selectedText =
+                    selectedView.findViewById<TextView>(R.id.club_or_interest_text).text
                 val drawableBox = selectedView.background
-                val currObj = if (currentPage == CurrentPage.INTERESTS) interests[position] else clubs[clubTitles.indexOf(selectedText)]
+                val currObj =
+                    if (currentPage == CurrentPage.INTERESTS) interests[position] else clubs[clubTitles.indexOf(
+                        selectedText
+                    )]
                 currObj.toggleSelected()
                 if (currObj.isSelected()) {
-                    drawableBox.colorFilter = BlendModeColorFilter(selectedColor, BlendMode.MULTIPLY)
+                    drawableBox.colorFilter =
+                        BlendModeColorFilter(selectedColor, BlendMode.MULTIPLY)
                     if (currentPage == CurrentPage.INTERESTS) userInterests.add(currObj.getText())
                     else userGroups.add(currObj.getText())
 
@@ -151,7 +193,8 @@ class ClubInterestActivity : AppCompatActivity() {
                         signup_next.isEnabled = true
                     }
                 } else {
-                    drawableBox.colorFilter = BlendModeColorFilter(unselectedColor, BlendMode.MULTIPLY)
+                    drawableBox.colorFilter =
+                        BlendModeColorFilter(unselectedColor, BlendMode.MULTIPLY)
                     if (currentPage == CurrentPage.INTERESTS) {
                         userInterests.remove(selectedText)
                         if (userInterests.isEmpty()) {
@@ -165,8 +208,6 @@ class ClubInterestActivity : AppCompatActivity() {
                     }
                 }
             }
-
-            updatePage()
         }
     }
 
@@ -184,16 +225,10 @@ class ClubInterestActivity : AppCompatActivity() {
                 signup_next.setText(R.string.almost_there)
                 add_later.visibility = View.INVISIBLE
 
-                for (i in 0 until adapter.count) {
-                    val v = interests_or_clubs.adapter.getView(i, null, interests_or_clubs)
-                    val drawableBox = v.background
-                    val nameView = v.findViewById<TextView>(R.id.club_or_interest_text)
-                    val name = nameView.text.toString()
-
-                    if (userInterests.contains(name))
-                        drawableBox.colorFilter = BlendModeColorFilter(selectedColor, BlendMode.MULTIPLY)
-                    else
-                        drawableBox.colorFilter = BlendModeColorFilter(unselectedColor, BlendMode.MULTIPLY)
+                for (i in interestTitles.indices) {
+                    if (userInterests.contains(interestTitles[i])) {
+                        interests[i].setSelected()
+                    }
                 }
 
                 signup_next.isEnabled = userInterests.isNotEmpty()
@@ -232,20 +267,11 @@ class ClubInterestActivity : AppCompatActivity() {
                                 true
                             )
                         interests_or_clubs.adapter = adapter
-                        for (i in 0 until adapter.count) {
-                            val v = interests_or_clubs.adapter.getView(
-                                i, null, interests_or_clubs
-                            ) as ConstraintLayout
-                            val drawableBox = v.background
-                            val nameView = v.findViewById<TextView>(R.id.club_or_interest_text)
-                            val name = nameView.text.toString()
-
-                            if (userGroups.contains(name))
-                                drawableBox.colorFilter = BlendModeColorFilter(selectedColor, BlendMode.MULTIPLY)
-                            else
-                                drawableBox.colorFilter = BlendModeColorFilter(unselectedColor, BlendMode.MULTIPLY)
+                        for (i in clubTitles.indices) {
+                            if (userGroups.contains(clubTitles[i])) {
+                                clubs[i].setSelected()
+                            }
                         }
-
                         return true
                     }
 
@@ -258,16 +284,10 @@ class ClubInterestActivity : AppCompatActivity() {
                 signup_next.setText(R.string.get_started)
                 add_later.visibility = View.VISIBLE
 
-                for (i in 0 until adapter.count) {
-                    val v = interests_or_clubs.adapter.getView(i, null, interests_or_clubs)
-                    val drawableBox = v.background
-                    val nameView = v.findViewById<TextView>(R.id.club_or_interest_text)
-                    val name = nameView.text.toString()
-
-                    if (userGroups.contains(name))
-                        drawableBox.colorFilter = BlendModeColorFilter(selectedColor, BlendMode.MULTIPLY)
-                    else
-                        drawableBox.colorFilter = BlendModeColorFilter(unselectedColor, BlendMode.MULTIPLY)
+                for (i in clubTitles.indices) {
+                    if (userGroups.contains(clubTitles[i])) {
+                        clubs[i].setSelected()
+                    }
                 }
 
                 signup_next.isEnabled = userGroups.isNotEmpty()
@@ -276,7 +296,26 @@ class ClubInterestActivity : AppCompatActivity() {
     }
 
     private fun onNextPage() {
-        // TODO: Save interests or groups
+        // update user interests or groups in backend
+        CoroutineScope(Dispatchers.Main).launch {
+            val updateEndpoint =
+                when (currentPage) {
+                    CurrentPage.INTERESTS -> Endpoint.updateInterests(userInterests)
+                    CurrentPage.GROUPS -> Endpoint.updateGroups(userGroups)
+                }
+            val typeToken = object : TypeToken<ApiResponse<String>>() {}.type
+            val updateResponse = withContext(Dispatchers.IO) {
+                Request.makeRequest<ApiResponse<String>>(
+                    updateEndpoint.okHttpRequest(),
+                    typeToken
+                )
+            }
+            if (updateResponse == null || !updateResponse.success) {
+                Toast.makeText(applicationContext, "Failed to save information", Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
+        println("Debug")
         if (currentPage == CurrentPage.INTERESTS) {
             val intent = Intent(this, ClubInterestActivity::class.java)
             intent.putExtra("page", 2)
@@ -291,7 +330,6 @@ class ClubInterestActivity : AppCompatActivity() {
     }
 
     private fun onBackPage() {
-        // TODO: Save interests or groups?
         if (currentPage == CurrentPage.INTERESTS) {
             finish()
         } else if (currentPage == CurrentPage.GROUPS) {

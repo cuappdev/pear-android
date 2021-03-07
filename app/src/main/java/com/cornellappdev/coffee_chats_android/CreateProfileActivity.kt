@@ -55,7 +55,6 @@ class CreateProfileActivity : AppCompatActivity() {
                     userTypeToken
                 )
             }!!.data
-            User.currentUser = user
             demographicsHeader.text = getString(R.string.demographics_header, user.firstName)
             // pre-fills existing user profile information
             if (!user.hometown.isNullOrBlank()) {
@@ -173,13 +172,6 @@ class CreateProfileActivity : AppCompatActivity() {
                     Toast.makeText(applicationContext, "Failed to save information", Toast.LENGTH_LONG).show()
                 }
             }
-
-            // update information locally
-            val user = User.currentUser
-            user.pronouns = pronouns
-            user.graduationYear = graduationYear
-            user.major = major
-            user.hometown = hometown
 
             val intent = Intent(this, ClubInterestActivity::class.java)
             intent.putExtra("page", 1)
