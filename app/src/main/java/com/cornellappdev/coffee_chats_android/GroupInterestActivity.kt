@@ -15,9 +15,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import com.cornellappdev.coffee_chats_android.adapters.ClubInterestAdapter
+import com.cornellappdev.coffee_chats_android.adapters.GroupInterestAdapter
 import com.cornellappdev.coffee_chats_android.models.ApiResponse
-import com.cornellappdev.coffee_chats_android.models.ClubOrInterest
+import com.cornellappdev.coffee_chats_android.models.GroupOrInterest
 import com.cornellappdev.coffee_chats_android.networking.*
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_create_profile.*
@@ -27,14 +27,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class ClubInterestActivity : AppCompatActivity() {
+class GroupInterestActivity : AppCompatActivity() {
     enum class CurrentPage {
         INTERESTS,
         GROUPS
     }
 
     private var currentPage: CurrentPage = CurrentPage.INTERESTS
-    lateinit var adapter: ClubInterestAdapter
+    lateinit var adapter: GroupInterestAdapter
     private val interestTitles = arrayOf(
         "Art",
         "Business",
@@ -68,7 +68,7 @@ class ClubInterestActivity : AppCompatActivity() {
         "programming, web/app development",
         "road, trips, backpacking"
     )
-    private lateinit var clubTitles: Array<String>
+    private lateinit var groupTitles: Array<String>
 
     private lateinit var userInterests: ArrayList<String>
     private lateinit var userGroups: ArrayList<String>
@@ -76,8 +76,8 @@ class ClubInterestActivity : AppCompatActivity() {
     var selectedColor = 0
     var unselectedColor = 0
 
-    private lateinit var interests: Array<ClubOrInterest>
-    private lateinit var clubs: Array<ClubOrInterest>
+    private lateinit var interests: Array<GroupOrInterest>
+    private lateinit var groups: Array<GroupOrInterest>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -127,10 +127,10 @@ class ClubInterestActivity : AppCompatActivity() {
                     )
                 }!!.data as ArrayList<String>
                 interests = Array(interestTitles.size) {
-                    ClubOrInterest("", "")
+                    GroupOrInterest("", "")
                 }
                 for (i in interestTitles.indices) {
-                    interests[i] = ClubOrInterest(
+                    interests[i] = GroupOrInterest(
                         interestTitles[i],
                         if (i < interestSubtitles.size) interestSubtitles[i] else ""
                     )
@@ -145,7 +145,7 @@ class ClubInterestActivity : AppCompatActivity() {
             } else {
                 val getGroupsEndpoint = Endpoint.getAllGroups()
                 val groupTypeToken = object : TypeToken<ApiResponse<List<String>>>() {}.type
-                clubTitles = withContext(Dispatchers.IO) {
+                groupTitles = withContext(Dispatchers.IO) {
                     Request.makeRequest<ApiResponse<List<String>>>(
                         getGroupsEndpoint.okHttpRequest(),
                         groupTypeToken
@@ -158,14 +158,14 @@ class ClubInterestActivity : AppCompatActivity() {
                         groupTypeToken
                     )
                 }!!.data as ArrayList<String>
-                clubs = Array(clubTitles.size) {
-                    ClubOrInterest("", "")
+                groups = Array(groupTitles.size) {
+                    GroupOrInterest("", "")
                 }
-                for (i in clubTitles.indices) {
-                    clubs[i] = ClubOrInterest(clubTitles[i], "")
+                for (i in groupTitles.indices) {
+                    groups[i] = GroupOrInterest(groupTitles[i], "")
 
                     for (j in userGroups.indices) {
-                        if (clubTitles[i] == userGroups[j]) {
+                        if (groupTitles[i] == userGroups[j]) {
                             signup_next.isEnabled = true
                             break
                         }
@@ -173,13 +173,13 @@ class ClubInterestActivity : AppCompatActivity() {
                 }
             }
             updatePage()
-            interests_or_clubs.setOnItemClickListener { _, view, position, _ ->
-                val selectedView = view.findViewById<ConstraintLayout>(R.id.club_or_interest_box)
+            interests_or_groups.setOnItemClickListener { _, view, position, _ ->
+                val selectedView = view.findViewById<ConstraintLayout>(R.id.group_or_interest_box)
                 val selectedText =
-                    selectedView.findViewById<TextView>(R.id.club_or_interest_text).text
+                    selectedView.findViewById<TextView>(R.id.group_or_interest_text).text
                 val drawableBox = selectedView.background
                 val currObj =
-                    if (currentPage == CurrentPage.INTERESTS) interests[position] else clubs[clubTitles.indexOf(
+                    if (currentPage == CurrentPage.INTERESTS) interests[position] else groups[groupTitles.indexOf(
                         selectedText
                     )]
                 currObj.toggleSelected()
@@ -214,12 +214,12 @@ class ClubInterestActivity : AppCompatActivity() {
     private fun updatePage() {
         when (currentPage) {
             CurrentPage.INTERESTS -> {
-                club_search.visibility = View.GONE
+                group_search.visibility = View.GONE
                 adapter =
-                    ClubInterestAdapter(
+                    GroupInterestAdapter(
                         this, interests, false
                     )
-                interests_or_clubs.adapter = adapter
+                interests_or_groups.adapter = adapter
 
                 signup_header.setText(R.string.interests_header)
                 signup_next.setText(R.string.almost_there)
@@ -234,42 +234,42 @@ class ClubInterestActivity : AppCompatActivity() {
                 signup_next.isEnabled = userInterests.isNotEmpty()
             }
             CurrentPage.GROUPS -> {
-                club_search.visibility = View.VISIBLE
-                club_search.queryHint = "Search"
+                group_search.visibility = View.VISIBLE
+                group_search.queryHint = "Search"
 
                 val searchImgId =
                     resources.getIdentifier("android:id/search_button", null, null)
                 val searchIcon: ImageView =
-                    club_search.findViewById(searchImgId)
+                    group_search.findViewById(searchImgId)
                 searchIcon.setColorFilter(
                     ContextCompat.getColor(this, R.color.searchHint), PorterDuff.Mode.DARKEN
                 )
                 adapter =
-                    ClubInterestAdapter(
-                        this, clubs, true
+                    GroupInterestAdapter(
+                        this, groups, true
                     )
 
-                interests_or_clubs.adapter = adapter
+                interests_or_groups.adapter = adapter
                 // initialize searchview
-                club_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                group_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextChange(newText: String): Boolean {
-                        var outputArr = clubs
+                        var outputArr = groups
                         if (newText.isNotBlank()) {
-                            val filtered = clubs.filter {
+                            val filtered = groups.filter {
                                 it.getText().toLowerCase().contains(newText.toLowerCase())
                             }.toTypedArray()
                             outputArr = filtered
                         }
                         adapter =
-                            ClubInterestAdapter(
+                            GroupInterestAdapter(
                                 applicationContext,
                                 outputArr,
                                 true
                             )
-                        interests_or_clubs.adapter = adapter
-                        for (i in clubTitles.indices) {
-                            if (userGroups.contains(clubTitles[i])) {
-                                clubs[i].setSelected()
+                        interests_or_groups.adapter = adapter
+                        for (i in groupTitles.indices) {
+                            if (userGroups.contains(groupTitles[i])) {
+                                groups[i].setSelected()
                             }
                         }
                         return true
@@ -280,13 +280,13 @@ class ClubInterestActivity : AppCompatActivity() {
                     }
                 })
 
-                signup_header.setText(R.string.clubs_header)
+                signup_header.setText(R.string.groups_header)
                 signup_next.setText(R.string.get_started)
                 add_later.visibility = View.VISIBLE
 
-                for (i in clubTitles.indices) {
-                    if (userGroups.contains(clubTitles[i])) {
-                        clubs[i].setSelected()
+                for (i in groupTitles.indices) {
+                    if (userGroups.contains(groupTitles[i])) {
+                        groups[i].setSelected()
                     }
                 }
 
@@ -315,9 +315,8 @@ class ClubInterestActivity : AppCompatActivity() {
                     .show()
             }
         }
-        println("Debug")
         if (currentPage == CurrentPage.INTERESTS) {
-            val intent = Intent(this, ClubInterestActivity::class.java)
+            val intent = Intent(this, GroupInterestActivity::class.java)
             intent.putExtra("page", 2)
             startActivity(intent)
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)

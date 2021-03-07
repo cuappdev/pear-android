@@ -43,7 +43,7 @@
 
 
     <SearchView
-        android:id="@+id/club_search"
+        android:id="@+id/group_search"
         android:layout_width="300dp"
         android:layout_marginTop="20dp"
         android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
         android:theme="@style/searchViewTheme"/>
 
     <ListView
-        android:id="@+id/interests_or_clubs"
+        android:id="@+id/interests_or_groups"
         android:layout_marginBottom="30dp"
         android:layout_marginTop="20dp"
         android:layout_width="300dp"
@@ -68,7 +68,7 @@
         android:divider="@android:color/transparent"
         android:dividerHeight="12.0sp"
         android:scrollbars="none"
-        app:layout_constraintTop_toBottomOf="@id/club_search"
+        app:layout_constraintTop_toBottomOf="@id/group_search"
         app:layout_constraintBottom_toTopOf="@id/signup_next"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/club_or_interest_box"
+    android:id="@+id/group_or_interest_box"
     android:layout_width="match_parent"
     android:layout_height="58dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -16,7 +16,7 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
-        android:id="@+id/club_or_interest_text"
+        android:id="@+id/group_or_interest_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -28,14 +28,14 @@
         app:layout_constraintLeft_toRightOf="@id/rounded_rectangle"/>
 
     <TextView
-        android:id="@+id/club_or_interest_subtext"
+        android:id="@+id/group_or_interest_subtext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/circular_book"
         android:textSize="12sp"
         android:layout_marginTop="5dp"
         android:textColor="@color/faded_text"
-        app:layout_constraintStart_toStartOf="@id/club_or_interest_text"
-        app:layout_constraintTop_toBottomOf="@id/club_or_interest_text"/>
+        app:layout_constraintStart_toStartOf="@id/group_or_interest_text"
+        app:layout_constraintTop_toBottomOf="@id/group_or_interest_text"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

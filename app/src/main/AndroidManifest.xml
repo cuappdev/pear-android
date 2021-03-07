@@ -17,7 +17,7 @@
             android:name=".SignInActivity"
             android:theme="@style/noAnimTheme" />
         <activity
-            android:name=".ClubInterestActivity"
+            android:name=".GroupInterestActivity"
             android:theme="@style/noAnimTheme" />
         <activity android:name=".SchedulingActivity" android:theme="@style/noAnimTheme">
             <intent-filter>
