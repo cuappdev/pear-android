@@ -28,6 +28,10 @@ import kotlinx.coroutines.withContext
 
 
 class GroupInterestActivity : AppCompatActivity() {
+    private val preferencesHelper: PreferencesHelper by lazy {
+        PreferencesHelper(this)
+    }
+
     enum class CurrentPage {
         INTERESTS,
         GROUPS
@@ -322,6 +326,7 @@ class GroupInterestActivity : AppCompatActivity() {
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         } else if (currentPage == CurrentPage.GROUPS) {
             // onboarding done, clear all activities on top of SchedulingActivity and launch SchedulingActivity
+            preferencesHelper.hasOnboarded = true
             val intent = Intent(this, SchedulingActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             startActivity(intent)
