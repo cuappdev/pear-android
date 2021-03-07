@@ -155,6 +155,7 @@ class CreateProfileActivity : AppCompatActivity() {
         })
 
         nextButton.setOnClickListener {
+            // update information on backend
             val pronouns = pronounSpinner.selectedItem as String
             val graduationYear = (classSpinner.selectedItemPosition + year).toString()
             val major = majorACTV.text.toString()
@@ -173,9 +174,16 @@ class CreateProfileActivity : AppCompatActivity() {
                 }
             }
 
+            // update information locally
+            val user = User.currentUser
+            user.pronouns = pronouns
+            user.graduationYear = graduationYear
+            user.major = major
+            user.hometown = hometown
+
             val intent = Intent(this, ClubInterestActivity::class.java)
-            startActivity(intent)
             intent.putExtra("page", 1)
+            startActivity(intent)
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
     }

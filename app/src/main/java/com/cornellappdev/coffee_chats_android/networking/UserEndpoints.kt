@@ -8,7 +8,9 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONException
 import org.json.JSONObject
 
-private fun authHeader(): Map<String, String> = mapOf("Authorization" to "Bearer ${UserSession.currentSession.accessToken}")
+private fun authHeader(): Map<String, String> =
+    mapOf("Authorization" to "Bearer ${UserSession.currentSession.accessToken}")
+
 private val gson = Gson()
 
 // AUTH
@@ -44,6 +46,38 @@ fun Endpoint.Companion.getAllMajors(): Endpoint {
 }
 
 fun Endpoint.Companion.updateDemographics(demographics: Demographics): Endpoint {
-    val requestBody = gson.toJson(demographics).toRequestBody("application/json; charset=utf-8".toMediaType())
-    return Endpoint(path = "/user/demographics", headers = authHeader(), body = requestBody, method = EndpointMethod.POST)
+    val requestBody =
+        gson.toJson(demographics).toRequestBody("application/json; charset=utf-8".toMediaType())
+    return Endpoint(
+        path = "/user/demographics",
+        headers = authHeader(),
+        body = requestBody,
+        method = EndpointMethod.POST
+    )
+}
+
+fun Endpoint.Companion.getAllInterests(): Endpoint {
+    return Endpoint(path = "/interest/all", headers = authHeader(), method = EndpointMethod.GET)
+}
+
+fun Endpoint.Companion.getAllGroups(): Endpoint {
+    return Endpoint(path = "/group/all", headers = authHeader(), method = EndpointMethod.GET)
+}
+
+fun Endpoint.Companion.getUserInterests(netID: String = ""): Endpoint {
+    val query = if (netID.isEmpty()) "" else "?netID=$netID"
+    return Endpoint(
+        path = "/user/interests/$query",
+        headers = authHeader(),
+        method = EndpointMethod.GET
+    )
+}
+
+fun Endpoint.Companion.getUserGroups(netID: String = ""): Endpoint {
+    val query = if (netID.isEmpty()) "" else "?netID=$netID"
+    return Endpoint(
+        path = "/user/groups/$query",
+        headers = authHeader(),
+        method = EndpointMethod.GET
+    )
 }

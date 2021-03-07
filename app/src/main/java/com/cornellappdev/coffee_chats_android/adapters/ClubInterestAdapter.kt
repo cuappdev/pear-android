@@ -1,6 +1,8 @@
 package com.cornellappdev.coffee_chats_android.adapters
 
 import android.content.Context
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
 import android.graphics.PorterDuff
 import android.view.LayoutInflater
 import android.view.View
@@ -46,8 +48,8 @@ class ClubInterestAdapter(private val mContext: Context, list: Array<ClubOrInter
         val unselected = ContextCompat.getColor(context, R.color.onboarding_fields)
         val drawableBox = viewHolder.layout!!.background
         if (currentClubInterest.isSelected()) {
-            drawableBox.setColorFilter(selected, PorterDuff.Mode.MULTIPLY)
-        } else drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
+            drawableBox.colorFilter = BlendModeColorFilter(selected, BlendMode.MULTIPLY)
+        } else drawableBox.colorFilter = BlendModeColorFilter(unselected, BlendMode.MULTIPLY)
 
         return listItem
     }

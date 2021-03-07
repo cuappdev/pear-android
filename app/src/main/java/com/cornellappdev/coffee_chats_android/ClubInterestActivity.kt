@@ -1,6 +1,8 @@
 package com.cornellappdev.coffee_chats_android
 
 import android.content.Intent
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
 import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.os.Bundle
@@ -13,54 +15,54 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.cornellappdev.coffee_chats_android.adapters.ClubInterestAdapter
+import com.cornellappdev.coffee_chats_android.models.ApiResponse
 import com.cornellappdev.coffee_chats_android.models.ClubOrInterest
-import com.cornellappdev.coffee_chats_android.models.InternalStorage
 import com.cornellappdev.coffee_chats_android.models.UserProfile
+import com.cornellappdev.coffee_chats_android.networking.*
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_create_profile.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class ClubInterestActivity : AppCompatActivity() {
     enum class CurrentPage {
         INTERESTS,
-        CLUBS
+        GROUPS
     }
     private var currentPage: CurrentPage = CurrentPage.INTERESTS
     lateinit var adapter: ClubInterestAdapter
-    lateinit var profile: UserProfile
-    private val interestTitles = arrayOf("Art", "Business", "Design", "Humanities", "Fitness & Sports", "Tech", "More")
-    private val interestSubtitles =  arrayOf("painting crafts, embroidery", "finance, entrepreneurship, VC", "UX/UI, graphic, print",
-        "history, politics", "working out, outdoors, basketball", "random technology", "there is more")
-    private val clubTitles = arrayOf("AppDev", "DTI", "Guac Magazine", "GCC", "CVC", "CVS")
+    private val interestTitles = arrayOf("Art", "Business", "Dance", "Design", "Fashion", "Fitness & Sports", "Food", "Humanities", "Music", "Photography", "Reading", "Sustainability", "Tech", "Travel", "TV & Film")
+    private val interestSubtitles =  arrayOf("painting, crafts, embroidery", "entrepreneurship, finance, VC", "urban, hip hop, ballet, swing",  "UX/UI, graphic, print",
+        "fashion", "working out, outdoors, basketball", "cooking, eating, baking", "history, politics", "instruments, producing, acapella", "digital, analog", "reading", "sustainability", "programming, web/app development", "road, trips, backpacking")
+    private lateinit var clubTitles: List<String>
 
-    var selected = 0
-    var unselected = 0
+    private lateinit var userInterests: ArrayList<String>
+    private lateinit var userGroups: ArrayList<String>
 
-    private var interests : Array<ClubOrInterest> = Array(interestTitles.size) {
-        ClubOrInterest("", "")
-    }
-    var clubs : Array<ClubOrInterest> = Array(clubTitles.size) {
-        ClubOrInterest("", "")
-    }
+    var selectedColor = 0
+    var unselectedColor = 0
+
+    private lateinit var interests : Array<ClubOrInterest>
+    private lateinit var clubs : Array<ClubOrInterest>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_create_profile)
 
-        selected = ContextCompat.getColor(this, R.color.onboardingListSelected)
-        unselected = ContextCompat.getColor(this, R.color.onboarding_fields)
+        selectedColor = ContextCompat.getColor(this, R.color.onboardingListSelected)
+        unselectedColor = ContextCompat.getColor(this, R.color.onboarding_fields)
 
         if(intent.getIntExtra("page", 1) == 1) {
             currentPage = CurrentPage.INTERESTS
             createProfileFragment.setBackgroundResource(R.drawable.onboarding_background_2)
         } else {
-            currentPage = CurrentPage.CLUBS
+            currentPage = CurrentPage.GROUPS
             createProfileFragment.setBackgroundResource(R.drawable.onboarding_background_3)
         }
-
-
-        // reads in user profile
-        profile = InternalStorage.readObject(this, "profile") as UserProfile
 
         signup_next.setOnClickListener { onNextPage() }
         add_later.visibility = View.INVISIBLE
@@ -83,60 +85,89 @@ class ClubInterestActivity : AppCompatActivity() {
         // signup_next is disabled until user has chosen at least one interest
         signup_next.isEnabled = false
 
-        for (i in interestTitles.indices) {
-            interests[i] = ClubOrInterest(interestTitles[i], interestSubtitles[i])
+        CoroutineScope(Dispatchers.Main).launch {
+            val getUserInterestsEndpoint = Endpoint.getUserInterests()
+            val interestTypeToken = object : TypeToken<ApiResponse<List<String>>>() {}.type
+            userInterests = withContext(Dispatchers.IO) {
+                Request.makeRequest<ApiResponse<List<String>>>(
+                    getUserInterestsEndpoint.okHttpRequest(),
+                    interestTypeToken
+                )
+            }!!.data as ArrayList<String>
+            interests = Array(interestTitles.size) {
+                ClubOrInterest("", "")
+            }
+            for (i in interestTitles.indices) {
+                interests[i] = ClubOrInterest(interestTitles[i], if (i < interestSubtitles.size) interestSubtitles[i] else "")
 
-            for (j in profile.interests.indices) {
-                if (interestTitles[i] == profile.interests[j]) {
-                    signup_next.isEnabled = true
-                    break
+                for (j in userInterests.indices) {
+                    if (interestTitles[i] == userInterests[j]) {
+                        signup_next.isEnabled = true
+                        break
+                    }
                 }
             }
-        }
+            val getGroupsEndpoint = Endpoint.getAllGroups()
+            val groupTypeToken = object : TypeToken<ApiResponse<List<String>>>() {}.type
+            clubTitles = withContext(Dispatchers.IO) {
+                Request.makeRequest<ApiResponse<List<String>>>(
+                    getGroupsEndpoint.okHttpRequest(),
+                    groupTypeToken
+                )!!.data
+            }
+            val getUserGroupsEndpoint = Endpoint.getUserGroups()
+            userGroups = withContext(Dispatchers.IO) {
+                Request.makeRequest<ApiResponse<List<String>>>(
+                    getUserGroupsEndpoint.okHttpRequest(),
+                    groupTypeToken
+                )
+            }!!.data as ArrayList<String>
+            clubs = Array(clubTitles.size) {
+                ClubOrInterest("", "")
+            }
+            for (i in clubTitles.indices) {
+                clubs[i] = ClubOrInterest(clubTitles[i], "")
 
-        for (i in clubTitles.indices) {
-            clubs[i] = ClubOrInterest(clubTitles[i], "")
-
-            for (j in profile.clubs.indices) {
-                if (clubTitles[i] == profile.clubs[j]) {
-                    signup_next.isEnabled = true
-                    break
+                for (j in userGroups.indices) {
+                    if (clubTitles[i] == userGroups[j]) {
+                        signup_next.isEnabled = true
+                        break
+                    }
                 }
             }
-        }
 
-        interests_or_clubs.setOnItemClickListener { _, view, position, _ ->
-            val selectedView = view.findViewById<ConstraintLayout>(R.id.club_or_interest_box)
-            val selectedText = selectedView.findViewById<TextView>(R.id.club_or_interest_text).text
-            val drawableBox = selectedView.background
-            val currObj = if (currentPage == CurrentPage.INTERESTS) interests[position] else clubs[clubTitles.indexOf(selectedText)]
-            currObj.toggleSelected()
-            if (currObj.isSelected()) {
-                drawableBox.setColorFilter(selected, PorterDuff.Mode.MULTIPLY)
-                if (currentPage == CurrentPage.INTERESTS) profile.interests.add(currObj.getText())
-                else profile.clubs.add(currObj.getText())
+            interests_or_clubs.setOnItemClickListener { _, view, position, _ ->
+                val selectedView = view.findViewById<ConstraintLayout>(R.id.club_or_interest_box)
+                val selectedText = selectedView.findViewById<TextView>(R.id.club_or_interest_text).text
+                val drawableBox = selectedView.background
+                val currObj = if (currentPage == CurrentPage.INTERESTS) interests[position] else clubs[clubTitles.indexOf(selectedText)]
+                currObj.toggleSelected()
+                if (currObj.isSelected()) {
+                    drawableBox.colorFilter = BlendModeColorFilter(selectedColor, BlendMode.MULTIPLY)
+                    if (currentPage == CurrentPage.INTERESTS) userInterests.add(currObj.getText())
+                    else userGroups.add(currObj.getText())
 
-                if (!signup_next.isEnabled) {
-                    signup_next.isEnabled = true
-                }
-            } else {
-                drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
-
-                if (currentPage == CurrentPage.INTERESTS) {
-                    profile.interests.remove(selectedText)
-                    if (profile.interests.isEmpty()) {
-                        signup_next.isEnabled = false
+                    if (!signup_next.isEnabled) {
+                        signup_next.isEnabled = true
                     }
                 } else {
-                    profile.clubs.remove(selectedText)
-                    if (profile.clubs.isEmpty()) {
-                        signup_next.isEnabled = false
+                    drawableBox.colorFilter = BlendModeColorFilter(unselectedColor, BlendMode.MULTIPLY)
+                    if (currentPage == CurrentPage.INTERESTS) {
+                        userInterests.remove(selectedText)
+                        if (userInterests.isEmpty()) {
+                            signup_next.isEnabled = false
+                        }
+                    } else {
+                        userGroups.remove(selectedText)
+                        if (userGroups.isEmpty()) {
+                            signup_next.isEnabled = false
+                        }
                     }
                 }
             }
-        }
 
-        updatePage()
+            updatePage()
+        }
     }
 
     private fun updatePage() {
@@ -159,15 +190,15 @@ class ClubInterestActivity : AppCompatActivity() {
                     val nameView = v.findViewById<TextView>(R.id.club_or_interest_text)
                     val name = nameView.text.toString()
 
-                    if (profile.interests.contains(name))
-                        drawableBox.setColorFilter(selected, PorterDuff.Mode.MULTIPLY)
+                    if (userInterests.contains(name))
+                        drawableBox.colorFilter = BlendModeColorFilter(selectedColor, BlendMode.MULTIPLY)
                     else
-                        drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
+                        drawableBox.colorFilter = BlendModeColorFilter(unselectedColor, BlendMode.MULTIPLY)
                 }
 
-                signup_next.isEnabled = profile.interests.isNotEmpty()
+                signup_next.isEnabled = userInterests.isNotEmpty()
             }
-            CurrentPage.CLUBS -> {
+            CurrentPage.GROUPS -> {
                 club_search.visibility = View.VISIBLE
                 club_search.queryHint = "Search"
 
@@ -209,10 +240,10 @@ class ClubInterestActivity : AppCompatActivity() {
                             val nameView = v.findViewById<TextView>(R.id.club_or_interest_text)
                             val name = nameView.text.toString()
 
-                            if (profile.clubs.contains(name))
-                                drawableBox.setColorFilter(selected, PorterDuff.Mode.MULTIPLY)
+                            if (userGroups.contains(name))
+                                drawableBox.colorFilter = BlendModeColorFilter(selectedColor, BlendMode.MULTIPLY)
                             else
-                                drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
+                                drawableBox.colorFilter = BlendModeColorFilter(unselectedColor, BlendMode.MULTIPLY)
                         }
 
                         return true
@@ -233,25 +264,25 @@ class ClubInterestActivity : AppCompatActivity() {
                     val nameView = v.findViewById<TextView>(R.id.club_or_interest_text)
                     val name = nameView.text.toString()
 
-                    if (profile.clubs.contains(name))
-                        drawableBox.setColorFilter(selected, PorterDuff.Mode.MULTIPLY)
+                    if (userGroups.contains(name))
+                        drawableBox.colorFilter = BlendModeColorFilter(selectedColor, BlendMode.MULTIPLY)
                     else
-                        drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
+                        drawableBox.colorFilter = BlendModeColorFilter(unselectedColor, BlendMode.MULTIPLY)
                 }
 
-                signup_next.isEnabled = profile.clubs.isNotEmpty()
+                signup_next.isEnabled = userGroups.isNotEmpty()
             }
         }
     }
 
     private fun onNextPage() {
-        InternalStorage.writeObject(this, "profile", profile as Object)
+        // TODO: Save interests or groups
         if (currentPage == CurrentPage.INTERESTS) {
             val intent = Intent(this, ClubInterestActivity::class.java)
             intent.putExtra("page", 2)
             startActivity(intent)
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
-        } else if (currentPage == CurrentPage.CLUBS) {
+        } else if (currentPage == CurrentPage.GROUPS) {
             // onboarding done, clear all activities on top of SchedulingActivity and launch SchedulingActivity
             val intent = Intent(this, SchedulingActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
@@ -260,10 +291,10 @@ class ClubInterestActivity : AppCompatActivity() {
     }
 
     private fun onBackPage() {
-        InternalStorage.writeObject(this, "profile", profile as Object)
+        // TODO: Save interests or groups?
         if (currentPage == CurrentPage.INTERESTS) {
             finish()
-        } else if (currentPage == CurrentPage.CLUBS) {
+        } else if (currentPage == CurrentPage.GROUPS) {
             currentPage = CurrentPage.INTERESTS
             finish()
         }
