@@ -39,39 +39,8 @@ class GroupInterestActivity : AppCompatActivity() {
 
     private var currentPage: CurrentPage = CurrentPage.INTERESTS
     lateinit var adapter: GroupInterestAdapter
-    private val interestTitles = arrayOf(
-        "Art",
-        "Business",
-        "Dance",
-        "Design",
-        "Fashion",
-        "Fitness & Sports",
-        "Food",
-        "Humanities",
-        "Music",
-        "Photography",
-        "Reading",
-        "Sustainability",
-        "Tech",
-        "Travel",
-        "TV & Film"
-    )
-    private val interestSubtitles = arrayOf(
-        "painting, crafts, embroidery",
-        "entrepreneurship, finance, VC",
-        "urban, hip hop, ballet, swing",
-        "UX/UI, graphic, print",
-        "fashion",
-        "working out, outdoors, basketball",
-        "cooking, eating, baking",
-        "history, politics",
-        "instruments, producing, acapella",
-        "digital, analog",
-        "reading",
-        "sustainability",
-        "programming, web/app development",
-        "road, trips, backpacking"
-    )
+    private lateinit var interestTitles: Array<String>
+    private lateinit var interestSubtitles: Array<String>
     private lateinit var groupTitles: Array<String>
 
     private lateinit var userInterests: ArrayList<String>
@@ -87,6 +56,9 @@ class GroupInterestActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_create_profile)
+
+        interestTitles = resources.getStringArray(R.array.interest_titles)
+        interestSubtitles = resources.getStringArray(R.array.interest_subtitles)
 
         selectedColor = ContextCompat.getColor(this, R.color.onboardingListSelected)
         unselectedColor = ContextCompat.getColor(this, R.color.onboarding_fields)
@@ -104,8 +76,7 @@ class GroupInterestActivity : AppCompatActivity() {
         add_later.setOnClickListener { onNextPage() }
         back_button.setOnClickListener { onBackPage() }
         // increase the hit area of back button
-        val parent =
-            back_button.parent as View // button: the view you want to enlarge hit area
+        val parent = back_button.parent as View // button: the view you want to enlarge hit area
 
         parent.post {
             val rect = Rect()
@@ -131,20 +102,13 @@ class GroupInterestActivity : AppCompatActivity() {
                     )
                 }!!.data as ArrayList<String>
                 interests = Array(interestTitles.size) {
-                    GroupOrInterest("", "")
+                    GroupOrInterest()
                 }
                 for (i in interestTitles.indices) {
                     interests[i] = GroupOrInterest(
                         interestTitles[i],
                         if (i < interestSubtitles.size) interestSubtitles[i] else ""
                     )
-
-                    for (j in userInterests.indices) {
-                        if (interestTitles[i] == userInterests[j]) {
-                            signup_next.isEnabled = true
-                            break
-                        }
-                    }
                 }
             } else {
                 val getGroupsEndpoint = Endpoint.getAllGroups()
@@ -163,17 +127,10 @@ class GroupInterestActivity : AppCompatActivity() {
                     )
                 }!!.data as ArrayList<String>
                 groups = Array(groupTitles.size) {
-                    GroupOrInterest("", "")
+                    GroupOrInterest()
                 }
                 for (i in groupTitles.indices) {
-                    groups[i] = GroupOrInterest(groupTitles[i], "")
-
-                    for (j in userGroups.indices) {
-                        if (groupTitles[i] == userGroups[j]) {
-                            signup_next.isEnabled = true
-                            break
-                        }
-                    }
+                    groups[i] = GroupOrInterest(groupTitles[i])
                 }
             }
             updatePage()
@@ -183,9 +140,8 @@ class GroupInterestActivity : AppCompatActivity() {
                     selectedView.findViewById<TextView>(R.id.group_or_interest_text).text
                 val drawableBox = selectedView.background
                 val currObj =
-                    if (currentPage == CurrentPage.INTERESTS) interests[position] else groups[groupTitles.indexOf(
-                        selectedText
-                    )]
+                    if (currentPage == CurrentPage.INTERESTS) interests[position]
+                    else groups[groupTitles.indexOf(selectedText)]
                 currObj.toggleSelected()
                 if (currObj.isSelected()) {
                     drawableBox.colorFilter =
@@ -239,7 +195,7 @@ class GroupInterestActivity : AppCompatActivity() {
             }
             CurrentPage.GROUPS -> {
                 group_search.visibility = View.VISIBLE
-                group_search.queryHint = "Search"
+                group_search.queryHint = getString(R.string.groups_search_query_hint)
 
                 val searchImgId =
                     resources.getIdentifier("android:id/search_button", null, null)
