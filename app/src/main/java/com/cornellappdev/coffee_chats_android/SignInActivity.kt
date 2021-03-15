@@ -37,7 +37,6 @@ class SignInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
-
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         val gso = Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -87,7 +86,11 @@ class SignInActivity : AppCompatActivity() {
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
-            val intent = Intent(this, CreateProfileActivity::class.java)
+            val intent = if (preferencesHelper.hasOnboarded) {
+                Intent(this, SchedulingActivity::class.java)
+            } else {
+                Intent(this, CreateProfileActivity::class.java)
+            }
             if (account != null) {
                 val personName: String? = account.givenName
                 val personEmail: String? = account.email
@@ -112,10 +115,7 @@ class SignInActivity : AppCompatActivity() {
                             preferencesHelper.accessToken = userSession.accessToken
                             preferencesHelper.refreshToken = userSession.refreshToken
                             preferencesHelper.expiresAt = userSession.sessionExpiration.toLong()
-                            Log.d(
-                                "GOOGLE_AUTH_LOGIN",
-                                "accessToken: ${userSession.accessToken}, refreshToken: ${userSession.refreshToken}, expiresAt: ${userSession.sessionExpiration}"
-                            )
+                            UserSession.currentSession = userSession
                             startActivity(intent)
                         }
                     } else {

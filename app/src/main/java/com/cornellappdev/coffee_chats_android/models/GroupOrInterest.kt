@@ -1,6 +1,6 @@
 package com.cornellappdev.coffee_chats_android.models
 
-class ClubOrInterest(private var text: String, private var subtext: String) {
+class GroupOrInterest(private var text: String = "", private var subtext: String = "") {
     private var selected: Boolean = false
 
     fun getText() : String {

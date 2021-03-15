@@ -5,13 +5,47 @@
     <string name="welcome_header">Welcome to Pear</string>
     <string name="interests_header">What do you love?</string>
     <string name="almost_there">Almost there</string>
-    <string name="clubs_header">What are you a part of?</string>
+    <string name="groups_header">What are you a part of?</string>
+    <string name="groups_search_query_hint">Search</string>
     <string name="get_started">Ready for Pear</string>
     <string name="go_back">Go back</string>
     <string name="demographics_header">"Hi %1$s!\nLet's get to know you better."</string>
     <string name="demographics_header_no_name">"Hi!\nLet's get to know you better."</string>
     <string name="add_later_button">I\'ll add later</string>
-
+    <string-array name="interest_titles">
+        <item>Art</item>
+        <item>Business</item>
+        <item>Dance</item>
+        <item>Design</item>
+        <item>Fashion</item>
+        <item>Fitness &amp; Sports</item>
+        <item>Food</item>
+        <item>Humanities</item>
+        <item>Music</item>
+        <item>Photography</item>
+        <item>Reading</item>
+        <item>Sustainability</item>
+        <item>Tech</item>
+        <item>Travel</item>
+        <item>TV &amp; Film</item>
+    </string-array>
+    <string-array name="interest_subtitles">
+        <item>painting, crafts, embroidery</item>
+        <item>entrepreneurship, finance, VC</item>
+        <item>urban, hip hop, ballet, swing</item>
+        <item>UX/UI, graphic, print</item>
+        <item>fashion</item>
+        <item>working out, outdoors, basketball</item>
+        <item>cooking, eating, baking</item>
+        <item>history, politics</item>
+        <item>instruments, producing, acapella</item>
+        <item>digital, analog</item>
+        <item>reading</item>
+        <item>sustainability</item>
+        <item>programming, web/app development</item>
+        <item>road, trips, backpacking</item>
+    </string-array>
+    
     <!--SCHEDULING-->
     <string name="scheduling_time_header">When are you free?</string>
     <string name="scheduling_finish">Next</string>

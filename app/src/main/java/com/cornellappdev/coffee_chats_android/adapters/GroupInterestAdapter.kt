@@ -1,7 +1,8 @@
 package com.cornellappdev.coffee_chats_android.adapters
 
 import android.content.Context
-import android.graphics.PorterDuff
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,13 +12,13 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.cornellappdev.coffee_chats_android.R
-import com.cornellappdev.coffee_chats_android.models.ClubOrInterest
+import com.cornellappdev.coffee_chats_android.models.GroupOrInterest
 
 
-class ClubInterestAdapter(private val mContext: Context, list: Array<ClubOrInterest>, club: Boolean) :
-    ArrayAdapter<ClubOrInterest?>(mContext, 0, list), Filterable {
+class GroupInterestAdapter(private val mContext: Context, list: Array<GroupOrInterest>, isGroup: Boolean) :
+    ArrayAdapter<GroupOrInterest?>(mContext, 0, list), Filterable {
     private var clubInterestList = list
-    private var isClubView = club
+    private var isGroupView = isGroup
     override fun getView(
         position: Int,
         convertView: View?,
@@ -26,8 +27,8 @@ class ClubInterestAdapter(private val mContext: Context, list: Array<ClubOrInter
         val viewHolder: ViewHolder
         val listItem: View
         if (convertView == null) {
-            listItem = if (isClubView) {
-                LayoutInflater.from(mContext).inflate(R.layout.club_view, parent, false)
+            listItem = if (isGroupView) {
+                LayoutInflater.from(mContext).inflate(R.layout.group_view, parent, false)
             } else {
                 LayoutInflater.from(mContext).inflate(R.layout.interest_view, parent, false)
             }
@@ -46,20 +47,20 @@ class ClubInterestAdapter(private val mContext: Context, list: Array<ClubOrInter
         val unselected = ContextCompat.getColor(context, R.color.onboarding_fields)
         val drawableBox = viewHolder.layout!!.background
         if (currentClubInterest.isSelected()) {
-            drawableBox.setColorFilter(selected, PorterDuff.Mode.MULTIPLY)
-        } else drawableBox.setColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
+            drawableBox.colorFilter = BlendModeColorFilter(selected, BlendMode.MULTIPLY)
+        } else drawableBox.colorFilter = BlendModeColorFilter(unselected, BlendMode.MULTIPLY)
 
         return listItem
     }
 
     init {
         clubInterestList = list
-        isClubView = club
+        isGroupView = isGroup
     }
 
     private class ViewHolder(view: View?) {
-        val clubOrInterestText = view?.findViewById(R.id.club_or_interest_text) as TextView
-        val clubOrInterestSubtext = view?.findViewById(R.id.club_or_interest_subtext) as TextView
-        val layout = view?.findViewById<ConstraintLayout>(R.id.club_or_interest_box)
+        val clubOrInterestText = view?.findViewById(R.id.group_or_interest_text) as TextView
+        val clubOrInterestSubtext = view?.findViewById(R.id.group_or_interest_subtext) as TextView
+        val layout = view?.findViewById<ConstraintLayout>(R.id.group_or_interest_box)
     }
 }
