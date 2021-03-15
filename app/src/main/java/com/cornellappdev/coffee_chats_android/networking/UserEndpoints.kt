@@ -1,6 +1,8 @@
 package com.cornellappdev.coffee_chats_android.networking
 
+import com.cornellappdev.coffee_chats_android.models.Availability
 import com.cornellappdev.coffee_chats_android.models.Demographics
+import com.cornellappdev.coffee_chats_android.models.Location
 import com.cornellappdev.coffee_chats_android.models.UserSession
 import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaType
@@ -91,6 +93,46 @@ fun Endpoint.Companion.updateGroups(groups: List<String>): Endpoint {
     val requestBody = json.toString().toRequestBody("application/json; charset=utf-8".toMediaType())
     return Endpoint(
         path = "/user/groups",
+        headers = authHeader(),
+        body = requestBody,
+        method = EndpointMethod.POST
+    )
+}
+
+fun Endpoint.Companion.getUserAvailabilities(netID: String = ""): Endpoint {
+    val query = if (netID.isEmpty()) "" else "?netID=$netID"
+    return Endpoint(
+        path = "/user/availabilities/$query",
+        headers = authHeader(),
+        method = EndpointMethod.GET
+    )
+}
+
+fun Endpoint.Companion.updateAvailabilities(availabilities: List<Availability>): Endpoint {
+    val json = gson.toJson(mapOf("schedule" to availabilities))
+    val requestBody = json.toString().toRequestBody("application/json; charset=utf-8".toMediaType())
+    return Endpoint(
+        path = "/user/availabilities",
+        headers = authHeader(),
+        body = requestBody,
+        method = EndpointMethod.POST
+    )
+}
+
+fun Endpoint.Companion.getUserLocations(netID: String = ""): Endpoint {
+    val query = if (netID.isEmpty()) "" else "?netID=$netID"
+    return Endpoint(
+        path = "/user/preferredLocations/$query",
+        headers = authHeader(),
+        method = EndpointMethod.GET
+    )
+}
+
+fun Endpoint.Companion.updateLocations(locations: List<Location>): Endpoint {
+    val json = gson.toJson(mapOf("preferences" to locations))
+    val requestBody = json.toString().toRequestBody("application/json; charset=utf-8".toMediaType())
+    return Endpoint(
+        path = "/user/preferredLocations",
         headers = authHeader(),
         body = requestBody,
         method = EndpointMethod.POST

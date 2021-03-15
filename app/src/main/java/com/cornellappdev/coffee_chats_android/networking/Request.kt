@@ -18,6 +18,7 @@ object Request {
     suspend inline fun <reified T> makeRequest(request: okhttp3.Request, typeToken: Type): T? {
         Log.d("BACKEND_REQUEST", request.url.toString())
         Log.d("BACKEND_REQUEST_METHOD", request.method)
+        Log.d("BACKEND_REQUEST_HEADERS", request.headers.toString())
         val response = httpClient.newCall(request).await()
         val responseBody = response.body
         val responseBodyString = responseBody?.string() ?: ""

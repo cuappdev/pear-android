@@ -46,31 +46,92 @@
         <item>road, trips, backpacking</item>
     </string-array>
     
-    <!--SCHEDULING-->
+    <!--SCHEDULING TIME-->
     <string name="scheduling_time_header">When are you free?</string>
     <string name="scheduling_finish">Next</string>
-    <string name="sat_sun">S</string>
-    <string name="mon">M</string>
-    <string name="tues">T</string>
-    <string name="wed">W</string>
-    <string name="thurs">Th</string>
-    <string name="fri">F</string>
+    <string-array name="days_abbr">
+        <item>Su</item>
+        <item>M</item>
+        <item>Tu</item>
+        <item>W</item>
+        <item>Th</item>
+        <item>F</item>
+        <item>Sa</item>
+    </string-array>
+    <string-array name="days_full_name">
+        <item>sunday</item>
+        <item>monday</item>
+        <item>tuesday</item>
+        <item>wednesday</item>
+        <item>thursday</item>
+        <item>friday</item>
+        <item>saturday</item>
+    </string-array>
+    <string-array name="times">
+        <item>9:00</item>
+        <item>1:00</item>
+        <item>5:00</item>
+        <item>9:30</item>
+        <item>1:30</item>
+        <item>5:30</item>
+        <item>10:00</item>
+        <item>2:00</item>
+        <item>6:00</item>
+        <item>10:30</item>
+        <item>2:30</item>
+        <item>6:30</item>
+        <item>11:00</item>
+        <item>3:00</item>
+        <item>7:00</item>
+        <item>11:30</item>
+        <item>3:30</item>
+        <item>7:30</item>
+        <item>12:00</item>
+        <item>4:00</item>
+        <item>8:00</item>
+        <item>12:30</item>
+        <item>4:30</item>
+        <item>8:30</item>
+    </string-array>
+    <string name="day_header">Every %1$s</string>
     <string name="morning">Morning</string>
     <string name="afternoon">Afternoon</string>
     <string name="evening">Evening</string>
+    <string name="scheduling_time_button">Next</string>
+
+    <!--SCHEDULING LOCATION-->
     <string name="scheduling_place_header">Where do you prefer?</string>
     <string name="scheduling_place_subtitle">pick three</string>
+    <string-array name="campus_locations">
+        <item>Atrium Café</item>
+        <item>Café Jennie</item>
+        <item>Gimme Coffee</item>
+        <item>Goldie\'s Café</item>
+        <item>Green Dragon</item>
+        <item>Libe Café</item>
+        <item>Mac\'s Café</item>
+        <item>Martha\'s Café</item>
+        <item>Mattin\'s Café</item>
+        <item>Temple of Zeus</item>
+    </string-array>
+    <string-array name="collegetown_locations">
+        <item>Kung Fu Tea</item>
+        <item>Starbucks</item>
+        <item>CTB</item>
+        <item>U Tea</item>
+    </string-array>
+    <string name="scheduling_place_button">Finish</string>
 
     <!--MATCH PAGE-->
     <string name="match_header">Meet your Pear</string>
-    <string name="match_loves">You both love...</string>
-    <string name="match_shared_clubs">You\'re both part of...</string>
-    <string name="match_enjoys">%1$s also enjoys...</string>
-    <string name="match_clubs">%1$s is also part of...</string>
+    <string name="match_loves">You both love…</string>
+    <string name="match_shared_clubs">You\'re both part of…</string>
+    <string name="match_enjoys">%1$s also enjoys…</string>
+    <string name="match_clubs">%1$s is also part of…</string>
     <string name="match_reach_out">Reach Out!</string>
 
     <!--NO MATCH PAGE-->
-    <string name="no_match_header">Meet your new Pear next Sunday</string>
+    <string name="no_match_header">Meet your new Pear next Monday</string>
     <string name="no_match_subheader">
         In the meantime, tell me when you\'re
         usually free to make meeting up easier!
