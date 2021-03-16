@@ -7,7 +7,6 @@ import android.widget.Button
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.cornellappdev.coffee_chats_android.models.*
 import com.cornellappdev.coffee_chats_android.networking.Endpoint
@@ -117,17 +116,7 @@ class SchedulingActivity :
     private fun onBackPage() {
         page--
         supportFragmentManager.popBackStack()
-        if (page == 0) {
-            setUpNoMatchPage()
-        } else if (page == 1) {
-            scheduling_header.text = getString(R.string.scheduling_time_header)
-            scheduling_finish.isEnabled = false
-            profile = InternalStorage.readObject(this, "profile") as UserProfile
-            for ((_, selectedTimes) in profile.availableTimes) {
-                if (selectedTimes.isNotEmpty()) nextButton.isEnabled = true
-            }
-            nextButton.text = getString(R.string.scheduling_time_button)
-        }
+        setUpCurrentPage()
     }
 
     private fun onNextPage() {
@@ -135,36 +124,42 @@ class SchedulingActivity :
             val locationFragment = supportFragmentManager.findFragmentByTag(schedulePlaceTag) as SchedulingPlaceFragment
             locationFragment.updateLocations()
             page = 0
-            setUpNoMatchPage()
+            setUpCurrentPage()
             supportFragmentManager.popBackStack(noMatchTag, 0)
             return
         }
-        back_button.visibility = View.VISIBLE
         if (page < 2) page++
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-        nextButton.text = getString(R.string.scheduling_finish)
-        nextButton.isEnabled = false
-        nextButton.setPadding(180, 0, 180, 0)
         if (page == 1) {
-            scheduling_header.text = getString(R.string.scheduling_time_header)
-            nextButton.text = getString(R.string.scheduling_time_button)
             ft.replace(body_fragment.id, SchedulingTimeFragment(), scheduleTimeTag)
         } else {
             val timeFragment = supportFragmentManager.findFragmentByTag(scheduleTimeTag) as SchedulingTimeFragment
             timeFragment.updateSchedule()
-            scheduling_header.text = getString(R.string.scheduling_place_header)
-            nextButton.text = getString(R.string.scheduling_place_button)
             ft.replace(body_fragment.id, SchedulingPlaceFragment(), schedulePlaceTag)
         }
+        setUpCurrentPage()
         ft.addToBackStack("ft")
         ft.commit()
     }
 
-    private fun setUpNoMatchPage() {
-        backButton.visibility = View.GONE
-        scheduling_header.text = getString(R.string.no_match_header)
-        nextButton.text = getString(R.string.no_match_availability)
-        nextButton.isEnabled = true
-        nextButton.setPadding(100, 0, 100, 0)
+    private fun setUpCurrentPage() {
+        if (page == 0) {
+            backButton.visibility = View.GONE
+            scheduling_header.text = getString(R.string.no_match_header)
+            nextButton.text = getString(R.string.no_match_availability)
+            nextButton.isEnabled = true
+            nextButton.setPadding(100, 0, 100, 0)
+        } else {
+            backButton.visibility = View.VISIBLE
+            nextButton.isEnabled = false
+            nextButton.setPadding(180, 0, 180, 0)
+            if (page == 1) {
+                scheduling_header.text = getString(R.string.scheduling_time_header)
+                nextButton.text = getString(R.string.scheduling_time_button)
+            } else {
+                scheduling_header.text = getString(R.string.scheduling_place_header)
+                nextButton.text = getString(R.string.scheduling_place_button)
+            }
+        }
     }
 }

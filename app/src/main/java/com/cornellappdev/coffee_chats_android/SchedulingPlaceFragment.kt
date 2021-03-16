@@ -25,6 +25,8 @@ class SchedulingPlaceFragment : Fragment() {
     private lateinit var campusPlaces: Array<String>
     private lateinit var collegetownPlaces: Array<String>
     private val preferredLocations = mutableListOf<String>()
+    // currently requiring a minimum of 3 places
+    private val minRequiredLocations = 3
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +41,7 @@ class SchedulingPlaceFragment : Fragment() {
         campusPlaces = resources.getStringArray(R.array.campus_locations)
         collegetownPlaces = resources.getStringArray(R.array.collegetown_locations)
         CoroutineScope(Dispatchers.Main).launch {
+            // get existing selected locations
             val getUserLocationsEndpoint = Endpoint.getUserLocations()
             val typeToken = object : TypeToken<ApiResponse<List<Location>>>() {}.type
             val locations = withContext(Dispatchers.IO) {
@@ -50,9 +53,9 @@ class SchedulingPlaceFragment : Fragment() {
             for ((_, place) in locations) {
                 preferredLocations.add(place)
             }
-            if (preferredLocations.isNotEmpty()) {
-                callback!!.onFilledOut()
-            }
+            toggleNextButton()
+
+            // set up adapters
             val campusAdapter = PlacesAdapter(requireContext(), campusPlaces, preferredLocations)
             campusGridView.adapter = campusAdapter
             val collegetownAdapter =
@@ -74,7 +77,6 @@ class SchedulingPlaceFragment : Fragment() {
                                 requireContext(),
                                 R.drawable.location_scheduling_places_unselected
                             )
-                        if (preferredLocations.isEmpty()) callback!!.onSelectionEmpty()
                     } else {
                         preferredLocations.add(campusPlaces[position])
                         campusSelectedPlace.background =
@@ -82,8 +84,8 @@ class SchedulingPlaceFragment : Fragment() {
                                 requireContext(),
                                 R.drawable.location_scheduling_places_selected
                             )
-                        callback!!.onFilledOut()
                     }
+                    toggleNextButton()
                 }
             collegetownGridView.onItemClickListener =
                 OnItemClickListener { _, _, position, _ ->
@@ -95,16 +97,24 @@ class SchedulingPlaceFragment : Fragment() {
                             requireContext(),
                             R.drawable.location_scheduling_places_unselected
                         )
-                        if (preferredLocations.isEmpty()) callback!!.onSelectionEmpty()
                     } else {
                         preferredLocations.add(collegetownPlaces[position])
                         ctownSelectedPlace.background = getDrawable(
                             requireContext(),
                             R.drawable.location_scheduling_places_selected
                         )
-                        callback!!.onFilledOut()
                     }
+                    toggleNextButton()
                 }
+        }
+    }
+
+    // enables or disables the next button based on the number of selected locations
+    private fun toggleNextButton() {
+        if (preferredLocations.size >= minRequiredLocations) {
+            callback!!.onFilledOut()
+        } else {
+            callback!!.onSelectionEmpty()
         }
     }
 
