@@ -74,14 +74,14 @@ class SchedulingActivity :
                 preferencesHelper.expiresAt.toString(),
                 true
             )
-            profile = InternalStorage.readObject(this, "profile") as UserProfile
         } else {
             // prompt user to log in
             signIn()
         }
 
         // add fragment to body_fragment
-        ft.add(body_fragment.id, NoMatchFragment()).addToBackStack(noMatchTag).commit()
+        ft.add(body_fragment.id, NoMatchFragment()).addToBackStack(noMatchTag)
+        ft.commit()
 
         back_button.setOnClickListener { onBackPage() }
         back_button.visibility = View.GONE
@@ -121,7 +121,8 @@ class SchedulingActivity :
 
     private fun onNextPage() {
         if (page == 2) {
-            val locationFragment = supportFragmentManager.findFragmentByTag(schedulePlaceTag) as SchedulingPlaceFragment
+            val locationFragment =
+                supportFragmentManager.findFragmentByTag(schedulePlaceTag) as SchedulingPlaceFragment
             locationFragment.updateLocations()
             page = 0
             setUpCurrentPage()
@@ -133,7 +134,8 @@ class SchedulingActivity :
         if (page == 1) {
             ft.replace(body_fragment.id, SchedulingTimeFragment(), scheduleTimeTag)
         } else {
-            val timeFragment = supportFragmentManager.findFragmentByTag(scheduleTimeTag) as SchedulingTimeFragment
+            val timeFragment =
+                supportFragmentManager.findFragmentByTag(scheduleTimeTag) as SchedulingTimeFragment
             timeFragment.updateSchedule()
             ft.replace(body_fragment.id, SchedulingPlaceFragment(), schedulePlaceTag)
         }
