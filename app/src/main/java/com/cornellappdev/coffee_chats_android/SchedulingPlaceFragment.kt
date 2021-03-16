@@ -25,6 +25,7 @@ class SchedulingPlaceFragment : Fragment() {
     private lateinit var campusPlaces: Array<String>
     private lateinit var collegetownPlaces: Array<String>
     private val preferredLocations = mutableListOf<String>()
+
     // currently requiring a minimum of 3 places
     private val minRequiredLocations = 3
 
