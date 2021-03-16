@@ -57,8 +57,8 @@ class SchedulingTimeFragment : Fragment() {
             availableTimes[day] = mutableListOf()
         }
 
-        // fetch existing user availabilities
         CoroutineScope(Dispatchers.Main).launch {
+            // fetch existing user availabilities
             val getUserAvailabilitiesEndpoint = Endpoint.getUserAvailabilities()
             val typeToken = object : TypeToken<ApiResponse<List<Availability>>>() {}.type
             val availabilities = withContext(Dispatchers.IO) {
@@ -170,108 +170,11 @@ class SchedulingTimeFragment : Fragment() {
                 }
             }
         }
-
-//        val profile = InternalStorage.readObject(requireContext(), "profile") as UserProfile
-//        // initialize [profile.availableTimes] HashMap and selectedDays based on existing profile
-//        for (day in days) {
-//            if (profile.availableTimes[day] == null) {
-//                profile.availableTimes[day] = mutableListOf()
-//            }
-//            if (profile.availableTimes[day]!!.size != 0) selectedDays.add(day)
-//        }
-//        InternalStorage.writeObject(requireContext(), "profile", profile as Object)
-
-//        val timeAdapter =
-//            TimeOptionAdapter(
-//                requireContext(),
-//                times,
-//                profile.availableTimes["Su"]!!
-//            )
-//        time_gridview.adapter = timeAdapter
-//        val dayAdapter =
-//            DayAdapter(
-//                requireContext(),
-//                days,
-//                selectedDays
-//            )
-//        day_selection.adapter = dayAdapter
-//        day_header.text = resources.getString(R.string.day_header, daysFullName[0].capitalize())        // Sunday by default
-//
-//        var previousDot: ImageView? = null
-//        day_selection.onItemClickListener = OnItemClickListener { _, v, position, _ ->
-//
-//            val daySelectedView = v as ConstraintLayout
-//            val daySelectedDot =
-//                daySelectedView.getChildAt(1) as ImageView //day indicator (small dot)
-//
-//            val sundaySelectedView = day_selection.getChildAt(0) as ConstraintLayout
-//            val sundaySelectedDot =
-//                sundaySelectedView.getChildAt(1) as ImageView //small dot below Sunday
-//
-//            //hide Sunday indicator when the first day is clicked
-//            if (previousDot == null) sundaySelectedDot.visibility = View.INVISIBLE
-//            //or hide the indicator of the last clicked day when a new day is clicked
-//            if (previousDot != null) previousDot!!.visibility = View.INVISIBLE
-//
-//            daySelectedDot.visibility = View.VISIBLE
-//            previousDot = daySelectedDot
-//            day_header.text = resources.getString(R.string.day_header, daysFullName[position].capitalize())
-////            day_header.text = "Every " + daysFullName[position]
-//            currDay = days[position]
-//            // update the time gridview to reflect selected time slots
-//            for (i in times.indices) {
-//                val timeView = time_gridview.getChildAt(i) as LinearLayout
-//                val timeTextView = timeView.getChildAt(0) as TextView
-//
-//                timeTextView.background =
-//                    if (profile.availableTimes[currDay]!!.contains(times[i])) {
-//                        getDrawable(requireContext(), R.drawable.selected_rounded_time_option)
-//                    } else {
-//                        getDrawable(requireContext(), R.drawable.unselected_rounded_time_option)
-//                    }
-//            }
-//        }
-//
-//        time_gridview.onItemClickListener = OnItemClickListener { _, v, _, _ ->
-//            val timeSelectedView = v as LinearLayout
-//            val timeSelectedTextView = timeSelectedView.getChildAt(0) as TextView
-//            val timeSelectedIndex =
-//                profile.availableTimes[currDay]!!.indexOf(timeSelectedTextView.text.toString())
-//            if (timeSelectedIndex > -1) {
-//                profile.availableTimes[currDay]!!.remove(timeSelectedTextView.text.toString())
-//                InternalStorage.writeObject(requireContext(), "profile", profile as Object)
-//                timeSelectedTextView.background =
-//                    getDrawable(requireContext(), R.drawable.unselected_rounded_time_option)
-//                // change the day button to white if no time is selected for current day
-//                if (profile.availableTimes[currDay]!!.size == 0) {
-//                    selectedDays.remove(currDay)
-//                    val currDayIndex = days.indexOf(currDay)
-//                    val daySelectedView = day_selection.getChildAt(currDayIndex) as ConstraintLayout
-//                    currDayTextView = daySelectedView.getChildAt(0) as TextView
-//                    currDayTextView.background = getDrawable(
-//                        requireContext(),
-//                        R.drawable.unselected_scheduling_circle_button
-//                    )
-//                }
-//                if (selectedDays.isEmpty()) callback!!.onSelectionEmpty()
-//            } else {
-//                profile.availableTimes[currDay]!!.add(timeSelectedTextView.text.toString())
-//                InternalStorage.writeObject(requireContext(), "profile", profile as Object)
-//                selectedDays.add(currDay)
-//                timeSelectedTextView.background =
-//                    getDrawable(requireContext(), R.drawable.selected_rounded_time_option)
-//                // change day button to highlighted
-//                val currDayIndex = days.indexOf(currDay)
-//                val daySelectedView = day_selection.getChildAt(currDayIndex) as ConstraintLayout
-//                currDayTextView = daySelectedView.getChildAt(0) as TextView
-//                currDayTextView.background =
-//                    getDrawable(requireContext(), R.drawable.selected_scheduling_circle_button)
-//                // enable finish button
-//                callback!!.onFilledOut()
-//            }
-//        }
     }
 
+    /**
+     * Converts time from a double to a string. e.g. `18.5` is converted to `"6:30"`
+     */
     private fun doubleTimeToString(time: Double): String {
         val minutes = if (floor(time) == time) "00" else "30"
         val hour = floor(time).toInt()

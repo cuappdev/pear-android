@@ -22,12 +22,9 @@ import kotlinx.coroutines.withContext
 
 
 class SchedulingPlaceFragment : Fragment() {
-    //    private val campusPlaces = arrayOf("Atrium Cafe", "Cafe Jennie", "Gimme Coffee", "Goldie’s Cafe",
-//        "Green Dragon", "Libe Cafe", "Mac’s Cafe", "Martha’s Cafe", "Mattin’s Cafe", "Temple of Zeus")
     private lateinit var campusPlaces: Array<String>
     private lateinit var collegetownPlaces: Array<String>
     private val preferredLocations = mutableListOf<String>()
-//    private val collegetownPlaces = arrayOf("Kung Fu Tea", "Starbucks", "Mango Mango", "U Tea")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -109,51 +106,6 @@ class SchedulingPlaceFragment : Fragment() {
                     }
                 }
         }
-//        val profile = InternalStorage.readObject(context!!, "profile") as UserProfile
-//        val campusAdapter =
-//            PlacesAdapter(
-//                context!!,
-//                campusPlaces,
-//                profile.preferredLocations
-//            )
-//        campusGridView.adapter = campusAdapter
-//        val collegetownAdapter =
-//            PlacesAdapter(
-//                context!!,
-//                collegetownPlaces,
-//                profile.preferredLocations
-//            )
-//        collegetownGridView.adapter = collegetownAdapter
-//
-//        campusGridView.onItemClickListener = OnItemClickListener { parent, v, position, id ->
-//            val campusSelectedPlace = campusGridView.getChildAt(position) as ConstraintLayout
-//            if (profile.preferredLocations.contains(campusPlaces[position])) {
-//                profile.preferredLocations.remove(campusPlaces[position])
-//                InternalStorage.writeObject(context!!, "profile", profile as Object)
-//                campusSelectedPlace.background = getDrawable(context!!, R.drawable.location_scheduling_places_unselected)
-//                if (profile.preferredLocations.isEmpty()) callback!!.onSelectionEmpty()
-//            } else {
-//                profile.preferredLocations.add(campusPlaces[position])
-//                InternalStorage.writeObject(context!!, "profile", profile as Object)
-//                campusSelectedPlace.background = getDrawable(context!!, R.drawable.location_scheduling_places_selected)
-//                callback!!.onFilledOut()
-//            }
-//        }
-//
-//        collegetownGridView.onItemClickListener = OnItemClickListener { parent, v, position, id ->
-//            val ctownSelectedPlace = collegetownGridView.getChildAt(position) as ConstraintLayout
-//            if (profile.preferredLocations.contains(collegetownPlaces[position])) {
-//                profile.preferredLocations.remove(collegetownPlaces[position])
-//                InternalStorage.writeObject(context!!, "profile", profile as Object)
-//                ctownSelectedPlace.background = getDrawable(context!!, R.drawable.location_scheduling_places_unselected)
-//                if (profile.preferredLocations.isEmpty()) callback!!.onSelectionEmpty()
-//            } else {
-//                profile.preferredLocations.add(collegetownPlaces[position])
-//                InternalStorage.writeObject(context!!, "profile", profile as Object)
-//                ctownSelectedPlace.background = getDrawable(context!!, R.drawable.location_scheduling_places_selected)
-//                callback!!.onFilledOut()
-//            }
-//        }
     }
 
     private var callback: OnFilledOutListener? = null
