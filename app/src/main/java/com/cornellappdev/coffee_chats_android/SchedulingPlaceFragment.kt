@@ -132,8 +132,10 @@ class SchedulingPlaceFragment : Fragment() {
 
     fun updateLocations() {
         val locations = mutableListOf<Location>()
+        val campusArea = getString(R.string.campus)
+        val collegetownArea = getString(R.string.collegetown)
         for (loc in preferredLocations) {
-            val area = if (campusPlaces.contains(loc)) "Campus" else "Collegetown"
+            val area = if (campusPlaces.contains(loc)) campusArea else collegetownArea
             locations.add(Location(area, loc))
         }
         CoroutineScope(Dispatchers.Main).launch {

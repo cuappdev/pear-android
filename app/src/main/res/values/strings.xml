@@ -121,6 +121,8 @@
         <item>U Tea</item>
     </string-array>
     <string name="scheduling_place_button">Finish</string>
+    <string name="campus">Campus</string>
+    <string name="collegetown">Collegetown</string>
 
     <!--MATCH PAGE-->
     <string name="match_header">Meet your Pear</string>
