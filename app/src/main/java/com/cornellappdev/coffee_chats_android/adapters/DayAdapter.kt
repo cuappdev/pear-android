@@ -11,17 +11,20 @@ import androidx.appcompat.content.res.AppCompatResources
 import com.cornellappdev.coffee_chats_android.R
 
 
-class DayAdapter(private val mContext: Context,
-                    private val days: Array<String>,
-                 private val selected: MutableSet<String>
-): BaseAdapter() {
+class DayAdapter(
+    private val mContext: Context,
+    private val days: Array<String>,
+    private val daysFullName: Array<String>,
+    private val selected: MutableSet<String>
+) : BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val viewHolder: ViewHolder
         val dayView: View
 
         if (convertView == null) {
-            val inflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val inflater =
+                mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             dayView = inflater.inflate(R.layout.time_scheduling_day_layout, null)
             viewHolder = ViewHolder(dayView)
             dayView.tag = viewHolder
@@ -31,7 +34,7 @@ class DayAdapter(private val mContext: Context,
         }
         viewHolder.dayTextView.text = days[position]
         if (position == 0) viewHolder.dayDot.visibility = View.VISIBLE
-        if (selected.contains(days[position])) {
+        if (selected.contains(daysFullName[position])) {
             viewHolder.dayTextView.background = AppCompatResources.getDrawable(
                 mContext,
                 R.drawable.selected_scheduling_circle_button

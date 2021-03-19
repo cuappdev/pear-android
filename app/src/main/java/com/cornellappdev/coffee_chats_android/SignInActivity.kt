@@ -99,9 +99,6 @@ class SignInActivity : AppCompatActivity() {
                     val domain: String? =
                         if (index == -1) null else personEmail.substring(index + 1)
                     if (domain != null && domain == "cornell.edu") {
-                        val profile = UserProfile(personName, personEmail)
-                        InternalStorage.writeObject(this, "profile", profile as Object)
-
                         // authenticate with backend
                         CoroutineScope(Dispatchers.Main).launch {
                             val userAuthEndpoint = Endpoint.authenticateUser(account.idToken!!)

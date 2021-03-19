@@ -4,22 +4,20 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:descendantFocusability="blocksDescendants">
+
     <TextView
         android:id="@+id/day_button"
-        android:tag="Sunday"
-        android:text="@string/sat_sun"
-        android:textColor="@color/black"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
         android:background="@drawable/unselected_scheduling_circle_button"
+        android:fontFamily="@font/circular_book"
         android:gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
+        android:tag="Sunday"
+        android:textColor="@color/black"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:fontFamily="@font/circular_book"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
     <ImageView
         android:id="@+id/day_dot"
         android:layout_width="8dp"

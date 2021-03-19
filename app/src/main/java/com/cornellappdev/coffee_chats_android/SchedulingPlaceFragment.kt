@@ -5,19 +5,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView.OnItemClickListener
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.cornellappdev.coffee_chats_android.adapters.PlacesAdapter
-import com.cornellappdev.coffee_chats_android.models.InternalStorage
-import com.cornellappdev.coffee_chats_android.models.UserProfile
+import com.cornellappdev.coffee_chats_android.models.ApiResponse
+import com.cornellappdev.coffee_chats_android.models.Location
+import com.cornellappdev.coffee_chats_android.networking.*
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_scheduling_place.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class SchedulingPlaceFragment : Fragment() {
-    private val campusPlaces = arrayOf("Atrium Cafe", "Cafe Jennie", "Gimme Coffee", "Goldie’s Cafe",
-        "Green Dragon", "Libe Cafe", "Mac’s Cafe", "Martha’s Cafe", "Mattin’s Cafe", "Temple of Zeus")
-    private val collegetownPlaces = arrayOf("Kung Fu Tea", "Starbucks", "Mango Mango", "U Tea")
+    private lateinit var campusPlaces: Array<String>
+    private lateinit var collegetownPlaces: Array<String>
+    private val preferredLocations = mutableListOf<String>()
+
+    // currently requiring a minimum of 3 places
+    private val minRequiredLocations = 3
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,50 +39,83 @@ class SchedulingPlaceFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val profile = InternalStorage.readObject(context!!, "profile") as UserProfile
-        val campusAdapter =
-            PlacesAdapter(
-                context!!,
-                campusPlaces,
-                profile.preferredLocations
-            )
-        campusGridView.adapter = campusAdapter
-        val collegetownAdapter =
-            PlacesAdapter(
-                context!!,
-                collegetownPlaces,
-                profile.preferredLocations
-            )
-        collegetownGridView.adapter = collegetownAdapter
-
-        campusGridView.onItemClickListener = OnItemClickListener { parent, v, position, id ->
-            val campusSelectedPlace = campusGridView.getChildAt(position) as ConstraintLayout
-            if (profile.preferredLocations.contains(campusPlaces[position])) {
-                profile.preferredLocations.remove(campusPlaces[position])
-                InternalStorage.writeObject(context!!, "profile", profile as Object)
-                campusSelectedPlace.background = getDrawable(context!!, R.drawable.location_scheduling_places_unselected)
-                if (profile.preferredLocations.isEmpty()) callback!!.onSelectionEmpty()
-            } else {
-                profile.preferredLocations.add(campusPlaces[position])
-                InternalStorage.writeObject(context!!, "profile", profile as Object)
-                campusSelectedPlace.background = getDrawable(context!!, R.drawable.location_scheduling_places_selected)
-                callback!!.onFilledOut()
+        campusPlaces = resources.getStringArray(R.array.campus_locations)
+        collegetownPlaces = resources.getStringArray(R.array.collegetown_locations)
+        CoroutineScope(Dispatchers.Main).launch {
+            // get existing selected locations
+            val getUserLocationsEndpoint = Endpoint.getUserLocations()
+            val typeToken = object : TypeToken<ApiResponse<List<Location>>>() {}.type
+            val locations = withContext(Dispatchers.IO) {
+                Request.makeRequest<ApiResponse<List<Location>>>(
+                    getUserLocationsEndpoint.okHttpRequest(),
+                    typeToken
+                )
+            }!!.data
+            for ((_, place) in locations) {
+                preferredLocations.add(place)
             }
+            toggleNextButton()
+
+            // set up adapters
+            val campusAdapter = PlacesAdapter(requireContext(), campusPlaces, preferredLocations)
+            campusGridView.adapter = campusAdapter
+            val collegetownAdapter =
+                PlacesAdapter(
+                    requireContext(),
+                    collegetownPlaces,
+                    preferredLocations
+                )
+            collegetownGridView.adapter = collegetownAdapter
+
+            campusGridView.onItemClickListener =
+                OnItemClickListener { _, _, position, _ ->
+                    val campusSelectedPlace =
+                        campusGridView.getChildAt(position) as ConstraintLayout
+                    if (preferredLocations.contains(campusPlaces[position])) {
+                        preferredLocations.remove(campusPlaces[position])
+                        campusSelectedPlace.background =
+                            getDrawable(
+                                requireContext(),
+                                R.drawable.location_scheduling_places_unselected
+                            )
+                    } else {
+                        preferredLocations.add(campusPlaces[position])
+                        campusSelectedPlace.background =
+                            getDrawable(
+                                requireContext(),
+                                R.drawable.location_scheduling_places_selected
+                            )
+                    }
+                    toggleNextButton()
+                }
+            collegetownGridView.onItemClickListener =
+                OnItemClickListener { _, _, position, _ ->
+                    val ctownSelectedPlace =
+                        collegetownGridView.getChildAt(position) as ConstraintLayout
+                    if (preferredLocations.contains(collegetownPlaces[position])) {
+                        preferredLocations.remove(collegetownPlaces[position])
+                        ctownSelectedPlace.background = getDrawable(
+                            requireContext(),
+                            R.drawable.location_scheduling_places_unselected
+                        )
+                    } else {
+                        preferredLocations.add(collegetownPlaces[position])
+                        ctownSelectedPlace.background = getDrawable(
+                            requireContext(),
+                            R.drawable.location_scheduling_places_selected
+                        )
+                    }
+                    toggleNextButton()
+                }
         }
+    }
 
-        collegetownGridView.onItemClickListener = OnItemClickListener { parent, v, position, id ->
-            val ctownSelectedPlace = collegetownGridView.getChildAt(position) as ConstraintLayout
-            if (profile.preferredLocations.contains(collegetownPlaces[position])) {
-                profile.preferredLocations.remove(collegetownPlaces[position])
-                InternalStorage.writeObject(context!!, "profile", profile as Object)
-                ctownSelectedPlace.background = getDrawable(context!!, R.drawable.location_scheduling_places_unselected)
-                if (profile.preferredLocations.isEmpty()) callback!!.onSelectionEmpty()
-            } else {
-                profile.preferredLocations.add(collegetownPlaces[position])
-                InternalStorage.writeObject(context!!, "profile", profile as Object)
-                ctownSelectedPlace.background = getDrawable(context!!, R.drawable.location_scheduling_places_selected)
-                callback!!.onFilledOut()
-            }
+    // enables or disables the next button based on the number of selected locations
+    private fun toggleNextButton() {
+        if (preferredLocations.size >= minRequiredLocations) {
+            callback!!.onFilledOut()
+        } else {
+            callback!!.onSelectionEmpty()
         }
     }
 
@@ -85,5 +128,29 @@ class SchedulingPlaceFragment : Fragment() {
     interface OnFilledOutListener {
         fun onFilledOut()
         fun onSelectionEmpty()
+    }
+
+    fun updateLocations() {
+        val locations = mutableListOf<Location>()
+        val campusArea = getString(R.string.campus)
+        val collegetownArea = getString(R.string.collegetown)
+        for (loc in preferredLocations) {
+            val area = if (campusPlaces.contains(loc)) campusArea else collegetownArea
+            locations.add(Location(area, loc))
+        }
+        CoroutineScope(Dispatchers.Main).launch {
+            val updateLocationsEndpoint = Endpoint.updateLocations(locations)
+            val typeToken = object : TypeToken<ApiResponse<List<Location>>>() {}.type
+            val updateLocationResponse = withContext(Dispatchers.IO) {
+                Request.makeRequest<ApiResponse<List<Location>>>(
+                    updateLocationsEndpoint.okHttpRequest(),
+                    typeToken
+                )
+            }
+            if (updateLocationResponse == null || !updateLocationResponse.success) {
+                Toast.makeText(requireContext(), "Failed to save information", Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
     }
 }
