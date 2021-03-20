@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         android:usesCleartextTraffic="${usesCleartextTraffic}">
+        <activity android:name=".EditProfileActivity"></activity>
         <activity
             android:name=".CreateProfileActivity"
             android:theme="@style/noAnimTheme" />
@@ -19,9 +20,12 @@
         <activity
             android:name=".GroupInterestActivity"
             android:theme="@style/noAnimTheme" />
-        <activity android:name=".SchedulingActivity" android:theme="@style/noAnimTheme">
+        <activity
+            android:name=".SchedulingActivity"
+            android:theme="@style/noAnimTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

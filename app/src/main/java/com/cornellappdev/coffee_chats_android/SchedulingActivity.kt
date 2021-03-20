@@ -6,6 +6,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.cornellappdev.coffee_chats_android.models.*
@@ -13,6 +15,7 @@ import com.cornellappdev.coffee_chats_android.networking.Endpoint
 import com.cornellappdev.coffee_chats_android.networking.Request
 import com.cornellappdev.coffee_chats_android.networking.refreshSession
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.material.navigation.NavigationView
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_scheduling.*
 import kotlinx.coroutines.CoroutineScope
@@ -83,13 +86,14 @@ class SchedulingActivity :
         ft.add(body_fragment.id, NoMatchFragment()).addToBackStack(noMatchTag)
         ft.commit()
 
-        back_button.setOnClickListener { onBackPage() }
-        back_button.visibility = View.GONE
+        nav_button.setOnClickListener { onBackPage() }
 
         scheduling_finish.setOnClickListener { onNextPage() }
 
         nextButton = findViewById(R.id.scheduling_finish)
-        backButton = findViewById(R.id.back_button)
+        backButton = findViewById(R.id.nav_button)
+
+        setUpCurrentPage()
     }
 
     private fun signIn() {
@@ -146,13 +150,25 @@ class SchedulingActivity :
 
     private fun setUpCurrentPage() {
         if (page == 0) {
-            backButton.visibility = View.GONE
+            val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
+            val navigationView = findViewById<NavigationView>(R.id.nav_view)
+            navigationView.itemIconTintList = null
+            backButton.background = ContextCompat.getDrawable(this, R.drawable.ic_sign_in_logo)
+            backButton.maxHeight = 40
+            backButton.maxWidth = 40
+            backButton.setOnClickListener {
+                if (drawerLayout.isOpen) {
+                    drawerLayout.close()
+                } else {
+                    drawerLayout.open()
+                }
+            }
             scheduling_header.text = getString(R.string.no_match_header)
             nextButton.text = getString(R.string.no_match_availability)
             nextButton.isEnabled = true
             nextButton.setPadding(100, 0, 100, 0)
         } else {
-            backButton.visibility = View.VISIBLE
+            backButton.background = ContextCompat.getDrawable(this, R.drawable.ic_back_carrot)
             nextButton.isEnabled = false
             nextButton.setPadding(180, 0, 180, 0)
             if (page == 1) {

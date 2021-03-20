@@ -45,7 +45,7 @@
         <item>programming, web/app development</item>
         <item>road, trips, backpacking</item>
     </string-array>
-    
+
     <!--SCHEDULING TIME-->
     <string name="scheduling_time_header">When are you free?</string>
     <string name="scheduling_finish">Next</string>
@@ -140,5 +140,9 @@
     </string>
     <string name="no_match_availability">Enter Availability</string>
 
-
+    <!--MENU-->
+    <string name="menu_groups">Your groups</string>
+    <string name="menu_interests">Your interests</string>
+    <string name="menu_prompts">Your prompts</string>
+    <string name="settings">Settings</string>
 </resources>

@@ -1,72 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activity_main"
-    android:background="@color/background_green">
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/background_green"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_profile"
+        app:itemIconTint="@null"
+        app:menu="@menu/activity_scheduling_drawer" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/activity_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:id="@+id/header_layout">
-        <ImageButton
-            android:id="@+id/back_button"
-            android:layout_width="10dp"
+        android:layout_height="match_parent"
+        android:background="@color/background_green">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/header_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/scheduling_header"
-            app:layout_constraintTop_toTopOf="@id/scheduling_header"
-            android:layout_marginLeft="24dp"
-            android:background="@drawable/ic_back_carrot"
-            android:clickable="true"
-            android:focusable="true"/>
-    <TextView
-        android:id="@+id/scheduling_header"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/no_match_header"
-        android:textSize="24sp"
-        android:textColor="@color/black"
-        android:layout_marginTop="60dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="53dp"
-        android:layout_marginRight="53dp"
-        android:gravity="center"
-        android:fontFamily="@font/circular_medium"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toTopOf="parent">
 
-    <FrameLayout
-        android:id="@+id/body_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/header_layout"
-        app:layout_constraintBottom_toTopOf="@id/scheduling_finish">
-    </FrameLayout>
+            <ImageButton
+                android:id="@+id/nav_button"
+                android:layout_width="10dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="24dp"
+                android:background="@drawable/ic_back_carrot"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="@id/scheduling_header"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="@id/scheduling_header" />
 
-    <Button
-        android:id="@+id/scheduling_finish"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:text="@string/no_match_availability"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:background="@drawable/profile_button_background"
-        android:textAllCaps="false"
-        android:fontFamily="@font/circular_medium"
-        android:layout_marginBottom="60dp"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        style="?android:attr/borderlessButtonStyle"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:enabled="true"
-        android:elevation="3dp"/>
+            <TextView
+                android:id="@+id/scheduling_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="53dp"
+                android:layout_marginTop="60dp"
+                android:layout_marginRight="53dp"
+                android:fontFamily="@font/circular_medium"
+                android:gravity="center"
+                android:text="@string/no_match_header"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <FrameLayout
+            android:id="@+id/body_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/scheduling_finish"
+            app:layout_constraintTop_toBottomOf="@id/header_layout"></FrameLayout>
+
+        <Button
+            android:id="@+id/scheduling_finish"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginBottom="60dp"
+            android:background="@drawable/profile_button_background"
+            android:elevation="3dp"
+            android:enabled="true"
+            android:fontFamily="@font/circular_medium"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:text="@string/no_match_availability"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.drawerlayout.widget.DrawerLayout>
