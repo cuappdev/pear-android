@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
@@ -7,18 +8,22 @@
         <item
             android:id="@+id/nav_interests"
             android:icon="@drawable/ic_interests_icon"
-            android:title="@string/menu_interests" />
+            android:title="@string/menu_interests"
+            app:actionLayout="@layout/nav_drawer_item" />
         <item
             android:id="@+id/nav_groups"
             android:icon="@drawable/ic_groups_icon"
-            android:title="@string/menu_groups" />
+            android:title="@string/menu_groups"
+            app:actionLayout="@layout/nav_drawer_item" />
         <item
             android:id="@+id/nav_prompts"
             android:icon="@drawable/ic_prompts_icon"
-            android:title="@string/menu_prompts" />
+            android:title="@string/menu_prompts"
+            app:actionLayout="@layout/nav_drawer_item" />
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings_icon"
-            android:title="@string/settings" />
+            android:title="@string/settings"
+            app:actionLayout="@layout/nav_drawer_item" />
     </group>
 </menu>

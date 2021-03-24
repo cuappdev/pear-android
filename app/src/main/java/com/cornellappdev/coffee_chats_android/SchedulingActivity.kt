@@ -1,8 +1,9 @@
 package com.cornellappdev.coffee_chats_android
 
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
-import android.view.View
+import android.util.TypedValue
 import android.widget.Button
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
@@ -13,11 +14,13 @@ import androidx.fragment.app.FragmentTransaction
 import com.cornellappdev.coffee_chats_android.models.*
 import com.cornellappdev.coffee_chats_android.networking.Endpoint
 import com.cornellappdev.coffee_chats_android.networking.Request
+import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.cornellappdev.coffee_chats_android.networking.refreshSession
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.navigation.NavigationView
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_scheduling.*
+import kotlinx.android.synthetic.main.nav_header_profile.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,7 +34,7 @@ class SchedulingActivity :
     SchedulingPlaceFragment.OnFilledOutListener {
     private lateinit var nextButton: Button
     private lateinit var backButton: ImageButton
-    private lateinit var profile: UserProfile
+    private lateinit var drawerLayout: DrawerLayout
     private var page = 0        // 0: no match; 1: time scheduling; 2: place scheduling
     private val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
     private val preferencesHelper: PreferencesHelper by lazy {
@@ -45,13 +48,14 @@ class SchedulingActivity :
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scheduling)
 
+        drawerLayout = findViewById(R.id.drawer_layout)
         // Determine if the app should show scheduling page or sign-in
         val account = GoogleSignIn.getLastSignedInAccount(this)
-        if (account != null) {
+        if (account != null && preferencesHelper.accessToken != null) {
             val isAccessTokenExpired = Date() >= Date(preferencesHelper.expiresAt * 1000)
-            // refresh session if necessary
-            if (isAccessTokenExpired) {
-                CoroutineScope(Dispatchers.Main).launch {
+            CoroutineScope(Dispatchers.Main).launch {
+                // refresh session if necessary
+                if (isAccessTokenExpired) {
                     val refreshSessionEndpoint =
                         Endpoint.refreshSession(preferencesHelper.refreshToken!!)
                     val typeToken = object : TypeToken<ApiResponse<UserSession>>() {}.type
@@ -69,14 +73,31 @@ class SchedulingActivity :
                     preferencesHelper.accessToken = userSession.accessToken
                     preferencesHelper.refreshToken = userSession.refreshToken
                     preferencesHelper.expiresAt = userSession.sessionExpiration.toLong()
+                } else {
+                    UserSession.currentSession = UserSession(
+                        preferencesHelper.accessToken!!,
+                        preferencesHelper.refreshToken!!,
+                        preferencesHelper.expiresAt.toString(),
+                        true
+                    )
                 }
+                val getUserEndpoint = Endpoint.getUser()
+                val userTypeToken = object : TypeToken<ApiResponse<User>>() {}.type
+                val user = withContext(Dispatchers.IO) {
+                    Request.makeRequest<ApiResponse<User>>(
+                        getUserEndpoint.okHttpRequest(),
+                        userTypeToken
+                    )
+                }!!.data
+                drawerLayout.user_name.text =
+                    getString(R.string.user_name, user.firstName, user.lastName)
+                drawerLayout.user_major_year.text = getString(
+                    R.string.user_major_year,
+                    user.major,
+                    "'${user.graduationYear?.substring(2)}"
+                )
+                drawerLayout.user_hometown.text = getString(R.string.user_hometown, user.hometown)
             }
-            UserSession.currentSession = UserSession(
-                preferencesHelper.accessToken!!,
-                preferencesHelper.refreshToken!!,
-                preferencesHelper.expiresAt.toString(),
-                true
-            )
         } else {
             // prompt user to log in
             signIn()
@@ -86,13 +107,12 @@ class SchedulingActivity :
         ft.add(body_fragment.id, NoMatchFragment()).addToBackStack(noMatchTag)
         ft.commit()
 
-        nav_button.setOnClickListener { onBackPage() }
-
         scheduling_finish.setOnClickListener { onNextPage() }
 
+        val navigationView = findViewById<NavigationView>(R.id.nav_view)
+        navigationView.itemIconTintList = null
         nextButton = findViewById(R.id.scheduling_finish)
         backButton = findViewById(R.id.nav_button)
-
         setUpCurrentPage()
     }
 
@@ -149,13 +169,14 @@ class SchedulingActivity :
     }
 
     private fun setUpCurrentPage() {
+        val displayMetrics = Resources.getSystem().displayMetrics
         if (page == 0) {
-            val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
-            val navigationView = findViewById<NavigationView>(R.id.nav_view)
-            navigationView.itemIconTintList = null
             backButton.background = ContextCompat.getDrawable(this, R.drawable.ic_sign_in_logo)
-            backButton.maxHeight = 40
-            backButton.maxWidth = 40
+            backButton.layoutParams = backButton.layoutParams.apply {
+                height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30f, displayMetrics)
+                    .toInt()
+                width = height
+            }
             backButton.setOnClickListener {
                 if (drawerLayout.isOpen) {
                     drawerLayout.close()
@@ -169,6 +190,15 @@ class SchedulingActivity :
             nextButton.setPadding(100, 0, 100, 0)
         } else {
             backButton.background = ContextCompat.getDrawable(this, R.drawable.ic_back_carrot)
+            backButton.layoutParams = backButton.layoutParams.apply {
+                height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 18f, displayMetrics)
+                    .toInt()
+                width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10f, displayMetrics)
+                    .toInt()
+            }
+            backButton.setOnClickListener {
+                onBackPage()
+            }
             nextButton.isEnabled = false
             nextButton.setPadding(180, 0, 180, 0)
             if (page == 1) {

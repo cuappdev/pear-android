@@ -17,6 +17,8 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_profile"
         app:itemIconTint="@null"
+        app:itemTextAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:itemTextColor="@color/black"
         app:menu="@menu/activity_scheduling_drawer" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
