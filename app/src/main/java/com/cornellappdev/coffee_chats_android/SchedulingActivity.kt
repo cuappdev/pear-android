@@ -4,9 +4,12 @@ import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.TypedValue
+import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -137,6 +140,16 @@ class SchedulingActivity :
         nextButton.isEnabled = false
     }
 
+    override fun onBackPressed() {
+        if (drawerLayout.isOpen) {
+            drawerLayout.close()
+        } else if (page > 0) {
+            onBackPage()
+        } else {
+            finish()
+        }
+    }
+
     private fun onBackPage() {
         page--
         supportFragmentManager.popBackStack()
@@ -184,6 +197,18 @@ class SchedulingActivity :
                     drawerLayout.open()
                 }
             }
+            val content = findViewById<ConstraintLayout>(R.id.activity_main)
+            drawerLayout.addDrawerListener(object : ActionBarDrawerToggle(
+                this,
+                drawerLayout,
+                R.string.drawer_open,
+                R.string.drawer_close
+            ) {
+                override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+                    super.onDrawerSlide(drawerView, slideOffset)
+                    content.translationX = drawerView.width * slideOffset
+                }
+            })
             scheduling_header.text = getString(R.string.no_match_header)
             nextButton.text = getString(R.string.no_match_availability)
             nextButton.isEnabled = true
