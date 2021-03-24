@@ -3,10 +3,13 @@ package com.cornellappdev.coffee_chats_android
 import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -112,10 +115,41 @@ class SchedulingActivity :
 
         scheduling_finish.setOnClickListener { onNextPage() }
 
-        val navigationView = findViewById<NavigationView>(R.id.nav_view)
-        navigationView.itemIconTintList = null
+        // initialize more lateinit vars
         nextButton = findViewById(R.id.scheduling_finish)
         backButton = findViewById(R.id.nav_button)
+
+        // set up drawer
+        val content = findViewById<ConstraintLayout>(R.id.activity_main)
+        drawerLayout.addDrawerListener(object : ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            R.string.drawer_open,
+            R.string.drawer_close
+        ) {
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+                super.onDrawerSlide(drawerView, slideOffset)
+                content.translationX = drawerView.width * slideOffset
+            }
+        })
+
+        // set up navigation view
+        val navigationView = findViewById<NavigationView>(R.id.nav_view)
+        navigationView.itemIconTintList = null
+        navigationView.setNavigationItemSelectedListener { menuItem ->
+            val itemPressed = when(menuItem.itemId) {
+                R.id.nav_interests -> "Interests"
+                R.id.nav_groups -> "Groups"
+                R.id.nav_prompts -> "Prompts"
+                R.id.nav_settings -> "Settings"
+                else -> "Impossible"
+            }
+            Log.d("NAV_ITEM_LISTENER", itemPressed)
+            Toast.makeText(applicationContext, "$itemPressed Pressed", Toast.LENGTH_SHORT).show()
+            drawerLayout.close()
+            true
+        }
+
         setUpCurrentPage()
     }
 
@@ -197,18 +231,6 @@ class SchedulingActivity :
                     drawerLayout.open()
                 }
             }
-            val content = findViewById<ConstraintLayout>(R.id.activity_main)
-            drawerLayout.addDrawerListener(object : ActionBarDrawerToggle(
-                this,
-                drawerLayout,
-                R.string.drawer_open,
-                R.string.drawer_close
-            ) {
-                override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-                    super.onDrawerSlide(drawerView, slideOffset)
-                    content.translationX = drawerView.width * slideOffset
-                }
-            })
             scheduling_header.text = getString(R.string.no_match_header)
             nextButton.text = getString(R.string.no_match_availability)
             nextButton.isEnabled = true
