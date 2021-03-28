@@ -29,7 +29,7 @@ import kotlinx.coroutines.withContext
 import kotlin.math.floor
 
 
-class SchedulingTimeFragment : Fragment() {
+class SchedulingTimeFragment : Fragment(), OnFilledOutObservable {
     private lateinit var currDay: String
     private lateinit var currDayTextView: TextView
     private lateinit var days: Array<String>
@@ -193,16 +193,11 @@ class SchedulingTimeFragment : Fragment() {
 
     private var callback: OnFilledOutListener? = null
 
-    fun setOnFilledOutListener(callback: OnFilledOutListener) {
+    override fun setOnFilledOutListener(callback: OnFilledOutListener) {
         this.callback = callback
     }
 
-    interface OnFilledOutListener {
-        fun onFilledOut()
-        fun onSelectionEmpty()
-    }
-
-    fun updateSchedule() {
+    override fun saveInformation() {
         val availabilities = mutableListOf<Availability>()
         for ((day, times) in availableTimes) {
             if (times.isNotEmpty()) {

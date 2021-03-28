@@ -2,12 +2,10 @@ package com.cornellappdev.coffee_chats_android
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Rect
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
-import android.view.TouchDelegate
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -15,13 +13,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import kotlinx.android.synthetic.main.activity_scheduling.*
 
-class ProfileSettingsActivity : AppCompatActivity(), SchedulingTimeFragment.OnFilledOutListener {
+class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     private val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
     private var content = Content.SETTINGS
+    private val basePages = listOf(Content.SETTINGS)
+    private val settingsSubPages = listOf(Content.EDIT_TIME, Content.EDIT_LOCATION)
+    private val editPages = listOf(Content.EDIT_TIME, Content.EDIT_LOCATION)
 
     enum class Content {
         SETTINGS,
-        EDIT_TIME
+        EDIT_TIME,
+        EDIT_LOCATION
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +34,7 @@ class ProfileSettingsActivity : AppCompatActivity(), SchedulingTimeFragment.OnFi
         val fragment: Fragment = when (content) {
             Content.SETTINGS -> SettingsFragment()
             Content.EDIT_TIME -> SchedulingTimeFragment()
+            Content.EDIT_LOCATION -> SchedulingPlaceFragment()
         }
         ft.add(body_fragment.id, fragment, content.name).addToBackStack("ft").commit()
 
@@ -43,9 +46,7 @@ class ProfileSettingsActivity : AppCompatActivity(), SchedulingTimeFragment.OnFi
     }
 
     override fun onBackPressed() {
-        val baseFragments = listOf(Content.SETTINGS)
-        val settingsSubPages = listOf(Content.EDIT_TIME)
-        if (content in baseFragments) {
+        if (content in basePages) {
             finish()
         } else if (content in settingsSubPages) {
             supportFragmentManager.popBackStack()
@@ -55,17 +56,17 @@ class ProfileSettingsActivity : AppCompatActivity(), SchedulingTimeFragment.OnFi
     }
 
     override fun onAttachFragment(fragment: Fragment) {
-        if (fragment is SchedulingTimeFragment) {
+        if (fragment is OnFilledOutObservable) {
             fragment.setOnFilledOutListener(this)
         }
     }
 
     private fun onSave() {
         when (content) {
-            Content.EDIT_TIME -> {
-                val timeFragment =
-                    supportFragmentManager.findFragmentByTag(Content.EDIT_TIME.name) as SchedulingTimeFragment
-                timeFragment.updateSchedule()
+            Content.EDIT_TIME, Content.EDIT_LOCATION -> {
+                val fragment =
+                    supportFragmentManager.findFragmentByTag(content.name) as OnFilledOutObservable
+                fragment.saveInformation()
                 onBackPressed()
             }
         }
@@ -74,6 +75,7 @@ class ProfileSettingsActivity : AppCompatActivity(), SchedulingTimeFragment.OnFi
     val settingsNavigationListener = fun(menuItem: MenuItem): Boolean {
         val itemPressed = when (menuItem.itemId) {
             R.id.nav_availabilities -> "Edit Availabilities"
+            R.id.nav_location -> "Edit Location Preferences"
             R.id.nav_social_media -> "Connect Social Media"
             R.id.nav_about -> "About Pear"
             R.id.nav_logout -> "Log Out"
@@ -81,12 +83,19 @@ class ProfileSettingsActivity : AppCompatActivity(), SchedulingTimeFragment.OnFi
         }
         Log.d("NAV_ITEM_LISTENER", itemPressed)
 
+        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
         when (menuItem.itemId) {
             R.id.nav_availabilities -> {
-                val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
                 content = Content.EDIT_TIME
                 setUpCurrentPage()
                 ft.replace(body_fragment.id, SchedulingTimeFragment(), content.name)
+                    .addToBackStack("ft")
+                    .commit()
+            }
+            R.id.nav_location -> {
+                content = Content.EDIT_LOCATION
+                setUpCurrentPage()
+                ft.replace(body_fragment.id, SchedulingPlaceFragment(), content.name)
                     .addToBackStack("ft")
                     .commit()
             }
@@ -106,25 +115,9 @@ class ProfileSettingsActivity : AppCompatActivity(), SchedulingTimeFragment.OnFi
     private fun setUpCurrentPage() {
         scheduling_header.text = when (content) {
             Content.SETTINGS -> getString(R.string.settings)
-            Content.EDIT_TIME -> getString(R.string.edit_availability)
+            Content.EDIT_TIME, Content.EDIT_LOCATION -> getString(R.string.edit_availability)
         }
-        save_button.visibility = if (content != Content.EDIT_TIME) View.GONE else View.VISIBLE
-    }
-
-    /**
-     * Increases hit area of `view` on all four sides by given `padding`, which defaults to 100
-     */
-    private fun increaseHitArea(view: View, padding: Int = 100) {
-        val parent = view.parent as View
-        parent.post {
-            val rect = Rect()
-            nav_button.getHitRect(rect)
-            rect.top -= padding
-            rect.left -= padding
-            rect.bottom += padding
-            rect.right += padding
-            parent.touchDelegate = TouchDelegate(rect, nav_button)
-        }
+        save_button.visibility = if (content in editPages) View.VISIBLE else View.GONE
     }
 
     override fun onFilledOut() {

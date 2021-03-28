@@ -41,8 +41,7 @@ import java.util.*
 
 class SchedulingActivity :
     AppCompatActivity(),
-    SchedulingTimeFragment.OnFilledOutListener,
-    SchedulingPlaceFragment.OnFilledOutListener {
+    OnFilledOutListener {
     private lateinit var nextButton: Button
     private lateinit var backButton: ImageButton
     private lateinit var drawerLayout: DrawerLayout
@@ -54,7 +53,6 @@ class SchedulingActivity :
     private val noMatchTag = "NO_MATCH"
     private val scheduleTimeTag = "SCHEDULING_TIME"
     private val schedulePlaceTag = "SCHEDULING_PLACE"
-    private val SETTINGS_CODE = 10032
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -170,9 +168,7 @@ class SchedulingActivity :
     }
 
     override fun onAttachFragment(fragment: Fragment) {
-        if (fragment is SchedulingTimeFragment) {
-            fragment.setOnFilledOutListener(this)
-        } else if (fragment is SchedulingPlaceFragment) {
+        if (fragment is OnFilledOutObservable) {
             fragment.setOnFilledOutListener(this)
         }
     }
@@ -214,7 +210,7 @@ class SchedulingActivity :
         if (page == 2) {
             val locationFragment =
                 supportFragmentManager.findFragmentByTag(schedulePlaceTag) as SchedulingPlaceFragment
-            locationFragment.updateLocations()
+            locationFragment.saveInformation()
             page = 0
             setUpCurrentPage()
             supportFragmentManager.popBackStack(noMatchTag, 0)
@@ -227,7 +223,7 @@ class SchedulingActivity :
         } else {
             val timeFragment =
                 supportFragmentManager.findFragmentByTag(scheduleTimeTag) as SchedulingTimeFragment
-            timeFragment.updateSchedule()
+            timeFragment.saveInformation()
             ft.replace(body_fragment.id, SchedulingPlaceFragment(), schedulePlaceTag)
         }
         setUpCurrentPage()
@@ -263,17 +259,7 @@ class SchedulingActivity :
                 width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10f, displayMetrics)
                     .toInt()
             }
-            // increase the hit area of back button
-            val parent = nav_button.parent as View // button: the view you want to enlarge hit area
-            parent.post {
-                val rect = Rect()
-                nav_button.getHitRect(rect)
-                rect.top -= 100 // increase top hit area
-                rect.left -= 100 // increase left hit area
-                rect.bottom += 100 // increase bottom hit area
-                rect.right += 100 // increase right hit area
-                parent.touchDelegate = TouchDelegate(rect, nav_button)
-            }
+            increaseHitArea(nav_button)
             backButton.setOnClickListener {
                 onBackPage()
             }
@@ -287,5 +273,9 @@ class SchedulingActivity :
                 nextButton.text = getString(R.string.scheduling_place_button)
             }
         }
+    }
+
+    companion object {
+        private const val SETTINGS_CODE = 10032
     }
 }
