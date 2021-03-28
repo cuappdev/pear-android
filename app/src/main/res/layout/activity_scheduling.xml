@@ -65,12 +65,24 @@
                 app:layout_constraintTop_toTopOf="@id/scheduling_header" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <FrameLayout
-            android:id="@+id/body_fragment"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@id/scheduling_finish"
-            app:layout_constraintTop_toBottomOf="@id/header_layout"></FrameLayout>
+            app:layout_constraintTop_toBottomOf="@id/header_layout">
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <FrameLayout
+                    android:id="@+id/body_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <!--            app:layout_constraintBottom_toTopOf="@id/scheduling_finish"-->
+                <!--            app:layout_constraintTop_toBottomOf="@id/header_layout"-->
+            </ScrollView>
+        </RelativeLayout>
+
+
 
         <Button
             android:id="@+id/scheduling_finish"

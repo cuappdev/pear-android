@@ -166,7 +166,7 @@ class GroupInterestActivity : AppCompatActivity() {
                 group_search.visibility = View.GONE
                 adapter =
                     GroupInterestAdapter(
-                        this, interests, false
+                        this, interests.toList(), false, GroupInterestAdapter.ItemColor.TOGGLE
                     )
                 interests_or_groups.adapter = adapter
 
@@ -195,7 +195,7 @@ class GroupInterestActivity : AppCompatActivity() {
                 )
                 adapter =
                     GroupInterestAdapter(
-                        this, groups, true
+                        this, groups.toList(), true, GroupInterestAdapter.ItemColor.TOGGLE
                     )
 
                 interests_or_groups.adapter = adapter
@@ -212,8 +212,9 @@ class GroupInterestActivity : AppCompatActivity() {
                         adapter =
                             GroupInterestAdapter(
                                 applicationContext,
-                                outputArr,
-                                true
+                                outputArr.toList(),
+                                true,
+                                GroupInterestAdapter.ItemColor.TOGGLE
                             )
                         interests_or_groups.adapter = adapter
                         for (i in groupTitles.indices) {

@@ -141,7 +141,7 @@ class SchedulingActivity :
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
         navigationView.itemIconTintList = null
         navigationView.setNavigationItemSelectedListener { menuItem ->
-            val itemPressed = when(menuItem.itemId) {
+            val itemPressed = when (menuItem.itemId) {
                 R.id.nav_interests -> "Interests"
                 R.id.nav_groups -> "Groups"
                 R.id.nav_prompts -> "Prompts"
@@ -151,10 +151,19 @@ class SchedulingActivity :
             Log.d("NAV_ITEM_LISTENER", itemPressed)
             Toast.makeText(applicationContext, "$itemPressed Pressed", Toast.LENGTH_SHORT).show()
             drawerLayout.close()
+            val intent = Intent(this, ProfileSettingsActivity::class.java)
+            when (menuItem.itemId) {
+                R.id.nav_interests -> {
+                    intent.putExtra("content", ProfileSettingsActivity.Content.EDIT_INTERESTS)
+                }
+                R.id.nav_settings -> {
+                    intent.putExtra("content", ProfileSettingsActivity.Content.SETTINGS)
+                }
+            }
             if (menuItem.itemId == R.id.nav_settings) {
-                val intent = Intent(this, ProfileSettingsActivity::class.java)
-                intent.putExtra("content", ProfileSettingsActivity.Content.SETTINGS)
                 startActivityForResult(intent, SETTINGS_CODE)
+            } else if (menuItem.itemId == R.id.nav_interests) {
+                startActivity(intent)
             }
             true
         }

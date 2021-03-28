@@ -15,12 +15,16 @@ import kotlinx.android.synthetic.main.activity_scheduling.*
 
 class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     private val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-    private var content = Content.SETTINGS
-    private val basePages = listOf(Content.SETTINGS)
+    private lateinit var content: Content
+    /** Pages directly reachable from drawer */
+    private val basePages = listOf(Content.EDIT_INTERESTS, Content.SETTINGS)
+    /** Fragments nested within settings */
     private val settingsSubPages = listOf(Content.EDIT_TIME, Content.EDIT_LOCATION)
-    private val editPages = listOf(Content.EDIT_TIME, Content.EDIT_LOCATION)
+    /** Fragments where users can edit and save information */
+    private val editPages = listOf(Content.EDIT_TIME, Content.EDIT_LOCATION, Content.EDIT_INTERESTS)
 
     enum class Content {
+        EDIT_INTERESTS,
         SETTINGS,
         EDIT_TIME,
         EDIT_LOCATION
@@ -29,9 +33,9 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scheduling)
-
         content = intent.getSerializableExtra("content") as Content
         val fragment: Fragment = when (content) {
+            Content.EDIT_INTERESTS -> EditInterestsFragment.newInstance(true)
             Content.SETTINGS -> SettingsFragment()
             Content.EDIT_TIME -> SchedulingTimeFragment()
             Content.EDIT_LOCATION -> SchedulingPlaceFragment()
@@ -114,6 +118,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
 
     private fun setUpCurrentPage() {
         scheduling_header.text = when (content) {
+            Content.EDIT_INTERESTS -> getString(R.string.edit_interests)
             Content.SETTINGS -> getString(R.string.settings)
             Content.EDIT_TIME, Content.EDIT_LOCATION -> getString(R.string.edit_availability)
         }
