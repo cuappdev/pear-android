@@ -140,7 +140,7 @@
     </string>
     <string name="no_match_availability">Enter Availability</string>
 
-    <!--MENU-->
+    <!--DRAWER MENU-->
     <string name="user_name">%1$s %2$s</string>
     <string name="user_hometown">From %1$s</string>
     <string name="user_major_year">%1$s, %2$s</string>
@@ -150,4 +150,10 @@
     <string name="settings">Settings</string>
     <string name="drawer_open">Open navigation drawer menu</string>
     <string name="drawer_close">Close navigation drawer menu</string>
+
+    <!--SETTINGS MENU-->
+    <string name="edit_availabilities">Edit Availabilities</string>
+    <string name="connect_social_media">Connect Social Media</string>
+    <string name="about_pear">About Pear</string>
+    <string name="log_out">Log Out</string>
 </resources>
