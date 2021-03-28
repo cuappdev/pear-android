@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/group_or_interest_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/circular_book"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Your interests" />
+
+        <TextView
+            android:id="@+id/group_or_interest_subtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/circular_book"
+            android:textColor="@color/faded_text"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@id/your_group_or_interest_text"
+            app:layout_constraintTop_toBottomOf="@id/your_group_or_interest_text"
+            tools:text="tap to deselect" />
+
+        <ListView
+            android:id="@+id/interests_or_groups_list"
+            android:layout_width="300dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="12.0sp"
+            android:fadingEdgeLength="50dp"
+            android:requiresFadingEdge="vertical"
+            android:scrollbars="none"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+</LinearLayout>

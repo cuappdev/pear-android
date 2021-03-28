@@ -75,18 +75,7 @@ class GroupInterestActivity : AppCompatActivity() {
         add_later.visibility = View.INVISIBLE
         add_later.setOnClickListener { onNextPage() }
         nav_button.setOnClickListener { onBackPage() }
-        // increase the hit area of back button
-        val parent = nav_button.parent as View // button: the view you want to enlarge hit area
-
-        parent.post {
-            val rect = Rect()
-            nav_button.getHitRect(rect)
-            rect.top -= 100 // increase top hit area
-            rect.left -= 100 // increase left hit area
-            rect.bottom += 100 // increase bottom hit area
-            rect.right += 100 // increase right hit area
-            parent.touchDelegate = TouchDelegate(rect, nav_button)
-        }
+        increaseHitArea(nav_button)
 
         // signup_next is disabled until user has chosen at least one interest
         signup_next.isEnabled = false
