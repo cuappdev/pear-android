@@ -19,5 +19,6 @@
     <color name="selected_interest_or_club">#FFDEDE</color>
     <color name="text_dark_green">#5B7E58</color>
     <color name="text_green">#698965</color>
+    <color name="forest_green">#176027</color>
     <color name="rounded_button">#FFAC5F</color>
 </resources>

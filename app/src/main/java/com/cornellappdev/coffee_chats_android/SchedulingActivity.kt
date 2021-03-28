@@ -1,11 +1,14 @@
 package com.cornellappdev.coffee_chats_android
 
+import android.app.Activity
 import android.content.Intent
 import android.content.res.Resources
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.MenuItem
+import android.view.TouchDelegate
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
@@ -26,6 +29,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.navigation.NavigationView
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_scheduling.*
+import kotlinx.android.synthetic.main.activity_scheduling.nav_button
+import kotlinx.android.synthetic.main.fragment_create_profile.*
 import kotlinx.android.synthetic.main.nav_header_profile.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,6 +54,7 @@ class SchedulingActivity :
     private val noMatchTag = "NO_MATCH"
     private val scheduleTimeTag = "SCHEDULING_TIME"
     private val schedulePlaceTag = "SCHEDULING_PLACE"
+    private val SETTINGS_CODE = 10032
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -147,6 +153,11 @@ class SchedulingActivity :
             Log.d("NAV_ITEM_LISTENER", itemPressed)
             Toast.makeText(applicationContext, "$itemPressed Pressed", Toast.LENGTH_SHORT).show()
             drawerLayout.close()
+            if (menuItem.itemId == R.id.nav_settings) {
+                val intent = Intent(this, ProfileSettingsActivity::class.java)
+                intent.putExtra("content", ProfileSettingsActivity.Content.SETTINGS)
+                startActivityForResult(intent, SETTINGS_CODE)
+            }
             true
         }
 
@@ -181,6 +192,15 @@ class SchedulingActivity :
             onBackPage()
         } else {
             finish()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        // user has logged out from Settings
+        if (requestCode == SETTINGS_CODE && resultCode == Activity.RESULT_OK) {
+            preferencesHelper.clearLogin()
+            signIn()
         }
     }
 
@@ -242,6 +262,17 @@ class SchedulingActivity :
                     .toInt()
                 width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10f, displayMetrics)
                     .toInt()
+            }
+            // increase the hit area of back button
+            val parent = nav_button.parent as View // button: the view you want to enlarge hit area
+            parent.post {
+                val rect = Rect()
+                nav_button.getHitRect(rect)
+                rect.top -= 100 // increase top hit area
+                rect.left -= 100 // increase left hit area
+                rect.bottom += 100 // increase bottom hit area
+                rect.right += 100 // increase right hit area
+                parent.touchDelegate = TouchDelegate(rect, nav_button)
             }
             backButton.setOnClickListener {
                 onBackPage()

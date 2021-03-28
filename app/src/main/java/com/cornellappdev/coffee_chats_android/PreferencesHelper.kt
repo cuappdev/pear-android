@@ -30,6 +30,14 @@ class PreferencesHelper(context: Context) {
             field = preferences.getBoolean(HAS_ONBOARDED, false)
         }
 
+    fun clearLogin() {
+        preferences.edit()
+            .remove(ACCESS_TOKEN)
+            .remove(REFRESH_TOKEN)
+            .remove(EXPIRES_AT)
+            .apply()
+    }
+
     companion object {
         private const val ACCESS_TOKEN = "data.source.prefs.ACCESS_TOKEN"
         private const val REFRESH_TOKEN = "data.source.prefs.REFRESH_TOKEN"

@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         android:usesCleartextTraffic="${usesCleartextTraffic}">
-        <activity android:name=".EditProfileActivity"></activity>
+        <activity android:name=".ProfileSettingsActivity"></activity>
         <activity
             android:name=".CreateProfileActivity"
             android:theme="@style/noAnimTheme" />

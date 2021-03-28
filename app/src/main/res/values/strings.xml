@@ -151,9 +151,12 @@
     <string name="drawer_open">Open navigation drawer menu</string>
     <string name="drawer_close">Close navigation drawer menu</string>
 
-    <!--SETTINGS MENU-->
+    <!--MY PROFILE-->
+    <string name="save">Save</string>
     <string name="edit_availabilities">Edit Availabilities</string>
     <string name="connect_social_media">Connect Social Media</string>
     <string name="about_pear">About Pear</string>
     <string name="log_out">Log Out</string>
+
+    <string name="edit_availability">Edit Availability</string>
 </resources>
