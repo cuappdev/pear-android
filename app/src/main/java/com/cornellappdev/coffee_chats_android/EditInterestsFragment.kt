@@ -1,10 +1,14 @@
 package com.cornellappdev.coffee_chats_android
 
+import android.content.res.Resources
 import android.os.Bundle
+import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.ListView
 import com.cornellappdev.coffee_chats_android.adapters.GroupInterestAdapter
 import com.cornellappdev.coffee_chats_android.adapters.GroupInterestAdapter.ItemColor
 import com.cornellappdev.coffee_chats_android.models.ApiResponse
@@ -75,34 +79,56 @@ class EditInterestsFragment : Fragment() {
                         moreItems.add(item)
                     }
                 }
-                selectedItemsAdapter = GroupInterestAdapter(requireContext(), selectedItems, false, ItemColor.GREEN)
-                selected_items.item_list.adapter = selectedItemsAdapter
-                moreItemsAdapter = GroupInterestAdapter(requireContext(), moreItems, false, ItemColor.WHITE)
-                more_items.item_list.adapter = moreItemsAdapter
+            } else {
+                val getGroupsEndpoint = Endpoint.getAllGroups()
+                val groupTypeToken = object : TypeToken<ApiResponse<List<String>>>() {}.type
+                groupTitles = withContext(Dispatchers.IO) {
+                    Request.makeRequest<ApiResponse<List<String>>>(
+                        getGroupsEndpoint.okHttpRequest(),
+                        groupTypeToken
+                    )!!.data.toTypedArray()
+                }
+                val getUserGroupsEndpoint = Endpoint.getUserGroups()
+                val userGroups = withContext(Dispatchers.IO) {
+                    Request.makeRequest<ApiResponse<List<String>>>(
+                        getUserGroupsEndpoint.okHttpRequest(),
+                        groupTypeToken
+                    )
+                }!!.data as ArrayList<String>
+                for ((i, group) in groupTitles.withIndex()) {
+                    val item = GroupOrInterest(groupTitles[i])
+                    if (group in userGroups) {
+                        selectedItems.add(item)
+                    } else {
+                        moreItems.add(item)
+                    }
+                }
             }
-//            else {
-//                val getGroupsEndpoint = Endpoint.getAllGroups()
-//                val groupTypeToken = object : TypeToken<ApiResponse<List<String>>>() {}.type
-//                groupTitles = withContext(Dispatchers.IO) {
-//                    Request.makeRequest<ApiResponse<List<String>>>(
-//                        getGroupsEndpoint.okHttpRequest(),
-//                        groupTypeToken
-//                    )!!.data.toTypedArray()
-//                }
-//                val getUserGroupsEndpoint = Endpoint.getUserGroups()
-//                val userGroups = withContext(Dispatchers.IO) {
-//                    Request.makeRequest<ApiResponse<List<String>>>(
-//                        getUserGroupsEndpoint.okHttpRequest(),
-//                        groupTypeToken
-//                    )
-//                }!!.data as ArrayList<String>
-//                groups = Array(groupTitles.size) {
-//                    GroupOrInterest()
-//                }
-//                for (i in groupTitles.indices) {
-//                    groups[i] = GroupOrInterest(groupTitles[i])
-//                }
-//            }
+            selectedItemsAdapter = GroupInterestAdapter(requireContext(), selectedItems, false, ItemColor.GREEN)
+            selected_items.item_list.adapter = selectedItemsAdapter
+            moreItemsAdapter = GroupInterestAdapter(requireContext(), moreItems, false, ItemColor.WHITE)
+            more_items.item_list.adapter = moreItemsAdapter
+            updatePage()
+        }
+    }
+
+    private fun updatePage() {
+        updateListViewHeight(selected_items.item_list, selectedItems.size)
+        updateListViewHeight(more_items.item_list, moreItems.size)
+    }
+
+    /**
+     * Updates the height of `listView` to show `listSize` items. Use this if the entire page needs
+     * to scroll without the individually nested ListViews scrolling
+     */
+    private fun updateListViewHeight(listView: ListView, listSize: Int) {
+        listView.layoutParams = (listView.layoutParams as LinearLayout.LayoutParams).apply {
+            val displayMetrics = Resources.getSystem().displayMetrics
+            val cellHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 75f, displayMetrics).toInt()
+
+            height = cellHeight * listSize
+            listView.requestLayout()
+            scrollView.requestLayout()
         }
     }
 

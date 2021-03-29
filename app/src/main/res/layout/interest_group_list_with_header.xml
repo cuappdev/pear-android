@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -15,9 +14,6 @@
             android:fontFamily="@font/circular_book"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             tools:text="Your interests" />
 
         <TextView
@@ -28,8 +24,6 @@
             android:fontFamily="@font/circular_book"
             android:textColor="@color/faded_text"
             android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="@id/list_title"
-            app:layout_constraintTop_toBottomOf="@id/list_title"
             tools:text="tap to deselect" />
 
         <ListView
@@ -41,9 +35,6 @@
             android:dividerHeight="12.0sp"
             android:fadingEdgeLength="50dp"
             android:requiresFadingEdge="vertical"
-            android:scrollbars="none"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:scrollbars="none" />
 
 </LinearLayout>
