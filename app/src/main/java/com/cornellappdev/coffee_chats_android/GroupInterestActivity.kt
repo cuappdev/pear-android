@@ -245,24 +245,11 @@ class GroupInterestActivity : AppCompatActivity() {
 
     private fun onNextPage() {
         // update user interests or groups in backend
-        CoroutineScope(Dispatchers.Main).launch {
-            val updateEndpoint =
-                when (currentPage) {
-                    CurrentPage.INTERESTS -> Endpoint.updateInterests(userInterests)
-                    CurrentPage.GROUPS -> Endpoint.updateGroups(userGroups)
-                }
-            val typeToken = object : TypeToken<ApiResponse<String>>() {}.type
-            val updateResponse = withContext(Dispatchers.IO) {
-                Request.makeRequest<ApiResponse<String>>(
-                    updateEndpoint.okHttpRequest(),
-                    typeToken
-                )
-            }
-            if (updateResponse == null || !updateResponse.success) {
-                Toast.makeText(applicationContext, "Failed to save information", Toast.LENGTH_LONG)
-                    .show()
-            }
+        val items = when (currentPage) {
+            CurrentPage.INTERESTS -> userInterests
+            CurrentPage.GROUPS -> userGroups
         }
+        updateInterestOrGroup(applicationContext, items, currentPage == CurrentPage.INTERESTS)
         if (currentPage == CurrentPage.INTERESTS) {
             val intent = Intent(this, GroupInterestActivity::class.java)
             intent.putExtra("page", 2)
