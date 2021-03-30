@@ -37,7 +37,7 @@ fun increaseHitArea(view: View, padding: Int = 100) {
 }
 
 /**
- * Typically implemented by activities when child fragments contain fields for users to fill out
+ * Implemented by activities in which fragments contain fields for users to fill out
  */
 interface OnFilledOutListener {
     fun onFilledOut()
@@ -45,7 +45,7 @@ interface OnFilledOutListener {
 }
 
 /**
- * Typically implemented by fragments in which users enter information
+ * Implemented by fragments in which users enter information
  */
 interface OnFilledOutObservable {
     fun setOnFilledOutListener(callback: OnFilledOutListener)

@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -82,16 +81,6 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     }
 
     val settingsNavigationListener = fun(menuItem: MenuItem): Boolean {
-        val itemPressed = when (menuItem.itemId) {
-            R.id.nav_availabilities -> "Edit Availabilities"
-            R.id.nav_location -> "Edit Location Preferences"
-            R.id.nav_social_media -> "Connect Social Media"
-            R.id.nav_about -> "About Pear"
-            R.id.nav_logout -> "Log Out"
-            else -> "Impossible"
-        }
-        Log.d("NAV_ITEM_LISTENER", itemPressed)
-
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
         when (menuItem.itemId) {
             R.id.nav_availabilities -> {

@@ -3,16 +3,11 @@ package com.cornellappdev.coffee_chats_android
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Resources
-import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
-import android.view.MenuItem
-import android.view.TouchDelegate
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
