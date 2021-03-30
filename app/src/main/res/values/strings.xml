@@ -170,6 +170,14 @@
     <string name="edit_availability">Edit Availability</string>
     <string name="edit_interests">Edit Interests</string>
     <string name="edit_groups">Edit Groups</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--ABOUT-->
+    <string name="pear_creation_reason">Pear was created to help Cornell students meet new people and form meaningful connections.</string>
+    <string name="get_paired"><b>Get paired</b> up with a new Cornell student like you, every week.</string>
+    <string name="reach_out"><b>Reach out</b> by sending over when and where you prefer, or choose from what your pair suggested.</string>
+    <string name="meet_at"><b>Meet at</b> the chosen time and place, and now you have one new friend at Cornell!</string>
+    <string name="pause_pairings">You can pause pairings at any time in Settings.</string>
+    <string name="send_feedback">Send feedback</string>
+    <string name="visit_website">Visit our website</string>
+    <string name="more_apps">More apps</string>
 </resources>

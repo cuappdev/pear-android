@@ -21,7 +21,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     private val basePages = listOf(Content.EDIT_INTERESTS, Content.EDIT_GROUPS, Content.SETTINGS)
 
     /** Fragments nested within settings */
-    private val settingsSubPages = listOf(Content.EDIT_TIME, Content.EDIT_LOCATION)
+    private val settingsSubPages = listOf(Content.EDIT_TIME, Content.EDIT_LOCATION, Content.ABOUT)
 
     /** Fragments where users can edit and save information */
     private val editPages = listOf(Content.EDIT_TIME, Content.EDIT_GROUPS, Content.EDIT_LOCATION, Content.EDIT_INTERESTS)
@@ -31,7 +31,8 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
         EDIT_GROUPS,
         SETTINGS,
         EDIT_TIME,
-        EDIT_LOCATION
+        EDIT_LOCATION,
+        ABOUT
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +45,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
             Content.SETTINGS -> SettingsFragment()
             Content.EDIT_TIME -> SchedulingTimeFragment()
             Content.EDIT_LOCATION -> SchedulingPlaceFragment()
+            Content.ABOUT -> AboutFragment()
         }
         ft.add(body_fragment.id, fragment, content.name).addToBackStack("ft").commit()
 
@@ -106,6 +108,13 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
                     .addToBackStack("ft")
                     .commit()
             }
+            R.id.nav_about -> {
+                content = Content.ABOUT
+                setUpCurrentPage()
+                ft.replace(body_fragment.id, AboutFragment(), content.name)
+                    .addToBackStack("ft")
+                    .commit()
+            }
             R.id.nav_logout -> {
                 val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestProfile()
@@ -125,6 +134,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
             Content.EDIT_GROUPS -> getString(R.string.edit_groups)
             Content.SETTINGS -> getString(R.string.settings)
             Content.EDIT_TIME, Content.EDIT_LOCATION -> getString(R.string.edit_availability)
+            Content.ABOUT -> getString(R.string.about_pear)
         }
         save_button.visibility = if (content in editPages) View.VISIBLE else View.GONE
     }
