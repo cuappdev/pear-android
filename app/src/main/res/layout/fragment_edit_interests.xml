@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content" />
 
             <LinearLayout
-                android:id="@+id/view_other_interests"
+                android:id="@+id/view_other_items"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -35,6 +35,7 @@
                 android:visibility="gone">
 
                 <ImageView
+                    android:id="@+id/arrow"
                     android:layout_width="16dp"
                     android:layout_height="8dp"
                     android:layout_marginEnd="2dp"
@@ -42,11 +43,11 @@
                     app:srcCompat="@drawable/ic_back_carrot" />
 
                 <TextView
+                    android:id="@+id/view_other_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:text="@string/other_interests"
                     android:textColor="@color/forest_green"
                     android:textSize="16sp" />
             </LinearLayout>

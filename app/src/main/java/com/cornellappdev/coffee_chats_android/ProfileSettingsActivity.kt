@@ -16,15 +16,19 @@ import kotlinx.android.synthetic.main.activity_scheduling.*
 class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     private val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
     private lateinit var content: Content
+
     /** Pages directly reachable from drawer */
-    private val basePages = listOf(Content.EDIT_INTERESTS, Content.SETTINGS)
+    private val basePages = listOf(Content.EDIT_INTERESTS, Content.EDIT_GROUPS, Content.SETTINGS)
+
     /** Fragments nested within settings */
     private val settingsSubPages = listOf(Content.EDIT_TIME, Content.EDIT_LOCATION)
+
     /** Fragments where users can edit and save information */
-    private val editPages = listOf(Content.EDIT_TIME, Content.EDIT_LOCATION, Content.EDIT_INTERESTS)
+    private val editPages = listOf(Content.EDIT_TIME, Content.EDIT_GROUPS, Content.EDIT_LOCATION, Content.EDIT_INTERESTS)
 
     enum class Content {
         EDIT_INTERESTS,
+        EDIT_GROUPS,
         SETTINGS,
         EDIT_TIME,
         EDIT_LOCATION
@@ -35,7 +39,8 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
         setContentView(R.layout.activity_scheduling)
         content = intent.getSerializableExtra("content") as Content
         val fragment: Fragment = when (content) {
-            Content.EDIT_INTERESTS -> EditInterestsFragment.newInstance(true)
+            Content.EDIT_INTERESTS -> EditInterestsGroupsFragment.newInstance(true)
+            Content.EDIT_GROUPS -> EditInterestsGroupsFragment.newInstance(false)
             Content.SETTINGS -> SettingsFragment()
             Content.EDIT_TIME -> SchedulingTimeFragment()
             Content.EDIT_LOCATION -> SchedulingPlaceFragment()
@@ -66,13 +71,11 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     }
 
     private fun onSave() {
-        when (content) {
-            Content.EDIT_TIME, Content.EDIT_LOCATION -> {
-                val fragment =
-                    supportFragmentManager.findFragmentByTag(content.name) as OnFilledOutObservable
-                fragment.saveInformation()
-                onBackPressed()
-            }
+        if (content in editPages) {
+            val fragment =
+                supportFragmentManager.findFragmentByTag(content.name) as OnFilledOutObservable
+            fragment.saveInformation()
+            onBackPressed()
         }
     }
 
@@ -119,6 +122,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     private fun setUpCurrentPage() {
         scheduling_header.text = when (content) {
             Content.EDIT_INTERESTS -> getString(R.string.edit_interests)
+            Content.EDIT_GROUPS -> getString(R.string.edit_groups)
             Content.SETTINGS -> getString(R.string.settings)
             Content.EDIT_TIME, Content.EDIT_LOCATION -> getString(R.string.edit_availability)
         }

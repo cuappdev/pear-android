@@ -4,9 +4,7 @@ import android.content.Intent
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
 import android.graphics.PorterDuff
-import android.graphics.Rect
 import android.os.Bundle
-import android.view.TouchDelegate
 import android.view.View
 import android.widget.ImageView
 import android.widget.SearchView

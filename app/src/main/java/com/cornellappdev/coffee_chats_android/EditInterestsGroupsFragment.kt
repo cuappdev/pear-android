@@ -16,16 +16,18 @@ import com.cornellappdev.coffee_chats_android.models.GroupOrInterest
 import com.cornellappdev.coffee_chats_android.networking.*
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_edit_interests.*
+import kotlinx.android.synthetic.main.fragment_edit_interests.view.*
 import kotlinx.android.synthetic.main.interest_group_list_with_header.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.min
+import kotlin.math.max
 
-private const val IS_INTEREST = "isInterest"
-
-class EditInterestsFragment : Fragment() {
+class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
     private var isInterest = true
+    private lateinit var itemString: String
     private val selectedItems = ArrayList<GroupOrInterest>()
     private val moreItems = ArrayList<GroupOrInterest>()
     private lateinit var selectedItemsAdapter: GroupInterestAdapter
@@ -35,10 +37,14 @@ class EditInterestsFragment : Fragment() {
     private lateinit var interestSubtitles: Array<String>
     private lateinit var groupTitles: Array<String>
 
+    /** whether to display all selected items, or just the first 3 */
+    private var showExcessSelectedItems = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             isInterest = it.getBoolean(IS_INTEREST)
+            itemString = if (isInterest) "interests" else "groups"
         }
     }
 
@@ -53,9 +59,12 @@ class EditInterestsFragment : Fragment() {
         interestTitles = resources.getStringArray(R.array.interest_titles)
         interestSubtitles = resources.getStringArray(R.array.interest_subtitles)
 
-        selected_items.list_title.text = getString(R.string.your_interests)
-        selected_items.list_subtitle.text = getString(R.string.deselect)
-        more_items.list_title.text = getString(R.string.more_interests)
+        if (isInterest) {
+            selected_items.list_title.text = getString(R.string.menu_interests)
+        } else {
+            selected_items.list_title.text = getString(R.string.menu_groups)
+        }
+        more_items.list_title.text = getString(R.string.more_items, itemString)
         more_items.list_subtitle.text = getString(R.string.tap_to_add)
 
         CoroutineScope(Dispatchers.Main).launch {
@@ -104,16 +113,46 @@ class EditInterestsFragment : Fragment() {
                     }
                 }
             }
-            selectedItemsAdapter = GroupInterestAdapter(requireContext(), selectedItems, false, ItemColor.GREEN)
+            selectedItemsAdapter =
+                GroupInterestAdapter(requireContext(), selectedItems, false, ItemColor.GREEN)
             selected_items.item_list.adapter = selectedItemsAdapter
-            moreItemsAdapter = GroupInterestAdapter(requireContext(), moreItems, false, ItemColor.WHITE)
+            moreItemsAdapter =
+                GroupInterestAdapter(requireContext(), moreItems, false, ItemColor.WHITE)
             more_items.item_list.adapter = moreItemsAdapter
+            view_other_items.setOnClickListener {
+                showExcessSelectedItems = !showExcessSelectedItems
+                updatePage()
+            }
+            selected_items.item_list.setOnItemClickListener { _, _, position, _ ->
+                moveItem(position, selectedItems, moreItems)
+            }
+            more_items.item_list.setOnItemClickListener { _, _, position, _ ->
+                moveItem(position, moreItems, selectedItems)
+            }
+            toggleSaveButton()
             updatePage()
         }
     }
 
     private fun updatePage() {
-        updateListViewHeight(selected_items.item_list, selectedItems.size)
+        if (selectedItems.size > 3) {
+            view_other_items.visibility = View.VISIBLE
+            view_other_items.arrow.rotation = if (showExcessSelectedItems) 90f else 270f
+        } else {
+            view_other_items.visibility = View.GONE
+            showExcessSelectedItems = false
+        }
+        view_other_items.view_other_textview.text =
+            if (showExcessSelectedItems) getString(R.string.view_fewer, itemString)
+            else getString(R.string.view_other, itemString)
+        selected_items.list_subtitle.text = when {
+            selectedItems.isEmpty() && isInterest -> getString(R.string.select_one_interest)
+            selectedItems.isEmpty() && !isInterest -> getString(R.string.select_one_group)
+            else -> getString(R.string.deselect)
+        }
+        val numItemsShown =
+            if (showExcessSelectedItems) selectedItems.size else min(selectedItems.size, 3)
+        updateListViewHeight(selected_items.item_list, numItemsShown)
         updateListViewHeight(more_items.item_list, moreItems.size)
     }
 
@@ -124,11 +163,40 @@ class EditInterestsFragment : Fragment() {
     private fun updateListViewHeight(listView: ListView, listSize: Int) {
         listView.layoutParams = (listView.layoutParams as LinearLayout.LayoutParams).apply {
             val displayMetrics = Resources.getSystem().displayMetrics
-            val cellHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 75f, displayMetrics).toInt()
+            val cellHeight =
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80f, displayMetrics).toInt()
 
             height = cellHeight * listSize
             listView.requestLayout()
             scrollView.requestLayout()
+        }
+    }
+
+    /**
+     * Moves item at position `pos` in `source` to `dest`, ensuring that items are sorted in
+     * alphabetical order, then updates the page to reflect changes
+     */
+    private fun moveItem(
+        pos: Int,
+        source: ArrayList<GroupOrInterest>,
+        dest: ArrayList<GroupOrInterest>
+    ) {
+        val item = source.removeAt(pos)
+        // find insertion index that preserves alphabetical order
+        val index = max(dest.indexOfLast { i -> i.getText() < item.getText() } + 1, 0)
+        dest.add(index, item)
+        selectedItemsAdapter.notifyDataSetChanged()
+        moreItemsAdapter.notifyDataSetChanged()
+        toggleSaveButton()
+        updatePage()
+    }
+
+    /** Enables or disables the Save button based on the number of selected items */
+    private fun toggleSaveButton() {
+        if (selectedItems.isEmpty()) {
+            callback!!.onSelectionEmpty()
+        } else {
+            callback!!.onFilledOut()
         }
     }
 
@@ -138,14 +206,30 @@ class EditInterestsFragment : Fragment() {
          * this fragment using the provided parameters.
          *
          * @param isInterest whether this fragment edits a group or interest
-         * @return A new instance of fragment EditInterestsFragment
+         * @return A new instance of fragment EditInterestsGroupsFragment
          */
         @JvmStatic
         fun newInstance(isInterest: Boolean) =
-            EditInterestsFragment().apply {
+            EditInterestsGroupsFragment().apply {
                 arguments = Bundle().apply {
                     putBoolean(IS_INTEREST, isInterest)
                 }
             }
+
+        private const val IS_INTEREST = "isInterest"
+    }
+
+    private var callback: OnFilledOutListener? = null
+
+    override fun setOnFilledOutListener(callback: OnFilledOutListener) {
+        this.callback = callback
+    }
+
+    override fun saveInformation() {
+        updateInterestOrGroup(
+            requireContext(),
+            selectedItems.map { item -> item.getText() },
+            isInterest
+        )
     }
 }
