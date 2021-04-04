@@ -15,10 +15,17 @@ import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.models.GroupOrInterest
 
 
-class GroupInterestAdapter(private val mContext: Context, list: Array<GroupOrInterest>, isGroup: Boolean) :
+class GroupInterestAdapter(private val mContext: Context, list: List<GroupOrInterest>, isGroup: Boolean, private val itemColor: ItemColor) :
     ArrayAdapter<GroupOrInterest?>(mContext, 0, list), Filterable {
     private var clubInterestList = list
     private var isGroupView = isGroup
+
+    enum class ItemColor {
+        WHITE,
+        GREEN,
+        TOGGLE
+    }
+
     override fun getView(
         position: Int,
         convertView: View?,
@@ -46,10 +53,13 @@ class GroupInterestAdapter(private val mContext: Context, list: Array<GroupOrInt
         val selected = ContextCompat.getColor(context, R.color.onboardingListSelected)
         val unselected = ContextCompat.getColor(context, R.color.onboarding_fields)
         val drawableBox = viewHolder.layout!!.background
-        if (currentClubInterest.isSelected()) {
-            drawableBox.colorFilter = BlendModeColorFilter(selected, BlendMode.MULTIPLY)
-        } else drawableBox.colorFilter = BlendModeColorFilter(unselected, BlendMode.MULTIPLY)
-
+        val greenFilter = BlendModeColorFilter(selected, BlendMode.MULTIPLY)
+        val whiteFilter = BlendModeColorFilter(unselected, BlendMode.MULTIPLY)
+        drawableBox.colorFilter = when (itemColor) {
+            ItemColor.WHITE -> whiteFilter
+            ItemColor.GREEN -> greenFilter
+            ItemColor.TOGGLE -> if (currentClubInterest.isSelected()) greenFilter else whiteFilter
+        }
         return listItem
     }
 

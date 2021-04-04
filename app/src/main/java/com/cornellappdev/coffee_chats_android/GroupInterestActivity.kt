@@ -4,9 +4,7 @@ import android.content.Intent
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
 import android.graphics.PorterDuff
-import android.graphics.Rect
 import android.os.Bundle
-import android.view.TouchDelegate
 import android.view.View
 import android.widget.ImageView
 import android.widget.SearchView
@@ -74,19 +72,8 @@ class GroupInterestActivity : AppCompatActivity() {
         signup_next.setOnClickListener { onNextPage() }
         add_later.visibility = View.INVISIBLE
         add_later.setOnClickListener { onNextPage() }
-        back_button.setOnClickListener { onBackPage() }
-        // increase the hit area of back button
-        val parent = back_button.parent as View // button: the view you want to enlarge hit area
-
-        parent.post {
-            val rect = Rect()
-            back_button.getHitRect(rect)
-            rect.top -= 100 // increase top hit area
-            rect.left -= 100 // increase left hit area
-            rect.bottom += 100 // increase bottom hit area
-            rect.right += 100 // increase right hit area
-            parent.touchDelegate = TouchDelegate(rect, back_button)
-        }
+        nav_button.setOnClickListener { onBackPage() }
+        increaseHitArea(nav_button)
 
         // signup_next is disabled until user has chosen at least one interest
         signup_next.isEnabled = false
@@ -177,7 +164,7 @@ class GroupInterestActivity : AppCompatActivity() {
                 group_search.visibility = View.GONE
                 adapter =
                     GroupInterestAdapter(
-                        this, interests, false
+                        this, interests.toList(), false, GroupInterestAdapter.ItemColor.TOGGLE
                     )
                 interests_or_groups.adapter = adapter
 
@@ -206,7 +193,7 @@ class GroupInterestActivity : AppCompatActivity() {
                 )
                 adapter =
                     GroupInterestAdapter(
-                        this, groups, true
+                        this, groups.toList(), true, GroupInterestAdapter.ItemColor.TOGGLE
                     )
 
                 interests_or_groups.adapter = adapter
@@ -223,8 +210,9 @@ class GroupInterestActivity : AppCompatActivity() {
                         adapter =
                             GroupInterestAdapter(
                                 applicationContext,
-                                outputArr,
-                                true
+                                outputArr.toList(),
+                                true,
+                                GroupInterestAdapter.ItemColor.TOGGLE
                             )
                         interests_or_groups.adapter = adapter
                         for (i in groupTitles.indices) {
@@ -257,24 +245,11 @@ class GroupInterestActivity : AppCompatActivity() {
 
     private fun onNextPage() {
         // update user interests or groups in backend
-        CoroutineScope(Dispatchers.Main).launch {
-            val updateEndpoint =
-                when (currentPage) {
-                    CurrentPage.INTERESTS -> Endpoint.updateInterests(userInterests)
-                    CurrentPage.GROUPS -> Endpoint.updateGroups(userGroups)
-                }
-            val typeToken = object : TypeToken<ApiResponse<String>>() {}.type
-            val updateResponse = withContext(Dispatchers.IO) {
-                Request.makeRequest<ApiResponse<String>>(
-                    updateEndpoint.okHttpRequest(),
-                    typeToken
-                )
-            }
-            if (updateResponse == null || !updateResponse.success) {
-                Toast.makeText(applicationContext, "Failed to save information", Toast.LENGTH_LONG)
-                    .show()
-            }
+        val items = when (currentPage) {
+            CurrentPage.INTERESTS -> userInterests
+            CurrentPage.GROUPS -> userGroups
         }
+        updateInterestOrGroup(applicationContext, items, currentPage == CurrentPage.INTERESTS)
         if (currentPage == CurrentPage.INTERESTS) {
             val intent = Intent(this, GroupInterestActivity::class.java)
             intent.putExtra("page", 2)

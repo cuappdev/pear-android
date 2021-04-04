@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_availabilities"
+            android:icon="@drawable/ic_availability_icon"
+            android:title="@string/edit_availabilities" />
+        <item
+            android:id="@+id/nav_location"
+            android:icon="@drawable/ic_location_icon"
+            android:title="@string/edit_location" />
+        <item
+            android:id="@+id/nav_social_media"
+            android:icon="@drawable/ic_envelope"
+            android:title="@string/connect_social_media" />
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_about_icon"
+            android:title="@string/about_pear" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_logout_icon"
+            android:title="@string/log_out" />
+    </group>
+</menu>

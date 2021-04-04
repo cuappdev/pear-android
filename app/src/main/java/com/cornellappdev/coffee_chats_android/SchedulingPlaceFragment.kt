@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class SchedulingPlaceFragment : Fragment() {
+class SchedulingPlaceFragment : Fragment(), OnFilledOutObservable {
     private lateinit var campusPlaces: Array<String>
     private lateinit var collegetownPlaces: Array<String>
     private val preferredLocations = mutableListOf<String>()
@@ -121,16 +121,11 @@ class SchedulingPlaceFragment : Fragment() {
 
     private var callback: OnFilledOutListener? = null
 
-    fun setOnFilledOutListener(callback: OnFilledOutListener) {
+    override fun setOnFilledOutListener(callback: OnFilledOutListener) {
         this.callback = callback
     }
 
-    interface OnFilledOutListener {
-        fun onFilledOut()
-        fun onSelectionEmpty()
-    }
-
-    fun updateLocations() {
+    override fun saveInformation() {
         val locations = mutableListOf<Location>()
         val campusArea = getString(R.string.campus)
         val collegetownArea = getString(R.string.collegetown)

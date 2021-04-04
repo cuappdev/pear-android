@@ -45,7 +45,7 @@
         <item>programming, web/app development</item>
         <item>road, trips, backpacking</item>
     </string-array>
-    
+
     <!--SCHEDULING TIME-->
     <string name="scheduling_time_header">When are you free?</string>
     <string name="scheduling_finish">Next</string>
@@ -140,5 +140,44 @@
     </string>
     <string name="no_match_availability">Enter Availability</string>
 
+    <!--DRAWER MENU-->
+    <string name="user_name">%1$s %2$s</string>
+    <string name="user_hometown">From %1$s</string>
+    <string name="user_major_year">%1$s, %2$s</string>
+    <string name="menu_groups">Your groups</string>
+    <string name="menu_interests">Your interests</string>
+    <string name="menu_prompts">Your prompts</string>
+    <string name="settings">Settings</string>
+    <string name="drawer_open">Open navigation drawer menu</string>
+    <string name="drawer_close">Close navigation drawer menu</string>
 
+    <!--MY PROFILE-->
+    <string name="save">Save</string>
+    <string name="edit_availabilities">Edit Availabilities</string>
+    <string name="edit_location">Edit Location Preferences</string>
+    <string name="connect_social_media">Connect Social Media</string>
+    <string name="about_pear">About Pear</string>
+    <string name="log_out">Log Out</string>
+
+    <string name="deselect">tap to deselect</string>
+    <string name="more_items">More %1$s</string>
+    <string name="tap_to_add">tap to add</string>
+    <string name="view_other">view your other %1$s</string>
+    <string name="view_fewer">view fewer %1$s</string>
+    <string name="select_one_interest">Select at least one interest so that we can better help you find a Pear!</string>
+    <string name="select_one_group">Select a group so that we can better help you find a Pear!</string>
+
+    <string name="edit_availability">Edit Availability</string>
+    <string name="edit_interests">Edit Interests</string>
+    <string name="edit_groups">Edit Groups</string>
+
+    <!--ABOUT-->
+    <string name="pear_creation_reason">Pear was created to help Cornell students meet new people and form meaningful connections.</string>
+    <string name="get_paired"><b>Get paired</b> up with a new Cornell student like you, every week.</string>
+    <string name="reach_out"><b>Reach out</b> by sending over when and where you prefer, or choose from what your pair suggested.</string>
+    <string name="meet_at"><b>Meet at</b> the chosen time and place, and now you have one new friend at Cornell!</string>
+    <string name="pause_pairings">You can pause pairings at any time in Settings.</string>
+    <string name="send_feedback">Send feedback</string>
+    <string name="visit_website">Visit our website</string>
+    <string name="more_apps">More apps</string>
 </resources>
