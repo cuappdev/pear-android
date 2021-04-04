@@ -20,18 +20,24 @@ class AboutFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         send_feedback.setOnClickListener {
-            visitWebsite("https://forms.gle/t9umWjckEs4NNWNS8/")
+            visitWebsite(FEEDBACK_URL)
         }
         visit_website.setOnClickListener {
-            visitWebsite("https://cornellappdev.com")
+            visitWebsite(WEBSITE_URL)
         }
         more_apps.setOnClickListener {
-            visitWebsite("https://cornellappdev.com/apps")
+            visitWebsite(MORE_APPS_URL)
         }
     }
 
     /** Starts an intent to visit the website at `url` */
     private fun visitWebsite(url: String) {
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+    }
+
+    companion object {
+        private const val FEEDBACK_URL = "https://forms.gle/t9umWjckEs4NNWNS8/"
+        private const val WEBSITE_URL = "https://cornellappdev.com"
+        private const val MORE_APPS_URL = "https://cornellappdev.com/apps"
     }
 }

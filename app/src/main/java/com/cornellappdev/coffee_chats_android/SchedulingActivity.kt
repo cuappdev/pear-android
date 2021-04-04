@@ -138,17 +138,13 @@ class SchedulingActivity :
         navigationView.setNavigationItemSelectedListener { menuItem ->
             drawerLayout.close()
             val intent = Intent(this, ProfileSettingsActivity::class.java)
-            when (menuItem.itemId) {
-                R.id.nav_interests -> {
-                    intent.putExtra("content", ProfileSettingsActivity.Content.EDIT_INTERESTS)
-                }
-                R.id.nav_groups -> {
-                    intent.putExtra("content", ProfileSettingsActivity.Content.EDIT_GROUPS)
-                }
-                R.id.nav_settings -> {
-                    intent.putExtra("content", ProfileSettingsActivity.Content.SETTINGS)
-                }
+            val contentTag = when (menuItem.itemId) {
+                R.id.nav_interests -> ProfileSettingsActivity.Content.EDIT_INTERESTS
+                R.id.nav_groups -> ProfileSettingsActivity.Content.EDIT_GROUPS
+                R.id.nav_settings -> ProfileSettingsActivity.Content.SETTINGS
+                else -> null
             }
+            contentTag?.let { intent.putExtra("content", contentTag) }
             when (menuItem.itemId) {
                 R.id.nav_settings -> startActivityForResult(intent, SETTINGS_CODE)
                 R.id.nav_interests, R.id.nav_groups -> startActivity(intent)
