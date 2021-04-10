@@ -1,9 +1,6 @@
 package com.cornellappdev.coffee_chats_android.networking
 
-import com.cornellappdev.coffee_chats_android.models.Availability
-import com.cornellappdev.coffee_chats_android.models.Demographics
-import com.cornellappdev.coffee_chats_android.models.Location
-import com.cornellappdev.coffee_chats_android.models.UserSession
+import com.cornellappdev.coffee_chats_android.models.*
 import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -133,6 +130,26 @@ fun Endpoint.Companion.updateLocations(locations: List<Location>): Endpoint {
     val requestBody = json.toString().toRequestBody("application/json; charset=utf-8".toMediaType())
     return Endpoint(
         path = "/user/preferredLocations",
+        headers = authHeader(),
+        body = requestBody,
+        method = EndpointMethod.POST
+    )
+}
+
+fun Endpoint.Companion.getUserSocialMedia(netID: String = ""): Endpoint {
+    val query = if (netID.isEmpty()) "" else "?netID=$netID"
+    return Endpoint(
+        path = "/user/socialMedia/$query",
+        headers = authHeader(),
+        method = EndpointMethod.GET
+    )
+}
+
+fun Endpoint.Companion.updateSocialMedia(socialMedia: SocialMedia): Endpoint {
+    val requestBody =
+        gson.toJson(socialMedia).toRequestBody("application/json; charset=utf-8".toMediaType())
+    return Endpoint(
+        path = "/user/socialMedia",
         headers = authHeader(),
         body = requestBody,
         method = EndpointMethod.POST

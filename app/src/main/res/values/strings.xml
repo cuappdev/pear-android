@@ -46,6 +46,12 @@
         <item>road, trips, backpacking</item>
     </string-array>
 
+    <!--SOCIAL MEDIA-->
+    <string name="social_media">Social Media</string>
+    <string name="social_media_blurb">Help your Pear contact you by connecting your social media accounts. Your information will only be shared with the verified Cornell students you are paired with.</string>
+    <string name="instagram_handle">\@Instagram handle</string>
+    <string name="facebook_profile">Facebook profile link</string>
+
     <!--SCHEDULING TIME-->
     <string name="scheduling_time_header">When are you free?</string>
     <string name="scheduling_finish">Next</string>
