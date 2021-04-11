@@ -51,7 +51,9 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener {
                 )
             }!!.data
             val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-            ft.replace(body_fragment.id, CreateProfileFragment(), content.name).addToBackStack("ft").commit()
+            ft.replace(body_fragment.id, CreateProfileFragment(), content.name)
+                .addToBackStack("ft")
+                .commit()
             setUpCurrentPage()
         }
         back_button.setOnClickListener { onBackPressed() }
@@ -77,9 +79,9 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener {
     }
 
     private fun onNextPage(view: View) {
-        val fragment =
+        val currFragment =
             supportFragmentManager.findFragmentByTag(content.name) as OnFilledOutObservable
-        fragment.saveInformation()
+        currFragment.saveInformation()
         // hide keyboard
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.applicationWindowToken, 0)
@@ -112,7 +114,10 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener {
         }
         back_button.visibility = if (content == Content.CREATE_PROFILE) View.GONE else View.VISIBLE
         add_later.visibility = if (content in addLaterPages) View.VISIBLE else View.GONE
-        onboarding_next.text = if (content == navigationList.last()) getString(R.string.ready_for_pear) else getString(R.string.next)
+        onboarding_next.text =
+            if (content == navigationList.last()) getString(R.string.ready_for_pear) else getString(
+                R.string.next
+            )
     }
 
     override fun onFilledOut() {

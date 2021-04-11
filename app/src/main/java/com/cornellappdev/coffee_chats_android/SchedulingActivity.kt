@@ -24,7 +24,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.navigation.NavigationView
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_scheduling.*
-import kotlinx.android.synthetic.main.activity_scheduling.nav_button
 import kotlinx.android.synthetic.main.fragment_create_profile.*
 import kotlinx.android.synthetic.main.nav_header_profile.view.*
 import kotlinx.coroutines.CoroutineScope

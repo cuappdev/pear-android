@@ -36,8 +36,8 @@ class InterestsGroupsFragment : Fragment(), OnFilledOutObservable {
     private lateinit var userInterests: ArrayList<String>
     private lateinit var userGroups: ArrayList<String>
 
-    var selectedColor = 0
-    var unselectedColor = 0
+    private var selectedColor = 0
+    private var unselectedColor = 0
 
     private lateinit var interests: Array<GroupOrInterest>
     private lateinit var groups: Array<GroupOrInterest>
@@ -248,8 +248,8 @@ class InterestsGroupsFragment : Fragment(), OnFilledOutObservable {
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
          *
-         * @param isInterest whether this fragment edits a group or interest
-         * @return A new instance of fragment EditInterestsGroupsFragment
+         * @param isInterest whether this fragment allows users to input interests or groups
+         * @return A new instance of fragment InterestsGroupsFragment
          */
         @JvmStatic
         fun newInstance(isInterest: Boolean) =
