@@ -85,6 +85,7 @@ class SchedulingActivity :
                         true
                     )
                 }
+                setUpDrawerLayout()
             }
         } else {
             // prompt user to log in
@@ -138,19 +139,12 @@ class SchedulingActivity :
         setUpCurrentPage()
     }
 
-    private fun signIn() {
-        val intent = Intent(this, SignInActivity::class.java)
-        startActivity(intent)
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setUpDrawerLayout()
     }
 
-    override fun onAttachFragment(fragment: Fragment) {
-        if (fragment is OnFilledOutObservable) {
-            fragment.setOnFilledOutListener(this)
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
+    private fun setUpDrawerLayout() {
         CoroutineScope(Dispatchers.Main).launch {
             val getUserEndpoint = Endpoint.getUser()
             val userTypeToken = object : TypeToken<ApiResponse<User>>() {}.type
@@ -168,6 +162,17 @@ class SchedulingActivity :
                 "'${user.graduationYear?.substring(2)}"
             )
             drawerLayout.user_hometown.text = getString(R.string.user_hometown, user.hometown)
+        }
+    }
+
+    private fun signIn() {
+        val intent = Intent(this, SignInActivity::class.java)
+        startActivity(intent)
+    }
+
+    override fun onAttachFragment(fragment: Fragment) {
+        if (fragment is OnFilledOutObservable) {
+            fragment.setOnFilledOutListener(this)
         }
     }
 
