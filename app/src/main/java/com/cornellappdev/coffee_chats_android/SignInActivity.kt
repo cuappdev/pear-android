@@ -89,7 +89,7 @@ class SignInActivity : AppCompatActivity() {
             val intent = if (preferencesHelper.hasOnboarded) {
                 Intent(this, SchedulingActivity::class.java)
             } else {
-                Intent(this, CreateProfileActivity::class.java)
+                Intent(this, OnboardingActivity::class.java)
             }
             if (account != null) {
                 val personName: String? = account.givenName

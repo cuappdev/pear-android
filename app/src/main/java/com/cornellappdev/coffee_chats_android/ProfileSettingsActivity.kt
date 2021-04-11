@@ -65,16 +65,11 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
         scheduling_finish.visibility = View.GONE
         increaseHitArea(nav_button)
         nav_button.setOnClickListener { onBackPressed() }
-        save_button.setOnClickListener { onSave() }
+        save_button.setOnClickListener { onSave(it) }
         setUpCurrentPage()
     }
 
     override fun onBackPressed() {
-        // hide keyboard
-        val inputMethodManager: InputMethodManager =
-            getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        val view = currentFocus ?: View(this)
-        inputMethodManager.hideSoftInputFromWindow(view.applicationWindowToken, 0)
         if (content in basePages) {
             finish()
         } else if (content in settingsSubPages) {
@@ -90,11 +85,14 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
         }
     }
 
-    private fun onSave() {
+    private fun onSave(view: View) {
         if (content in editPages) {
             val fragment =
                 supportFragmentManager.findFragmentByTag(content.name) as OnFilledOutObservable
             fragment.saveInformation()
+            // hide keyboard
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.applicationWindowToken, 0)
             onBackPressed()
         }
     }
