@@ -159,7 +159,7 @@ class SchedulingActivity :
             drawerLayout.user_major_year.text = getString(
                 R.string.user_major_year,
                 user.major,
-                "'${user.graduationYear?.substring(2)}"
+                user.graduationYear?.substring(2)
             )
             drawerLayout.user_hometown.text = getString(R.string.user_hometown, user.hometown)
         }
