@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:background="@color/background_green"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@+id/header_layout"
+        android:paddingBottom="20dp">
+
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/onboarding_header"
+            app:layout_constraintTop_toTopOf="@id/onboarding_header"
+            android:layout_marginStart="24dp"
+            android:background="@drawable/ic_back_carrot"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <TextView
+            android:id="@+id/onboarding_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:fontFamily="@font/circular_medium"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/body_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/onboarding_next"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_layout" />
+
+    <Button
+        android:id="@+id/onboarding_next"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:textSize="20sp"
+        android:background="@drawable/profile_button_background"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:fontFamily="@font/circular_medium"
+        android:layout_marginBottom="70dp"
+        style="?android:attr/borderlessButtonStyle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <Button
+        android:id="@+id/add_later"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:background="@null"
+        android:text="@string/add_later_button"
+        android:textSize="16sp"
+        android:textColor="@color/faded_text"
+        android:fontFamily="@font/circular_book"
+        app:layout_constraintTop_toBottomOf="@id/onboarding_next"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

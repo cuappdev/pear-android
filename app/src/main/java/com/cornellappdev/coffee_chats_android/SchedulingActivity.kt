@@ -24,7 +24,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.navigation.NavigationView
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_scheduling.*
-import kotlinx.android.synthetic.main.activity_scheduling.nav_button
 import kotlinx.android.synthetic.main.fragment_create_profile.*
 import kotlinx.android.synthetic.main.nav_header_profile.view.*
 import kotlinx.coroutines.CoroutineScope
@@ -86,22 +85,7 @@ class SchedulingActivity :
                         true
                     )
                 }
-                val getUserEndpoint = Endpoint.getUser()
-                val userTypeToken = object : TypeToken<ApiResponse<User>>() {}.type
-                val user = withContext(Dispatchers.IO) {
-                    Request.makeRequest<ApiResponse<User>>(
-                        getUserEndpoint.okHttpRequest(),
-                        userTypeToken
-                    )
-                }!!.data
-                drawerLayout.user_name.text =
-                    getString(R.string.user_name, user.firstName, user.lastName)
-                drawerLayout.user_major_year.text = getString(
-                    R.string.user_major_year,
-                    user.major,
-                    "'${user.graduationYear?.substring(2)}"
-                )
-                drawerLayout.user_hometown.text = getString(R.string.user_hometown, user.hometown)
+                setUpDrawerLayout()
             }
         } else {
             // prompt user to log in
@@ -153,6 +137,32 @@ class SchedulingActivity :
         }
 
         setUpCurrentPage()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setUpDrawerLayout()
+    }
+
+    private fun setUpDrawerLayout() {
+        CoroutineScope(Dispatchers.Main).launch {
+            val getUserEndpoint = Endpoint.getUser()
+            val userTypeToken = object : TypeToken<ApiResponse<User>>() {}.type
+            val user = withContext(Dispatchers.IO) {
+                Request.makeRequest<ApiResponse<User>>(
+                    getUserEndpoint.okHttpRequest(),
+                    userTypeToken
+                )
+            }!!.data
+            drawerLayout.user_name.text =
+                getString(R.string.user_name, user.firstName, user.lastName)
+            drawerLayout.user_major_year.text = getString(
+                R.string.user_major_year,
+                user.major,
+                user.graduationYear?.substring(2)
+            )
+            drawerLayout.user_hometown.text = getString(R.string.user_hometown, user.hometown)
+        }
     }
 
     private fun signIn() {

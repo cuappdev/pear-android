@@ -2,10 +2,11 @@ package com.cornellappdev.coffee_chats_android
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -20,10 +21,21 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     private val basePages = listOf(Content.EDIT_INTERESTS, Content.EDIT_GROUPS, Content.SETTINGS)
 
     /** Fragments nested within settings */
-    private val settingsSubPages = listOf(Content.EDIT_TIME, Content.EDIT_LOCATION, Content.ABOUT)
+    private val settingsSubPages = listOf(
+        Content.EDIT_TIME,
+        Content.EDIT_LOCATION,
+        Content.SOCIAL_MEDIA,
+        Content.ABOUT
+    )
 
     /** Fragments where users can edit and save information */
-    private val editPages = listOf(Content.EDIT_TIME, Content.EDIT_GROUPS, Content.EDIT_LOCATION, Content.EDIT_INTERESTS)
+    private val editPages = listOf(
+        Content.EDIT_TIME,
+        Content.EDIT_GROUPS,
+        Content.EDIT_LOCATION,
+        Content.SOCIAL_MEDIA,
+        Content.EDIT_INTERESTS
+    )
 
     enum class Content {
         EDIT_INTERESTS,
@@ -31,6 +43,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
         SETTINGS,
         EDIT_TIME,
         EDIT_LOCATION,
+        SOCIAL_MEDIA,
         ABOUT
     }
 
@@ -44,6 +57,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
             Content.SETTINGS -> SettingsFragment()
             Content.EDIT_TIME -> SchedulingTimeFragment()
             Content.EDIT_LOCATION -> SchedulingPlaceFragment()
+            Content.SOCIAL_MEDIA -> SocialMediaFragment()
             Content.ABOUT -> AboutFragment()
         }
         ft.add(body_fragment.id, fragment, content.name).addToBackStack("ft").commit()
@@ -51,7 +65,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
         scheduling_finish.visibility = View.GONE
         increaseHitArea(nav_button)
         nav_button.setOnClickListener { onBackPressed() }
-        save_button.setOnClickListener { onSave() }
+        save_button.setOnClickListener { onSave(it) }
         setUpCurrentPage()
     }
 
@@ -71,11 +85,14 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
         }
     }
 
-    private fun onSave() {
+    private fun onSave(view: View) {
         if (content in editPages) {
             val fragment =
                 supportFragmentManager.findFragmentByTag(content.name) as OnFilledOutObservable
             fragment.saveInformation()
+            // hide keyboard
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.applicationWindowToken, 0)
             onBackPressed()
         }
     }
@@ -94,6 +111,13 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
                 content = Content.EDIT_LOCATION
                 setUpCurrentPage()
                 ft.replace(body_fragment.id, SchedulingPlaceFragment(), content.name)
+                    .addToBackStack("ft")
+                    .commit()
+            }
+            R.id.nav_social_media -> {
+                content = Content.SOCIAL_MEDIA
+                setUpCurrentPage()
+                ft.replace(body_fragment.id, SocialMediaFragment(), content.name)
                     .addToBackStack("ft")
                     .commit()
             }
@@ -123,6 +147,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
             Content.EDIT_GROUPS -> getString(R.string.edit_groups)
             Content.SETTINGS -> getString(R.string.settings)
             Content.EDIT_TIME, Content.EDIT_LOCATION -> getString(R.string.edit_availability)
+            Content.SOCIAL_MEDIA -> getString(R.string.social_media)
             Content.ABOUT -> getString(R.string.about_pear)
         }
         save_button.visibility = if (content in editPages) View.VISIBLE else View.GONE

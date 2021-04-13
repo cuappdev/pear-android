@@ -7,11 +7,14 @@
     <string name="almost_there">Almost there</string>
     <string name="groups_header">What are you a part of?</string>
     <string name="groups_search_query_hint">Search</string>
-    <string name="get_started">Ready for Pear</string>
+    <string name="ready_for_pear">Ready for Pear</string>
     <string name="go_back">Go back</string>
     <string name="demographics_header">"Hi %1$s!\nLet's get to know you better."</string>
     <string name="demographics_header_no_name">"Hi!\nLet's get to know you better."</string>
     <string name="add_later_button">I\'ll add later</string>
+    <string name="major">Major</string>
+    <string name="hometown">Hometown</string>
+    <!--INTERESTS-->
     <string-array name="interest_titles">
         <item>Art</item>
         <item>Business</item>
@@ -46,9 +49,16 @@
         <item>road, trips, backpacking</item>
     </string-array>
 
+    <!--SOCIAL MEDIA-->
+    <string name="social_media">Social Media</string>
+    <string name="social_media_header">Connect your social media</string>
+    <string name="social_media_blurb">Help your Pear contact you by connecting your social media accounts. Your information will only be shared with the verified Cornell students you are paired with.</string>
+    <string name="instagram_handle">\@Instagram handle</string>
+    <string name="facebook_profile">Facebook profile link</string>
+
     <!--SCHEDULING TIME-->
     <string name="scheduling_time_header">When are you free?</string>
-    <string name="scheduling_finish">Next</string>
+    <string name="next">Next</string>
     <string-array name="days_abbr">
         <item>Su</item>
         <item>M</item>
@@ -143,7 +153,7 @@
     <!--DRAWER MENU-->
     <string name="user_name">%1$s %2$s</string>
     <string name="user_hometown">From %1$s</string>
-    <string name="user_major_year">%1$s, %2$s</string>
+    <string name="user_major_year">%1$s, \'%2$s</string>
     <string name="menu_groups">Your groups</string>
     <string name="menu_interests">Your interests</string>
     <string name="menu_prompts">Your prompts</string>

@@ -14,13 +14,10 @@
             android:name=".ProfileSettingsActivity"
             android:theme="@style/noAnimTheme" />
         <activity
-            android:name=".CreateProfileActivity"
-            android:theme="@style/noAnimTheme" />
-        <activity
             android:name=".SignInActivity"
             android:theme="@style/noAnimTheme" />
         <activity
-            android:name=".GroupInterestActivity"
+            android:name=".OnboardingActivity"
             android:theme="@style/noAnimTheme" />
         <activity
             android:name=".SchedulingActivity"

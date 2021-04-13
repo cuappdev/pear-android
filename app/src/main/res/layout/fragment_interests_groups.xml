@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <SearchView
+        android:id="@+id/group_search"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_edittext"
+        android:hint="@string/groups_search_query_hint"
+        android:iconifiedByDefault="false"
+        android:searchHintIcon="@drawable/search_icon"
+        android:searchIcon="@drawable/search_icon"
+        android:theme="@style/searchViewTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ListView
+        android:id="@+id/interests_or_groups"
+        android:layout_width="300dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="12.0sp"
+        android:fadingEdgeLength="50dp"
+        android:requiresFadingEdge="vertical"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/group_search" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
