@@ -25,11 +25,20 @@ fun Endpoint.Companion.refreshSession(refreshToken: String): Endpoint {
     )
 }
 
-// USER
-fun Endpoint.Companion.getUser(netID: String = ""): Endpoint {
+/**
+ * Helper for generating GET requests to paths of the form user/`field`/
+ */
+fun getFieldHelper(netID: String, field: String): Endpoint {
     val query = if (netID.isEmpty()) "" else "?netID=$netID"
-    return Endpoint(path = "/user/$query", headers = authHeader(), method = EndpointMethod.GET)
+    return Endpoint(
+        path = "/user/$field/$query",
+        headers = authHeader(),
+        method = EndpointMethod.GET
+    )
 }
+
+// USER
+fun Endpoint.Companion.getUser(netID: String = ""): Endpoint = getFieldHelper(netID, "")
 
 // ONBOARDING
 fun Endpoint.Companion.getAllMajors(): Endpoint {
@@ -56,23 +65,10 @@ fun Endpoint.Companion.getAllGroups(): Endpoint {
     return Endpoint(path = "/group/all", headers = authHeader(), method = EndpointMethod.GET)
 }
 
-fun Endpoint.Companion.getUserInterests(netID: String = ""): Endpoint {
-    val query = if (netID.isEmpty()) "" else "?netID=$netID"
-    return Endpoint(
-        path = "/user/interests/$query",
-        headers = authHeader(),
-        method = EndpointMethod.GET
-    )
-}
+fun Endpoint.Companion.getUserInterests(netID: String = ""): Endpoint =
+    getFieldHelper(netID, "interests")
 
-fun Endpoint.Companion.getUserGroups(netID: String = ""): Endpoint {
-    val query = if (netID.isEmpty()) "" else "?netID=$netID"
-    return Endpoint(
-        path = "/user/groups/$query",
-        headers = authHeader(),
-        method = EndpointMethod.GET
-    )
-}
+fun Endpoint.Companion.getUserGroups(netID: String = ""): Endpoint = getFieldHelper(netID, "groups")
 
 fun Endpoint.Companion.updateInterests(interests: List<String>): Endpoint {
     val json = gson.toJson(mapOf("interests" to interests))
@@ -96,14 +92,8 @@ fun Endpoint.Companion.updateGroups(groups: List<String>): Endpoint {
     )
 }
 
-fun Endpoint.Companion.getUserAvailabilities(netID: String = ""): Endpoint {
-    val query = if (netID.isEmpty()) "" else "?netID=$netID"
-    return Endpoint(
-        path = "/user/availabilities/$query",
-        headers = authHeader(),
-        method = EndpointMethod.GET
-    )
-}
+fun Endpoint.Companion.getUserAvailabilities(netID: String = ""): Endpoint =
+    getFieldHelper(netID, "availabilities")
 
 fun Endpoint.Companion.updateAvailabilities(availabilities: List<Availability>): Endpoint {
     val json = gson.toJson(mapOf("schedule" to availabilities))
@@ -116,14 +106,8 @@ fun Endpoint.Companion.updateAvailabilities(availabilities: List<Availability>):
     )
 }
 
-fun Endpoint.Companion.getUserLocations(netID: String = ""): Endpoint {
-    val query = if (netID.isEmpty()) "" else "?netID=$netID"
-    return Endpoint(
-        path = "/user/preferredLocations/$query",
-        headers = authHeader(),
-        method = EndpointMethod.GET
-    )
-}
+fun Endpoint.Companion.getUserLocations(netID: String = ""): Endpoint =
+    getFieldHelper(netID, "preferredLocations")
 
 fun Endpoint.Companion.updateLocations(locations: List<Location>): Endpoint {
     val json = gson.toJson(mapOf("preferences" to locations))
@@ -136,20 +120,41 @@ fun Endpoint.Companion.updateLocations(locations: List<Location>): Endpoint {
     )
 }
 
-fun Endpoint.Companion.getUserSocialMedia(netID: String = ""): Endpoint {
-    val query = if (netID.isEmpty()) "" else "?netID=$netID"
-    return Endpoint(
-        path = "/user/socialMedia/$query",
-        headers = authHeader(),
-        method = EndpointMethod.GET
-    )
-}
+fun Endpoint.Companion.getUserSocialMedia(netID: String = ""): Endpoint =
+    getFieldHelper(netID, "socialMedia")
 
 fun Endpoint.Companion.updateSocialMedia(socialMedia: SocialMedia): Endpoint {
     val requestBody =
         gson.toJson(socialMedia).toRequestBody("application/json; charset=utf-8".toMediaType())
     return Endpoint(
         path = "/user/socialMedia",
+        headers = authHeader(),
+        body = requestBody,
+        method = EndpointMethod.POST
+    )
+}
+
+fun Endpoint.Companion.getUserGoals(netID: String = ""): Endpoint = getFieldHelper(netID, "goals")
+
+fun Endpoint.Companion.updateGoals(goals: List<String>): Endpoint {
+    val json = gson.toJson(mapOf("goals" to goals))
+    val requestBody = json.toString().toRequestBody("application/json; charset=utf-8".toMediaType())
+    return Endpoint(
+        path = "/user/goals",
+        headers = authHeader(),
+        body = requestBody,
+        method = EndpointMethod.POST
+    )
+}
+
+fun Endpoint.Companion.getUserTalkingPoints(netID: String = ""): Endpoint =
+    getFieldHelper(netID, "talkingPoints")
+
+fun Endpoint.Companion.updateTalkingPoints(talkingPoints: List<String>): Endpoint {
+    val json = gson.toJson(mapOf("talkingPoints" to talkingPoints))
+    val requestBody = json.toString().toRequestBody("application/json; charset=utf-8".toMediaType())
+    return Endpoint(
+        path = "/user/talkingPoints",
         headers = authHeader(),
         body = requestBody,
         method = EndpointMethod.POST
