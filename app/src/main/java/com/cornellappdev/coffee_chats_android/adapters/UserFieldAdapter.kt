@@ -12,13 +12,16 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.cornellappdev.coffee_chats_android.R
-import com.cornellappdev.coffee_chats_android.models.GroupOrInterest
+import com.cornellappdev.coffee_chats_android.models.UserField
 
 
-class GroupInterestAdapter(private val mContext: Context, list: List<GroupOrInterest>, isGroup: Boolean, private val itemColor: ItemColor) :
-    ArrayAdapter<GroupOrInterest?>(mContext, 0, list), Filterable {
+class UserFieldAdapter(
+    private val mContext: Context,
+    list: List<UserField>,
+    private val itemColor: ItemColor
+) :
+    ArrayAdapter<UserField?>(mContext, 0, list), Filterable {
     private var clubInterestList = list
-    private var isGroupView = isGroup
 
     enum class ItemColor {
         WHITE,
@@ -34,11 +37,8 @@ class GroupInterestAdapter(private val mContext: Context, list: List<GroupOrInte
         val viewHolder: ViewHolder
         val listItem: View
         if (convertView == null) {
-            listItem = if (isGroupView) {
-                LayoutInflater.from(mContext).inflate(R.layout.group_view, parent, false)
-            } else {
+            listItem =
                 LayoutInflater.from(mContext).inflate(R.layout.interest_view, parent, false)
-            }
             viewHolder = ViewHolder(listItem)
             listItem.tag = viewHolder
         } else {
@@ -65,7 +65,6 @@ class GroupInterestAdapter(private val mContext: Context, list: List<GroupOrInte
 
     init {
         clubInterestList = list
-        isGroupView = isGroup
     }
 
     private class ViewHolder(view: View?) {

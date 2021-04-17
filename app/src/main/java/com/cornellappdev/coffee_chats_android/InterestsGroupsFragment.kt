@@ -13,9 +13,9 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.cornellappdev.coffee_chats_android.adapters.GroupInterestAdapter
+import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter
 import com.cornellappdev.coffee_chats_android.models.ApiResponse
-import com.cornellappdev.coffee_chats_android.models.GroupOrInterest
+import com.cornellappdev.coffee_chats_android.models.UserField
 import com.cornellappdev.coffee_chats_android.networking.*
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_interests_groups.*
@@ -28,7 +28,7 @@ class InterestsGroupsFragment : Fragment(), OnFilledOutObservable {
 
     private var isInterest = true
 
-    lateinit var adapter: GroupInterestAdapter
+    lateinit var adapter: UserFieldAdapter
     private lateinit var interestTitles: Array<String>
     private lateinit var interestSubtitles: Array<String>
     private lateinit var groupTitles: Array<String>
@@ -39,8 +39,8 @@ class InterestsGroupsFragment : Fragment(), OnFilledOutObservable {
     private var selectedColor = 0
     private var unselectedColor = 0
 
-    private lateinit var interests: Array<GroupOrInterest>
-    private lateinit var groups: Array<GroupOrInterest>
+    private lateinit var interests: Array<UserField>
+    private lateinit var groups: Array<UserField>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,10 +77,10 @@ class InterestsGroupsFragment : Fragment(), OnFilledOutObservable {
                     )
                 }!!.data as ArrayList<String>
                 interests = Array(interestTitles.size) {
-                    GroupOrInterest()
+                    UserField()
                 }
                 for (i in interestTitles.indices) {
-                    interests[i] = GroupOrInterest(
+                    interests[i] = UserField(
                         interestTitles[i],
                         if (i < interestSubtitles.size) interestSubtitles[i] else ""
                     )
@@ -102,10 +102,10 @@ class InterestsGroupsFragment : Fragment(), OnFilledOutObservable {
                     )
                 }!!.data as ArrayList<String>
                 groups = Array(groupTitles.size) {
-                    GroupOrInterest()
+                    UserField()
                 }
                 for (i in groupTitles.indices) {
-                    groups[i] = GroupOrInterest(groupTitles[i])
+                    groups[i] = UserField(groupTitles[i])
                 }
             }
             updatePage()
@@ -148,11 +148,10 @@ class InterestsGroupsFragment : Fragment(), OnFilledOutObservable {
         if (isInterest) {
             group_search.visibility = View.GONE
             adapter =
-                GroupInterestAdapter(
+                UserFieldAdapter(
                     requireContext(),
                     interests.toList(),
-                    false,
-                    GroupInterestAdapter.ItemColor.TOGGLE
+                    UserFieldAdapter.ItemColor.TOGGLE
                 )
             interests_or_groups.adapter = adapter
 
@@ -179,8 +178,8 @@ class InterestsGroupsFragment : Fragment(), OnFilledOutObservable {
                 ContextCompat.getColor(requireContext(), R.color.searchHint), PorterDuff.Mode.DARKEN
             )
             adapter =
-                GroupInterestAdapter(
-                    requireContext(), groups.toList(), true, GroupInterestAdapter.ItemColor.TOGGLE
+                UserFieldAdapter(
+                    requireContext(), groups.toList(), UserFieldAdapter.ItemColor.TOGGLE
                 )
 
             interests_or_groups.adapter = adapter
@@ -195,11 +194,10 @@ class InterestsGroupsFragment : Fragment(), OnFilledOutObservable {
                         outputArr = filtered
                     }
                     adapter =
-                        GroupInterestAdapter(
+                        UserFieldAdapter(
                             requireContext(),
                             outputArr.toList(),
-                            true,
-                            GroupInterestAdapter.ItemColor.TOGGLE
+                            UserFieldAdapter.ItemColor.TOGGLE
                         )
                     interests_or_groups.adapter = adapter
                     for (i in groupTitles.indices) {
@@ -240,7 +238,7 @@ class InterestsGroupsFragment : Fragment(), OnFilledOutObservable {
         if (!isInterest) {
             group_search.setQuery("", false)
         }
-        updateInterestOrGroup(requireContext(), items, isInterest)
+        updateUserField(requireContext(), items, if (isInterest) UserField.Category.INTEREST else UserField.Category.GROUP)
     }
 
     companion object {
