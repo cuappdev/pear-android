@@ -103,7 +103,6 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener {
             setUpCurrentPage()
         } else {
             // onboarding done, launch SchedulingActivity
-            preferencesHelper.hasOnboarded = true
             val intent = Intent(this, SchedulingActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             startActivity(intent)

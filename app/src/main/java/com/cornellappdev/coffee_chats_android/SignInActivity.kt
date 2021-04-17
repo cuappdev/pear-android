@@ -7,10 +7,13 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.cornellappdev.coffee_chats_android.models.*
+import com.cornellappdev.coffee_chats_android.models.ApiResponse
+import com.cornellappdev.coffee_chats_android.models.User
+import com.cornellappdev.coffee_chats_android.models.UserSession
 import com.cornellappdev.coffee_chats_android.networking.Endpoint
 import com.cornellappdev.coffee_chats_android.networking.Request
 import com.cornellappdev.coffee_chats_android.networking.authenticateUser
+import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -86,11 +89,6 @@ class SignInActivity : AppCompatActivity() {
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
-            val intent = if (preferencesHelper.hasOnboarded) {
-                Intent(this, SchedulingActivity::class.java)
-            } else {
-                Intent(this, OnboardingActivity::class.java)
-            }
             if (account != null) {
                 val personName: String? = account.givenName
                 val personEmail: String? = account.email
@@ -113,6 +111,19 @@ class SignInActivity : AppCompatActivity() {
                             preferencesHelper.refreshToken = userSession.refreshToken
                             preferencesHelper.expiresAt = userSession.sessionExpiration.toLong()
                             UserSession.currentSession = userSession
+                            val getUserEndpoint = Endpoint.getUser()
+                            val userTypeToken = object : TypeToken<ApiResponse<User>>() {}.type
+                            val user = withContext(Dispatchers.IO) {
+                                Request.makeRequest<ApiResponse<User>>(
+                                    getUserEndpoint.okHttpRequest(),
+                                    userTypeToken
+                                )
+                            }!!.data
+                            val intent = if (user.didOnboard) {
+                                Intent(applicationContext, SchedulingActivity::class.java)
+                            } else {
+                                Intent(applicationContext, OnboardingActivity::class.java)
+                            }
                             startActivity(intent)
                         }
                     } else {
@@ -137,5 +148,14 @@ class SignInActivity : AppCompatActivity() {
             .addOnCompleteListener(this) {
                 // ...
             }
+    }
+
+    override fun onBackPressed() {
+        // Pressing the back button goes to the home screen
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.addCategory(Intent.CATEGORY_HOME)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
+        super.onBackPressed()
     }
 }

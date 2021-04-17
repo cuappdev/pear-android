@@ -24,12 +24,6 @@ class PreferencesHelper(context: Context) {
             field = preferences.getLong(EXPIRES_AT, 0L)
         }
 
-    var hasOnboarded = preferences.getBoolean(HAS_ONBOARDED, false)
-        set(value) {
-            preferences.edit().putBoolean(HAS_ONBOARDED, value).apply()
-            field = preferences.getBoolean(HAS_ONBOARDED, false)
-        }
-
     fun clearLogin() {
         preferences.edit()
             .remove(ACCESS_TOKEN)
@@ -42,6 +36,5 @@ class PreferencesHelper(context: Context) {
         private const val ACCESS_TOKEN = "data.source.prefs.ACCESS_TOKEN"
         private const val REFRESH_TOKEN = "data.source.prefs.REFRESH_TOKEN"
         private const val EXPIRES_AT = "data.source.prefs.EXPIRES_AT"
-        private const val HAS_ONBOARDED = "data.source.prefs.HAS_ONBOARDED"
     }
 }

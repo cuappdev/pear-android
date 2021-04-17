@@ -10,5 +10,6 @@ data class User(
     val graduationYear: String?,
     val pronouns: String?,
     val interests: List<String>,
-    val groups: List<String>
+    val groups: List<String>,
+    val didOnboard: Boolean
 )
