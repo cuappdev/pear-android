@@ -17,11 +17,10 @@ import com.cornellappdev.coffee_chats_android.models.UserField
 
 class UserFieldAdapter(
     private val mContext: Context,
-    list: List<UserField>,
+    private val fieldList: List<UserField>,
     private val itemColor: ItemColor
 ) :
-    ArrayAdapter<UserField?>(mContext, 0, list), Filterable {
-    private var clubInterestList = list
+    ArrayAdapter<UserField?>(mContext, 0, fieldList), Filterable {
 
     enum class ItemColor {
         WHITE,
@@ -46,7 +45,7 @@ class UserFieldAdapter(
             viewHolder = listItem.tag as ViewHolder
         }
 
-        val currentClubInterest = clubInterestList[position]
+        val currentClubInterest = fieldList[position]
         viewHolder.clubOrInterestText.text = currentClubInterest.getText()
         viewHolder.clubOrInterestSubtext.text = currentClubInterest.getSubtext()
 
@@ -61,10 +60,6 @@ class UserFieldAdapter(
             ItemColor.TOGGLE -> if (currentClubInterest.isSelected()) greenFilter else whiteFilter
         }
         return listItem
-    }
-
-    init {
-        clubInterestList = list
     }
 
     private class ViewHolder(view: View?) {

@@ -137,7 +137,6 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
                     selectedView.findViewById<TextView>(R.id.group_or_interest_text).text
                 val drawableBox = selectedView.background
                 val currObj = fieldAdapterArray[position]
-//                val currObj = fieldAdapterArray[fieldTitles.indexOf(selectedText)]
                 currObj.toggleSelected()
                 if (currObj.isSelected()) {
                     drawableBox.colorFilter =
