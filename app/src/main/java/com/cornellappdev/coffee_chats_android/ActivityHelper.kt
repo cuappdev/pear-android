@@ -6,10 +6,8 @@ import android.view.TouchDelegate
 import android.view.View
 import android.widget.Toast
 import com.cornellappdev.coffee_chats_android.models.ApiResponse
-import com.cornellappdev.coffee_chats_android.networking.Endpoint
-import com.cornellappdev.coffee_chats_android.networking.Request
-import com.cornellappdev.coffee_chats_android.networking.updateGroups
-import com.cornellappdev.coffee_chats_android.networking.updateInterests
+import com.cornellappdev.coffee_chats_android.models.UserField.Category
+import com.cornellappdev.coffee_chats_android.networking.*
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -57,9 +55,14 @@ interface OnFilledOutObservable {
  * if `isInterest` is true, and groups otherwise. An error message is displayed via a Toast if an
  * error occurs.
  */
-fun updateInterestOrGroup(applicationContext: Context, items: List<String>, isInterest: Boolean) {
+fun updateUserField(applicationContext: Context, items: List<String>, category: Category) {
     CoroutineScope(Dispatchers.Main).launch {
-        val updateEndpoint = if (isInterest) Endpoint.updateInterests(items) else Endpoint.updateGroups(items)
+        val updateEndpoint = when (category) {
+            Category.INTEREST -> Endpoint.updateInterests(items)
+            Category.GROUP -> Endpoint.updateGroups(items)
+            Category.GOAL -> Endpoint.updateGoals(items)
+            Category.TALKING_POINT -> Endpoint.updateTalkingPoints(items)
+        }
         val typeToken = object : TypeToken<ApiResponse<String>>() {}.type
         val updateResponse = withContext(Dispatchers.IO) {
             Request.makeRequest<ApiResponse<String>>(

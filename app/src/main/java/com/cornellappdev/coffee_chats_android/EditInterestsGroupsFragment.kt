@@ -9,10 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ListView
-import com.cornellappdev.coffee_chats_android.adapters.GroupInterestAdapter
-import com.cornellappdev.coffee_chats_android.adapters.GroupInterestAdapter.ItemColor
+import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter
+import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter.ItemColor
 import com.cornellappdev.coffee_chats_android.models.ApiResponse
-import com.cornellappdev.coffee_chats_android.models.GroupOrInterest
+import com.cornellappdev.coffee_chats_android.models.UserField
 import com.cornellappdev.coffee_chats_android.networking.*
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_edit_interests.*
@@ -28,10 +28,10 @@ import kotlin.math.max
 class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
     private var isInterest = true
     private lateinit var itemString: String
-    private val selectedItems = ArrayList<GroupOrInterest>()
-    private val moreItems = ArrayList<GroupOrInterest>()
-    private lateinit var selectedItemsAdapter: GroupInterestAdapter
-    private lateinit var moreItemsAdapter: GroupInterestAdapter
+    private val selectedItems = ArrayList<UserField>()
+    private val moreItems = ArrayList<UserField>()
+    private lateinit var selectedItemsAdapter: UserFieldAdapter
+    private lateinit var moreItemsAdapter: UserFieldAdapter
 
     private lateinit var interestTitles: Array<String>
     private lateinit var interestSubtitles: Array<String>
@@ -78,7 +78,7 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
                     )
                 }!!.data as ArrayList<String>
                 for ((i, interest) in interestTitles.withIndex()) {
-                    val item = GroupOrInterest(
+                    val item = UserField(
                         interestTitles[i],
                         if (i < interestSubtitles.size) interestSubtitles[i] else ""
                     )
@@ -105,7 +105,7 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
                     )
                 }!!.data as ArrayList<String>
                 for ((i, group) in groupTitles.withIndex()) {
-                    val item = GroupOrInterest(groupTitles[i])
+                    val item = UserField(groupTitles[i])
                     if (group in userGroups) {
                         selectedItems.add(item)
                     } else {
@@ -114,10 +114,10 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
                 }
             }
             selectedItemsAdapter =
-                GroupInterestAdapter(requireContext(), selectedItems, false, ItemColor.GREEN)
+                UserFieldAdapter(requireContext(), selectedItems, ItemColor.GREEN)
             selected_items.item_list.adapter = selectedItemsAdapter
             moreItemsAdapter =
-                GroupInterestAdapter(requireContext(), moreItems, false, ItemColor.WHITE)
+                UserFieldAdapter(requireContext(), moreItems, ItemColor.WHITE)
             more_items.item_list.adapter = moreItemsAdapter
             view_other_items.setOnClickListener {
                 showExcessSelectedItems = !showExcessSelectedItems
@@ -178,8 +178,8 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
      */
     private fun moveItem(
         pos: Int,
-        source: ArrayList<GroupOrInterest>,
-        dest: ArrayList<GroupOrInterest>
+        source: ArrayList<UserField>,
+        dest: ArrayList<UserField>
     ) {
         val item = source.removeAt(pos)
         // find insertion index that preserves alphabetical order
@@ -226,10 +226,10 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
     }
 
     override fun saveInformation() {
-        updateInterestOrGroup(
+        updateUserField(
             requireContext(),
             selectedItems.map { item -> item.getText() },
-            isInterest
+            if (isInterest) UserField.Category.INTEREST else UserField.Category.GROUP
         )
     }
 }

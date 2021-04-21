@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.cornellappdev.coffee_chats_android.models.ApiResponse
 import com.cornellappdev.coffee_chats_android.models.User
+import com.cornellappdev.coffee_chats_android.models.UserField
 import com.cornellappdev.coffee_chats_android.networking.Endpoint
 import com.cornellappdev.coffee_chats_android.networking.Request
 import com.cornellappdev.coffee_chats_android.networking.getUser
@@ -23,14 +24,16 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener {
     private var content = Content.CREATE_PROFILE
     private lateinit var user: User
     private val navigationList =
-        listOf(Content.CREATE_PROFILE, Content.INTERESTS, Content.GROUPS, Content.SOCIAL_MEDIA)
-    private val addLaterPages = listOf(Content.GROUPS, Content.SOCIAL_MEDIA)
+        listOf(Content.CREATE_PROFILE, Content.INTERESTS, Content.GROUPS, Content.GOALS, Content.TALKING_POINTS, Content.SOCIAL_MEDIA)
+    private val addLaterPages = listOf(Content.GROUPS, Content.GOALS, Content.TALKING_POINTS, Content.SOCIAL_MEDIA)
 
 
     enum class Content {
         CREATE_PROFILE,
         INTERESTS,
         GROUPS,
+        GOALS,
+        TALKING_POINTS,
         SOCIAL_MEDIA
     }
 
@@ -89,8 +92,10 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener {
             content = navigationList[navigationList.indexOf(content) + 1]
             val fragment: Fragment = when (content) {
                 Content.CREATE_PROFILE -> CreateProfileFragment()
-                Content.INTERESTS -> InterestsGroupsFragment.newInstance(true)
-                Content.GROUPS -> InterestsGroupsFragment.newInstance(false)
+                Content.INTERESTS -> UserFieldFragment.newInstance(UserField.Category.INTEREST)
+                Content.GROUPS -> UserFieldFragment.newInstance(UserField.Category.GROUP)
+                Content.GOALS -> UserFieldFragment.newInstance(UserField.Category.GOAL)
+                Content.TALKING_POINTS -> UserFieldFragment.newInstance(UserField.Category.TALKING_POINT)
                 Content.SOCIAL_MEDIA -> SocialMediaFragment()
             }
             val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
@@ -98,7 +103,6 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener {
             setUpCurrentPage()
         } else {
             // onboarding done, launch SchedulingActivity
-            preferencesHelper.hasOnboarded = true
             val intent = Intent(this, SchedulingActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             startActivity(intent)
@@ -110,6 +114,8 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener {
             Content.CREATE_PROFILE -> getString(R.string.demographics_header, user.firstName)
             Content.INTERESTS -> getString(R.string.interests_header)
             Content.GROUPS -> getString(R.string.groups_header)
+            Content.GOALS -> getString(R.string.goals_header)
+            Content.TALKING_POINTS -> getString(R.string.talking_pointers_header)
             Content.SOCIAL_MEDIA -> getString(R.string.social_media_header)
         }
         back_button.visibility = if (content == Content.CREATE_PROFILE) View.GONE else View.VISIBLE

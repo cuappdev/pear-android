@@ -12,13 +12,15 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.cornellappdev.coffee_chats_android.R
-import com.cornellappdev.coffee_chats_android.models.GroupOrInterest
+import com.cornellappdev.coffee_chats_android.models.UserField
 
 
-class GroupInterestAdapter(private val mContext: Context, list: List<GroupOrInterest>, isGroup: Boolean, private val itemColor: ItemColor) :
-    ArrayAdapter<GroupOrInterest?>(mContext, 0, list), Filterable {
-    private var clubInterestList = list
-    private var isGroupView = isGroup
+class UserFieldAdapter(
+    private val mContext: Context,
+    private val fieldList: List<UserField>,
+    private val itemColor: ItemColor
+) :
+    ArrayAdapter<UserField?>(mContext, 0, fieldList), Filterable {
 
     enum class ItemColor {
         WHITE,
@@ -34,11 +36,8 @@ class GroupInterestAdapter(private val mContext: Context, list: List<GroupOrInte
         val viewHolder: ViewHolder
         val listItem: View
         if (convertView == null) {
-            listItem = if (isGroupView) {
-                LayoutInflater.from(mContext).inflate(R.layout.group_view, parent, false)
-            } else {
+            listItem =
                 LayoutInflater.from(mContext).inflate(R.layout.interest_view, parent, false)
-            }
             viewHolder = ViewHolder(listItem)
             listItem.tag = viewHolder
         } else {
@@ -46,7 +45,7 @@ class GroupInterestAdapter(private val mContext: Context, list: List<GroupOrInte
             viewHolder = listItem.tag as ViewHolder
         }
 
-        val currentClubInterest = clubInterestList[position]
+        val currentClubInterest = fieldList[position]
         viewHolder.clubOrInterestText.text = currentClubInterest.getText()
         viewHolder.clubOrInterestSubtext.text = currentClubInterest.getSubtext()
 
@@ -61,11 +60,6 @@ class GroupInterestAdapter(private val mContext: Context, list: List<GroupOrInte
             ItemColor.TOGGLE -> if (currentClubInterest.isSelected()) greenFilter else whiteFilter
         }
         return listItem
-    }
-
-    init {
-        clubInterestList = list
-        isGroupView = isGroup
     }
 
     private class ViewHolder(view: View?) {

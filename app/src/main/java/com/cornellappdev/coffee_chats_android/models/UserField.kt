@@ -1,6 +1,13 @@
 package com.cornellappdev.coffee_chats_android.models
 
-class GroupOrInterest(private var text: String = "", private var subtext: String = "") {
+class UserField(private var text: String = "", private var subtext: String = "") {
+    enum class Category {
+        INTEREST,
+        GROUP,
+        GOAL,
+        TALKING_POINT
+    }
+
     private var selected: Boolean = false
 
     fun getText() : String {

@@ -1,3 +1,3 @@
 package com.cornellappdev.coffee_chats_android.models
 
-data class SocialMedia(val facebook: String, val instagram: String)
+data class SocialMedia(val facebook: String, val instagram: String, val didOnboard: Boolean = true)
