@@ -133,6 +133,7 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
             edit_prompt_view.visibility = View.GONE
             container.setActionButtonText("Next")
         }
+        container.setActionButtonVisibility(content != Content.DISPLAY_PROMPTS)
     }
 
     fun onBackPressed() {
@@ -194,6 +195,8 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
 
     interface PromptsContainer {
         fun setActionButtonText(text: String)
+
+        fun setActionButtonVisibility(isVisible: Boolean)
 
         fun setHeaderText(text: String)
     }

@@ -131,6 +131,10 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
         onboarding_next.text = text
     }
 
+    override fun setActionButtonVisibility(isVisible: Boolean) {
+        onboarding_next.visibility = if (isVisible) View.VISIBLE else View.GONE
+    }
+
     override fun setHeaderText(text: String) {
         onboarding_header.text = text
     }
