@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Filterable
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -18,7 +19,8 @@ import com.cornellappdev.coffee_chats_android.models.UserField
 class UserFieldAdapter(
     private val mContext: Context,
     private val fieldList: List<UserField>,
-    private val itemColor: ItemColor
+    private val itemColor: ItemColor,
+    private val hideIcon: Boolean = false
 ) :
     ArrayAdapter<UserField?>(mContext, 0, fieldList), Filterable {
 
@@ -59,6 +61,9 @@ class UserFieldAdapter(
             ItemColor.GREEN -> greenFilter
             ItemColor.TOGGLE -> if (currentClubInterest.isSelected()) greenFilter else whiteFilter
         }
+        if (hideIcon) {
+            viewHolder.icon!!.visibility = View.GONE
+        }
         return listItem
     }
 
@@ -66,5 +71,6 @@ class UserFieldAdapter(
         val clubOrInterestText = view?.findViewById(R.id.group_or_interest_text) as TextView
         val clubOrInterestSubtext = view?.findViewById(R.id.group_or_interest_subtext) as TextView
         val layout = view?.findViewById<ConstraintLayout>(R.id.group_or_interest_box)
+        val icon = view?.findViewById<View>(R.id.rounded_rectangle)
     }
 }
