@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -34,5 +35,53 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/group_search" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/edit_prompt_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/prompt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/circular_book"
+            android:textAlignment="viewStart"
+            android:textColor="@color/faded_text"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@id/response_edit_text"
+            app:layout_constraintStart_toStartOf="@id/response_edit_text"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Why are you on Pear?" />
+
+        <EditText
+            android:id="@+id/response_edit_text"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_edittext"
+            android:gravity="top|start"
+            android:inputType="textMultiLine"
+            android:maxLength="150"
+            android:padding="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/prompt" />
+
+        <TextView
+            android:id="@+id/char_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/circular_book"
+            android:textColor="@color/faded_text"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@id/response_edit_text"
+            app:layout_constraintTop_toBottomOf="@id/response_edit_text"
+            tools:text="150" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
