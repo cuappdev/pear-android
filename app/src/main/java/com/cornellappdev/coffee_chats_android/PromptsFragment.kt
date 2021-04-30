@@ -91,7 +91,9 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
             Content.EDIT_RESPONSE -> {
                 container.setHeaderText(getString(R.string.enter_response))
                 prompt.text = currentPrompt
-                char_count.text = "$MAX_CHARACTERS"
+                if (!editExistingResponse) {
+                    char_count.text = "$MAX_CHARACTERS"
+                }
                 if (response_edit_text.text.isNotEmpty()) {
                     callback!!.onFilledOut()
                 } else {
