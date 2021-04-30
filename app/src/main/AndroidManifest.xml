@@ -18,7 +18,8 @@
             android:theme="@style/noAnimTheme" />
         <activity
             android:name=".OnboardingActivity"
-            android:theme="@style/noAnimTheme" />
+            android:theme="@style/noAnimTheme"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".SchedulingActivity"
             android:theme="@style/noAnimTheme">

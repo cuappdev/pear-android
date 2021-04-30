@@ -116,7 +116,8 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
                 UserFieldAdapter(
                     requireContext(),
                     fieldAdapterArray.toList(),
-                    UserFieldAdapter.ItemColor.TOGGLE
+                    UserFieldAdapter.ItemColor.TOGGLE,
+                    category == Category.GOAL
                 )
             interests_or_groups.adapter = adapter
             // display selected fields
