@@ -51,6 +51,36 @@
         <item>road, trips, backpacking</item>
     </string-array>
 
+    <!--PROMPTS-->
+    <string name="prompts_header">Let\'s get to know you better!</string>
+    <string name="select_prompt">Select a prompt</string>
+    <string name="enter_response">Enter your response</string>
+    <string-array name="prompts">
+        <item>Why are you on Pear?</item>
+        <item>Why should other students reach out to you?</item>
+        <item>How would you introduce yourself to someone new?</item>
+        <item>What do you like most about your major?</item>
+        <item>What do you hope to accomplish this semester?</item>
+        <item>What could you talk about for hours?</item>
+        <item>What\'s a funny story with no context?</item>
+        <item>What are your most recent 5 emojis?</item>
+        <item>What\'s your favorite food (besides pears)?</item>
+        <item>What are your go-to songs?</item>
+        <item>What are 3 things on your bucket list?</item>
+        <item>What\'s something you want to do before you graduate?</item>
+        <item>Last book you read that you loved?</item>
+        <item>The last tv show series you watched?</item>
+        <item>When you were younger what did you want to be?</item>
+        <item>What is something about you that you take pride in?</item>
+        <item>What is a social cause that you care about?</item>
+        <item>If you could go anywhere in the world, where would you go?</item>
+        <item>Where do you spend time on campus?</item>
+        <item>What is your favorite restaurant?</item>
+        <item>What is something you want to learn?</item>
+        <item>What is a fact about you that surprises people?</item>
+        <item>What is your ideal day?</item>
+    </string-array>
+
     <!--GOALS-->
     <string-array name="goal_titles">
         <item>Just chatting</item>
