@@ -1,6 +1,8 @@
 package com.cornellappdev.coffee_chats_android
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +32,7 @@ class SocialMediaFragment : Fragment(), OnFilledOutObservable {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        callback!!.onSelectionEmpty()
         CoroutineScope(Dispatchers.Main).launch {
             val getUserSocialMediaEndpoint = Endpoint.getUserSocialMedia()
             val typeToken = object : TypeToken<ApiResponse<SocialMedia>>() {}.type
@@ -39,6 +42,17 @@ class SocialMediaFragment : Fragment(), OnFilledOutObservable {
                     typeToken
                 )
             }!!.data
+            val textWatcher = object : TextWatcher {
+                override fun afterTextChanged(s: Editable) {}
+
+                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                    toggleSaveButton()
+                }
+            }
+            instagramEditText.addTextChangedListener(textWatcher)
+            facebookEditText.addTextChangedListener(textWatcher)
             instagramEditText.setText(userSocialMedia.instagram)
             facebookEditText.setText(userSocialMedia.facebook)
         }
@@ -50,8 +64,16 @@ class SocialMediaFragment : Fragment(), OnFilledOutObservable {
         this.callback = callback
     }
 
+    private fun toggleSaveButton() {
+        if (instagramEditText.text.isNotEmpty() || facebookEditText.text.isNotEmpty()) {
+            callback!!.onFilledOut()
+        } else {
+            callback!!.onSelectionEmpty()
+        }
+    }
+
     override fun saveInformation() {
-        val socialMedia = SocialMedia(facebookEditText.text.toString(), instagramEditText.text.toString())
+        val socialMedia = SocialMedia(facebookEditText.text.toString().trim(), instagramEditText.text.toString().trim())
         CoroutineScope(Dispatchers.Main).launch {
             val updateSocialMediaEndpoint = Endpoint.updateSocialMedia(socialMedia)
             val typeToken = object : TypeToken<ApiResponse<SocialMedia>>() {}.type

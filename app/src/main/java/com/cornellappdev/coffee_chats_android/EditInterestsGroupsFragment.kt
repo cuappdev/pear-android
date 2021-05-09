@@ -3,12 +3,12 @@ package com.cornellappdev.coffee_chats_android
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.TypedValue
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ListView
+import androidx.fragment.app.Fragment
 import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter
 import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter.ItemColor
 import com.cornellappdev.coffee_chats_android.models.ApiResponse
@@ -22,8 +22,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.math.min
 import kotlin.math.max
+import kotlin.math.min
 
 class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
     private var isInterest = true
@@ -68,6 +68,7 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
         more_items.list_subtitle.text = getString(R.string.tap_to_add)
 
         CoroutineScope(Dispatchers.Main).launch {
+            val packageName = requireContext().packageName
             if (isInterest) {
                 val getUserInterestsEndpoint = Endpoint.getUserInterests()
                 val interestTypeToken = object : TypeToken<ApiResponse<List<String>>>() {}.type
@@ -80,7 +81,12 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
                 for ((i, interest) in interestTitles.withIndex()) {
                     val item = UserField(
                         interestTitles[i],
-                        if (i < interestSubtitles.size) interestSubtitles[i] else ""
+                        if (i < interestSubtitles.size) interestSubtitles[i] else "",
+                        resources.getIdentifier(
+                            "ic_int_${interestTitles[i].split(" ")[0].toLowerCase()}",
+                            "drawable",
+                            packageName
+                        )
                     )
                     if (interest in userInterests) {
                         selectedItems.add(item)
@@ -105,7 +111,10 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
                     )
                 }!!.data as ArrayList<String>
                 for ((i, group) in groupTitles.withIndex()) {
-                    val item = UserField(groupTitles[i])
+                    val item = UserField(
+                        groupTitles[i],
+                        drawableId = if (groupTitles[i] == "Cornell AppDev") R.drawable.ic_gr_appdev_logo else R.drawable.groups_white
+                    )
                     if (group in userGroups) {
                         selectedItems.add(item)
                     } else {

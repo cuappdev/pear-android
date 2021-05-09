@@ -34,11 +34,14 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
 
     lateinit var adapter: UserFieldAdapter
     private lateinit var fieldAdapterArray: Array<UserField>
+    private lateinit var currFieldAdapterArray: Array<UserField>
 
     /** master list of all valid options for this field */
     private lateinit var fieldTitles: Array<String>
+
     /** master list of all subtitles for this field */
     private lateinit var fieldSubtitles: Array<String>
+
     /** fields selected by the user */
     private lateinit var userFields: ArrayList<String>
 
@@ -105,10 +108,23 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
             }
             // set up adapter
             fieldAdapterArray = Array(fieldTitles.size) { UserField() }
+            val resources = requireContext().resources
+            val packageName = requireContext().packageName
             for (i in fieldTitles.indices) {
                 fieldAdapterArray[i] = UserField(
                     fieldTitles[i],
-                    if (i < fieldSubtitles.size) fieldSubtitles[i] else ""
+                    if (i < fieldSubtitles.size) fieldSubtitles[i] else "",
+                    when (category) {
+                        Category.INTEREST -> {
+                            resources.getIdentifier(
+                                "ic_int_${fieldTitles[i].split(" ")[0].toLowerCase()}",
+                                "drawable",
+                                packageName
+                            )
+                        }
+                        Category.GROUP -> if (fieldTitles[i] == "Cornell AppDev") R.drawable.ic_gr_appdev_logo else R.drawable.groups_white
+                        else -> null
+                    }
                 )
             }
             fieldAdapterArray.sortBy { u -> u.getText() }
@@ -117,7 +133,7 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
                     requireContext(),
                     fieldAdapterArray.toList(),
                     UserFieldAdapter.ItemColor.TOGGLE,
-                    category == Category.GOAL
+                    category in listOf(Category.GOAL, Category.TALKING_POINT)
                 )
             interests_or_groups.adapter = adapter
             // display selected fields
@@ -137,7 +153,7 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
                 val selectedText =
                     selectedView.findViewById<TextView>(R.id.group_or_interest_text).text
                 val drawableBox = selectedView.background
-                val currObj = fieldAdapterArray[position]
+                val currObj = currFieldAdapterArray[position]
                 currObj.toggleSelected()
                 if (currObj.isSelected()) {
                     drawableBox.colorFilter =
@@ -161,6 +177,7 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
      * Sets up or hides search bar depending on `content`
      */
     private fun setUpPage() {
+        currFieldAdapterArray = fieldAdapterArray
         if (category in searchableContent) {
             group_search.visibility = View.VISIBLE
             group_search.queryHint = getString(R.string.groups_search_query_hint)
@@ -175,23 +192,24 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
             // initialize searchview
             group_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextChange(newText: String): Boolean {
-                    var outputArr = fieldAdapterArray
+                    currFieldAdapterArray = fieldAdapterArray
                     if (newText.isNotBlank()) {
                         val filtered = fieldAdapterArray.filter {
                             it.getText().toLowerCase().contains(newText.toLowerCase())
                         }.toTypedArray()
-                        outputArr = filtered
+                        currFieldAdapterArray = filtered
                     }
                     adapter =
                         UserFieldAdapter(
                             requireContext(),
-                            outputArr.toList(),
-                            UserFieldAdapter.ItemColor.TOGGLE
+                            currFieldAdapterArray.toList(),
+                            UserFieldAdapter.ItemColor.TOGGLE,
+                            category in listOf(Category.GOAL, Category.TALKING_POINT)
                         )
                     interests_or_groups.adapter = adapter
-                    for (i in fieldAdapterArray.indices) {
-                        if (userFields.contains(fieldAdapterArray[i].getText())) {
-                            fieldAdapterArray[i].setSelected()
+                    for (i in currFieldAdapterArray.indices) {
+                        if (userFields.contains(currFieldAdapterArray[i].getText())) {
+                            currFieldAdapterArray[i].setSelected()
                         }
                     }
                     return true

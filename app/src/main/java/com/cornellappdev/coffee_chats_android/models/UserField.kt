@@ -1,6 +1,6 @@
 package com.cornellappdev.coffee_chats_android.models
 
-class UserField(private var text: String = "", private var subtext: String = "") {
+class UserField(private var text: String = "", private var subtext: String = "", val drawableId: Int? = null) {
     enum class Category {
         INTEREST,
         GROUP,
