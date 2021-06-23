@@ -49,7 +49,17 @@ class UserFieldAdapter(
 
         val currentClubInterest = fieldList[position]
         viewHolder.clubOrInterestText.text = currentClubInterest.getText()
-        viewHolder.clubOrInterestSubtext.text = currentClubInterest.getSubtext()
+        if (currentClubInterest.getSubtext().isNotEmpty()) {
+            viewHolder.clubOrInterestSubtext.text = currentClubInterest.getSubtext()
+        } else {
+            viewHolder.clubOrInterestSubtext.visibility = View.GONE
+        }
+
+        if (hideIcon) {
+            viewHolder.icon!!.visibility = View.GONE
+        } else {
+            viewHolder.icon!!.setImageDrawable(ContextCompat.getDrawable(mContext, currentClubInterest.drawableId!!))
+        }
 
         val selected = ContextCompat.getColor(context, R.color.onboardingListSelected)
         val unselected = ContextCompat.getColor(context, R.color.onboarding_fields)
@@ -61,9 +71,6 @@ class UserFieldAdapter(
             ItemColor.GREEN -> greenFilter
             ItemColor.TOGGLE -> if (currentClubInterest.isSelected()) greenFilter else whiteFilter
         }
-        if (hideIcon) {
-            viewHolder.icon!!.visibility = View.GONE
-        }
         return listItem
     }
 
@@ -71,6 +78,6 @@ class UserFieldAdapter(
         val clubOrInterestText = view?.findViewById(R.id.group_or_interest_text) as TextView
         val clubOrInterestSubtext = view?.findViewById(R.id.group_or_interest_subtext) as TextView
         val layout = view?.findViewById<ConstraintLayout>(R.id.group_or_interest_box)
-        val icon = view?.findViewById<View>(R.id.rounded_rectangle)
+        val icon = view?.findViewById<ImageView>(R.id.rounded_rectangle)
     }
 }

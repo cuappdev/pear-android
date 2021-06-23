@@ -183,6 +183,9 @@
     <string name="match_enjoys">%1$s also enjoys…</string>
     <string name="match_clubs">%1$s is also part of…</string>
     <string name="match_reach_out">Reach Out!</string>
+    <string name="profile_basic_info_header">The basics</string>
+    <string name="profile_interests_header">Things I love</string>
+    <string name="profile_groups_header">Groups I\'m a part of</string>
 
     <!--NO MATCH PAGE-->
     <string name="no_match_header">Meet your new Pear next Monday</string>
