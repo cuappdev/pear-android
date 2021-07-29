@@ -15,7 +15,7 @@ class Endpoint(
     private val body: RequestBody? = null,
     private val method: EndpointMethod
 ) {
-    private val host = "https://${BuildConfig.BACKEND_URI}/api/v1"
+    private val host = "http://${BuildConfig.BACKEND_URI}/api"
 
     companion object
 

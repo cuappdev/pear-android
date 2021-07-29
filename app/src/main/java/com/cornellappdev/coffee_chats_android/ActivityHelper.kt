@@ -18,6 +18,8 @@ import kotlinx.coroutines.withContext
  * Helper file for methods or interfaces used across multiple activities or fragments
  */
 
+const val ACCESS_TOKEN_TAG = "ACCESS_TOKEN"
+
 /**
  * Increases hit area of `view` on all four sides by given `padding`, which defaults to 100
  */
@@ -38,15 +40,19 @@ fun increaseHitArea(view: View, padding: Int = 100) {
  * Implemented by activities in which fragments contain fields for users to fill out
  */
 interface OnFilledOutListener {
+    /** Actions to be taken when all required fields are filled out */
     fun onFilledOut()
+    /** Actions to be taken when not all required fields are filled out */
     fun onSelectionEmpty()
 }
 
 /**
- * Implemented by fragments in which users enter information
+ * Implemented by fragments in which users enter information in fields
  */
 interface OnFilledOutObservable {
+    /** Passes the observable the listener needs to notify when status of fields changes */
     fun setOnFilledOutListener(callback: OnFilledOutListener)
+    /** Saves user-entered information in the current fragment on the backend */
     fun saveInformation()
 }
 

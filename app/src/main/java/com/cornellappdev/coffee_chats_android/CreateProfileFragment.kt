@@ -9,16 +9,16 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.cornellappdev.coffee_chats_android.models.ApiResponse
 import com.cornellappdev.coffee_chats_android.models.Demographics
+import com.cornellappdev.coffee_chats_android.models.Major
 import com.cornellappdev.coffee_chats_android.models.User
-import com.cornellappdev.coffee_chats_android.networking.*
-import com.google.gson.reflect.TypeToken
+import com.cornellappdev.coffee_chats_android.networking.getAllMajors
+import com.cornellappdev.coffee_chats_android.networking.getUser
+import com.cornellappdev.coffee_chats_android.networking.updateDemographics
 import kotlinx.android.synthetic.main.fragment_create_profile.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -28,6 +28,10 @@ class CreateProfileFragment : Fragment(), OnFilledOutObservable {
     private var majorFilled = false
     private var hometownFilled = false
     private var year = Calendar.getInstance().get(Calendar.YEAR)
+
+    private lateinit var user: User
+
+    private lateinit var allMajorsList: List<Major>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,45 +56,31 @@ class CreateProfileFragment : Fragment(), OnFilledOutObservable {
         classSpinner.adapter = classArrayAdapter
 
         CoroutineScope(Dispatchers.Main).launch {
-            val getUserEndpoint = Endpoint.getUser()
-            val userTypeToken = object : TypeToken<ApiResponse<User>>() {}.type
-            val user = withContext(Dispatchers.IO) {
-                Request.makeRequest<ApiResponse<User>>(
-                    getUserEndpoint.okHttpRequest(),
-                    userTypeToken
-                )
-            }!!.data
+            user = getUser()
             // pre-fills existing user profile information
             if (!user.hometown.isNullOrBlank()) {
                 hometownEditText.setText(user.hometown)
                 hometownFilled = true
             }
-            if (!user.major.isNullOrBlank()) {
-                majorACTV.setText(user.major)
+            if (user.majors.isNotEmpty()) {
+                majorACTV.setText(user.majors.first().name)
                 majorFilled = true
             }
             // nextButton is disabled until user has filled out all required info
-            if (user.hometown.isNullOrBlank() || user.major.isNullOrBlank()) {
+            if (user.hometown.isNullOrBlank() || user.majors.isEmpty()) {
                 callback!!.onSelectionEmpty()
             }
 
             if (!user.graduationYear.isNullOrBlank()) classSpinner.setSelection(
-                Integer.parseInt(user.graduationYear) - year
+                Integer.parseInt(user.graduationYear!!) - year
             )
 
             // Initializing the major AutoCompleteTextView
-            val getMajorsEndpoint = Endpoint.getAllMajors()
-            val majorsTypeToken = object : TypeToken<ApiResponse<List<String>>>() {}.type
-            val majors = withContext(Dispatchers.IO) {
-                Request.makeRequest<ApiResponse<List<String>>>(
-                    getMajorsEndpoint.okHttpRequest(),
-                    majorsTypeToken
-                )
-            }!!.data
+            allMajorsList = getAllMajors()
             val majorAdapter: ArrayAdapter<String> = ArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_dropdown_item_1line,
-                majors
+                allMajorsList.map { it.name }
             )
             majorACTV.setAdapter(majorAdapter)
 
@@ -156,16 +146,18 @@ class CreateProfileFragment : Fragment(), OnFilledOutObservable {
         val pronouns = pronounSpinner.selectedItem as String
         val graduationYear = (classSpinner.selectedItemPosition + year).toString()
         val major = majorACTV.text.toString()
+        val majorIndex = allMajorsList.firstOrNull { it.name == major }?.id
         val hometown = hometownEditText.text.toString()
-        val demographics = Demographics(pronouns, graduationYear, major, hometown, "")
+        val demographics = Demographics(
+            pronouns,
+            graduationYear,
+            if (majorIndex != null) listOf(majorIndex) else emptyList(),
+            hometown,
+            null
+        )
 
-        val updateDemographicsEndpoint = Endpoint.updateDemographics(demographics)
-        val typeToken = object : TypeToken<ApiResponse<Demographics>>() {}.type
         CoroutineScope(Dispatchers.IO).launch {
-            val updateDemographicsResponse = Request.makeRequest<ApiResponse<Demographics>>(
-                updateDemographicsEndpoint.okHttpRequest(),
-                typeToken
-            )
+            val updateDemographicsResponse = updateDemographics(demographics)
             if (updateDemographicsResponse == null || !updateDemographicsResponse.success) {
                 Toast.makeText(requireContext(), "Failed to save information", Toast.LENGTH_LONG)
                     .show()
