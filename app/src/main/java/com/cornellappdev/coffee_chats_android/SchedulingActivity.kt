@@ -15,22 +15,15 @@ import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import com.cornellappdev.coffee_chats_android.models.*
-import com.cornellappdev.coffee_chats_android.networking.Endpoint
-import com.cornellappdev.coffee_chats_android.networking.Request
-import com.cornellappdev.coffee_chats_android.networking.getUser
-import com.cornellappdev.coffee_chats_android.networking.refreshSession
+import com.cornellappdev.coffee_chats_android.models.User
+import com.cornellappdev.coffee_chats_android.networking.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.navigation.NavigationView
-import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_scheduling.*
-import kotlinx.android.synthetic.main.fragment_create_profile.*
 import kotlinx.android.synthetic.main.nav_header_profile.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.*
 
 
 class SchedulingActivity :
@@ -38,6 +31,7 @@ class SchedulingActivity :
     OnFilledOutListener {
     private lateinit var nextButton: Button
     private lateinit var backButton: ImageButton
+    private lateinit var user: User
     private lateinit var drawerLayout: DrawerLayout
     private var page = 0        // 0: no match; 1: time scheduling; 2: place scheduling
     private val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
@@ -51,41 +45,23 @@ class SchedulingActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scheduling)
-
         drawerLayout = findViewById(R.id.drawer_layout)
-        // Determine if the app should show scheduling page or sign-in
+        // determine if the app should show scheduling page, sign-in, or onboarding
         val account = GoogleSignIn.getLastSignedInAccount(this)
-        if (account != null && preferencesHelper.accessToken != null) {
-            val isAccessTokenExpired = Date() >= Date(preferencesHelper.expiresAt * 1000)
+        if (account != null && preferencesHelper.accessToken != null && preferencesHelper.accessToken!!.isNotEmpty()) {
+            // user is already signed in - get user profile
             CoroutineScope(Dispatchers.Main).launch {
-                // refresh session if necessary
-                if (isAccessTokenExpired) {
-                    val refreshSessionEndpoint =
-                        Endpoint.refreshSession(preferencesHelper.refreshToken!!)
-                    val typeToken = object : TypeToken<ApiResponse<UserSession>>() {}.type
-                    val response = withContext(Dispatchers.IO) {
-                        Request.makeRequest<ApiResponse<UserSession>>(
-                            refreshSessionEndpoint.okHttpRequest(),
-                            typeToken
-                        )
-                    }!!
-                    if (!response.success) {
-                        signIn()
-                        return@launch
-                    }
-                    val userSession = response.data
-                    preferencesHelper.accessToken = userSession.accessToken
-                    preferencesHelper.refreshToken = userSession.refreshToken
-                    preferencesHelper.expiresAt = userSession.sessionExpiration.toLong()
+                setUpNetworking(preferencesHelper.accessToken!!)
+                user = getUser()
+                // move to onboarding if user hasn't finished
+                if (!user.hasOnboarded) {
+                    val intent = Intent(applicationContext, OnboardingActivity::class.java)
+                    intent.putExtra(ACCESS_TOKEN_TAG, preferencesHelper.accessToken!!)
+                    startActivity(intent)
                 } else {
-                    UserSession.currentSession = UserSession(
-                        preferencesHelper.accessToken!!,
-                        preferencesHelper.refreshToken!!,
-                        preferencesHelper.expiresAt.toString(),
-                        true
-                    )
+                    // set up drawer if user has onboarded
+                    setUpDrawerLayout()
                 }
-                setUpDrawerLayout()
             }
         } else {
             // prompt user to log in
@@ -101,20 +77,6 @@ class SchedulingActivity :
         // initialize more lateinit vars
         nextButton = findViewById(R.id.scheduling_finish)
         backButton = findViewById(R.id.nav_button)
-
-        // set up drawer
-        val content = findViewById<ConstraintLayout>(R.id.activity_main)
-        drawerLayout.addDrawerListener(object : ActionBarDrawerToggle(
-            this,
-            drawerLayout,
-            R.string.drawer_open,
-            R.string.drawer_close
-        ) {
-            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-                super.onDrawerSlide(drawerView, slideOffset)
-                content.translationX = drawerView.width * slideOffset
-            }
-        })
 
         // set up navigation view
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
@@ -144,27 +106,36 @@ class SchedulingActivity :
         setUpDrawerLayout()
     }
 
+    /**
+     * Populates drawer layout with user information and adds a listener so the contents of the
+     * page move when the drawer slides.
+     */
     private fun setUpDrawerLayout() {
-        CoroutineScope(Dispatchers.Main).launch {
-            val getUserEndpoint = Endpoint.getUser()
-            val userTypeToken = object : TypeToken<ApiResponse<User>>() {}.type
-            val user = withContext(Dispatchers.IO) {
-                Request.makeRequest<ApiResponse<User>>(
-                    getUserEndpoint.okHttpRequest(),
-                    userTypeToken
-                )
-            }!!.data
-            drawerLayout.user_name.text =
-                getString(R.string.user_name, user.firstName, user.lastName)
-            drawerLayout.user_major_year.text = getString(
-                R.string.user_major_year,
-                user.major,
-                user.graduationYear?.substring(2)
-            )
-            drawerLayout.user_hometown.text = getString(R.string.user_hometown, user.hometown)
-        }
+        drawerLayout.user_name.text =
+            getString(R.string.user_name, user.firstName, user.lastName)
+        drawerLayout.user_major_year.text = getString(
+            R.string.user_major_year,
+            if (user.majors.isNotEmpty()) user.majors.first().name else "",
+            user.graduationYear?.substring(2)
+        )
+        drawerLayout.user_hometown.text = getString(R.string.user_hometown, user.hometown)
+        val content = findViewById<ConstraintLayout>(R.id.activity_main)
+        drawerLayout.addDrawerListener(object : ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            R.string.drawer_open,
+            R.string.drawer_close
+        ) {
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+                super.onDrawerSlide(drawerView, slideOffset)
+                content.translationX = drawerView.width * slideOffset
+            }
+        })
     }
 
+    /**
+     * Navigates to `SignInActivity`
+     */
     private fun signIn() {
         val intent = Intent(this, SignInActivity::class.java)
         startActivity(intent)

@@ -1,29 +1,78 @@
 package com.cornellappdev.coffee_chats_android.networking
 
+import android.util.Log
 import com.cornellappdev.coffee_chats_android.models.*
 import com.google.gson.Gson
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import java.lang.reflect.Type
+
+/* NEW NETWORKING */
 
 private fun authHeader(): Map<String, String> =
-    mapOf("Authorization" to "Bearer ${UserSession.currentSession.accessToken}")
+    mapOf("Authorization" to "Token ${UserSession.currentAccessToken}")
+
+private val moshi = Moshi.Builder()
+    .addLast(KotlinJsonAdapterFactory())
+    .build()
+
+/** Helper for generating request bodies for POST requests */
+private fun <T> toRequestBody(data: T, typeToken: Type): RequestBody {
+    Log.d("REQUEST_BODY", moshi.adapter<T>(typeToken).toJson(data).toString())
+    return moshi.adapter<T>(typeToken).toJson(data)
+        .toRequestBody(("application/json; charset=utf-8").toMediaType())
+}
+
+// AUTH
+fun Endpoint.Companion.authenticateUser(idToken: String): Endpoint =
+    Endpoint(
+        path = "/authenticate/",
+        body = mapToRequestBody(mapOf("id_token" to idToken)),
+        method = EndpointMethod.POST
+    )
+
+// PROFILE
+
+fun Endpoint.Companion.getSelfProfile(): Endpoint =
+    Endpoint(path = "/me/", headers = authHeader(), method = EndpointMethod.GET)
+
+fun Endpoint.Companion.updateDemographics(demographics: Demographics): Endpoint {
+    val requestBody = toRequestBody(demographics, Demographics::class.java)
+    return Endpoint(
+        path = "/me/",
+        headers = authHeader(),
+        body = requestBody,
+        method = EndpointMethod.POST
+    )
+}
+
+// MAJORS
+
+fun Endpoint.Companion.getAllMajors(): Endpoint {
+    return Endpoint(path = "/majors/", headers = authHeader(), method = EndpointMethod.GET)
+}
+
+// INTERESTS
+
+fun Endpoint.Companion.getAllInterests(): Endpoint {
+    return Endpoint(path = "/interests/", headers = authHeader(), method = EndpointMethod.GET)
+}
+
+// GROUPS
+
+fun Endpoint.Companion.getAllGroups(): Endpoint {
+    return Endpoint(path = "/groups/", headers = authHeader(), method = EndpointMethod.GET)
+}
+
+/* OLD NETWORKING */
 
 private val gson = Gson()
 
-// AUTH
-fun Endpoint.Companion.authenticateUser(idToken: String): Endpoint {
-    val json = gson.toJson(mapOf("idToken" to idToken))
-    val requestBody = json.toRequestBody("application/json; charset=utf-8".toMediaType())
-    return Endpoint(path = "/auth/login", body = requestBody, method = EndpointMethod.POST)
-}
-
-fun Endpoint.Companion.refreshSession(refreshToken: String): Endpoint {
-    return Endpoint(
-        path = "/refresh",
-        headers = mapOf("Authorization" to "Bearer $refreshToken"),
-        method = EndpointMethod.GET
-    )
-}
+private fun <K, V> mapToRequestBody(map: Map<K, V>): RequestBody =
+    gson.toJson(map).toRequestBody("application/json; charset=utf-8".toMediaType())
 
 /**
  * Helper for generating GET requests to paths of the form user/`field`/
@@ -41,29 +90,6 @@ fun getFieldHelper(netID: String, field: String): Endpoint {
 fun Endpoint.Companion.getUser(netID: String = ""): Endpoint = getFieldHelper(netID, "")
 
 // ONBOARDING
-fun Endpoint.Companion.getAllMajors(): Endpoint {
-    return Endpoint(path = "/major/all", headers = authHeader(), method = EndpointMethod.GET)
-}
-
-fun Endpoint.Companion.updateDemographics(demographics: Demographics): Endpoint {
-    val requestBody =
-        gson.toJson(demographics).toRequestBody("application/json; charset=utf-8".toMediaType())
-    return Endpoint(
-        path = "/user/demographics",
-        headers = authHeader(),
-        body = requestBody,
-        method = EndpointMethod.POST
-    )
-}
-
-fun Endpoint.Companion.getAllInterests(): Endpoint {
-    // TODO: To be integrated once both titles and subtitles are provided
-    return Endpoint(path = "/interest/all", headers = authHeader(), method = EndpointMethod.GET)
-}
-
-fun Endpoint.Companion.getAllGroups(): Endpoint {
-    return Endpoint(path = "/group/all", headers = authHeader(), method = EndpointMethod.GET)
-}
 
 fun Endpoint.Companion.getUserInterests(netID: String = ""): Endpoint =
     getFieldHelper(netID, "interests")

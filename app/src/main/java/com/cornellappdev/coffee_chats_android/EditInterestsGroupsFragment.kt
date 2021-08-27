@@ -101,7 +101,7 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
                     Request.makeRequest<ApiResponse<List<String>>>(
                         getGroupsEndpoint.okHttpRequest(),
                         groupTypeToken
-                    )!!.data.toTypedArray()
+                    )!!.data!!.toTypedArray()
                 }
                 val getUserGroupsEndpoint = Endpoint.getUserGroups()
                 val userGroups = withContext(Dispatchers.IO) {

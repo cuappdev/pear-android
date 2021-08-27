@@ -51,7 +51,7 @@ class SchedulingPlaceFragment : Fragment(), OnFilledOutObservable {
                     typeToken
                 )
             }!!.data
-            for ((_, place) in locations) {
+            for ((_, place) in locations!!) {
                 preferredLocations.add(place)
             }
             toggleNextButton()

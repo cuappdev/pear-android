@@ -67,8 +67,8 @@ class SchedulingTimeFragment : Fragment(), OnFilledOutObservable {
                     typeToken
                 )
             }!!.data
-            for ((day, times) in availabilities) {
-                availableTimes[day]!!.addAll(times.map { t -> doubleTimeToString(t) })
+            for ((day, times) in availabilities!!) {
+                availableTimes[day]!!.addAll(times.map { t: Double -> doubleTimeToString(t) })
                 if (times.isNotEmpty()) {
                     selectedDays.add(day)
                 }

@@ -10,9 +10,7 @@ import androidx.core.content.ContextCompat
 import com.cornellappdev.coffee_chats_android.models.ApiResponse
 import com.cornellappdev.coffee_chats_android.models.User
 import com.cornellappdev.coffee_chats_android.models.UserSession
-import com.cornellappdev.coffee_chats_android.networking.Endpoint
-import com.cornellappdev.coffee_chats_android.networking.Request
-import com.cornellappdev.coffee_chats_android.networking.authenticateUser
+import com.cornellappdev.coffee_chats_android.networking.*
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -99,27 +97,11 @@ class SignInActivity : AppCompatActivity() {
                     if (domain != null && domain == "cornell.edu") {
                         // authenticate with backend
                         CoroutineScope(Dispatchers.Main).launch {
-                            val userAuthEndpoint = Endpoint.authenticateUser(account.idToken!!)
-                            val typeToken = object : TypeToken<ApiResponse<UserSession>>() {}.type
-                            val userSession = withContext(Dispatchers.IO) {
-                                Request.makeRequest<ApiResponse<UserSession>>(
-                                    userAuthEndpoint.okHttpRequest(),
-                                    typeToken
-                                )
-                            }!!.data
+                            val userSession = authenticateUser(account.idToken!!)
                             preferencesHelper.accessToken = userSession.accessToken
-                            preferencesHelper.refreshToken = userSession.refreshToken
-                            preferencesHelper.expiresAt = userSession.sessionExpiration.toLong()
-                            UserSession.currentSession = userSession
-                            val getUserEndpoint = Endpoint.getUser()
-                            val userTypeToken = object : TypeToken<ApiResponse<User>>() {}.type
-                            val user = withContext(Dispatchers.IO) {
-                                Request.makeRequest<ApiResponse<User>>(
-                                    getUserEndpoint.okHttpRequest(),
-                                    userTypeToken
-                                )
-                            }!!.data
-                            val intent = if (user.didOnboard) {
+                            setUpNetworking(userSession.accessToken)
+                            val user = getUser()
+                            val intent = if (user.hasOnboarded) {
                                 Intent(applicationContext, SchedulingActivity::class.java)
                             } else {
                                 Intent(applicationContext, OnboardingActivity::class.java)

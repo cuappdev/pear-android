@@ -13,8 +13,10 @@ import androidx.fragment.app.FragmentTransaction
 import com.cornellappdev.coffee_chats_android.models.ApiResponse
 import com.cornellappdev.coffee_chats_android.models.User
 import com.cornellappdev.coffee_chats_android.models.UserField
+import com.cornellappdev.coffee_chats_android.models.UserSession
 import com.cornellappdev.coffee_chats_android.networking.Endpoint
 import com.cornellappdev.coffee_chats_android.networking.Request
+import com.cornellappdev.coffee_chats_android.networking.getSelfProfile
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_onboarding.*
@@ -25,8 +27,14 @@ import kotlinx.coroutines.withContext
 
 class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
     PromptsFragment.PromptsContainer {
-    private var content = Content.CREATE_PROFILE
+
+    /** Current user profile- will be mutated as user fills out information in onboarding */
     private lateinit var user: User
+
+    /** Currently-displayed page */
+    private var content = Content.CREATE_PROFILE
+
+    /** Order in which pages are presented */
     private val navigationList =
         listOf(
             Content.CREATE_PROFILE,
@@ -37,12 +45,12 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
             Content.TALKING_POINTS,
             Content.SOCIAL_MEDIA
         )
+
+    /** Pages that display the Add Later button */
     private val addLaterPages =
         listOf(Content.GROUPS, Content.GOALS, Content.TALKING_POINTS, Content.SOCIAL_MEDIA)
 
-    /** default bottom margin for next button */
-    private var defaultButtonBottomMargin = 0
-
+    /** All onboarding pages */
     enum class Content {
         CREATE_PROFILE,
         INTERESTS,
@@ -53,18 +61,17 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
         SOCIAL_MEDIA
     }
 
+    /** Default bottom margin for next button */
+    private var defaultButtonBottomMargin = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_onboarding)
         CoroutineScope(Dispatchers.Main).launch {
-            val getUserEndpoint = Endpoint.getUser()
-            val userTypeToken = object : TypeToken<ApiResponse<User>>() {}.type
-            user = withContext(Dispatchers.IO) {
-                Request.makeRequest<ApiResponse<User>>(
-                    getUserEndpoint.okHttpRequest(),
-                    userTypeToken
-                )
-            }!!.data
+            intent.getStringExtra(ACCESS_TOKEN_TAG)?.let {
+                UserSession.currentAccessToken = it
+            }
+            user = getUser()
             val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
             ft.replace(body_fragment.id, CreateProfileFragment(), content.name)
                 .addToBackStack("ft")

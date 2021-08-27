@@ -14,16 +14,15 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter
-import com.cornellappdev.coffee_chats_android.models.ApiResponse
 import com.cornellappdev.coffee_chats_android.models.UserField
 import com.cornellappdev.coffee_chats_android.models.UserField.Category
-import com.cornellappdev.coffee_chats_android.networking.*
-import com.google.gson.reflect.TypeToken
+import com.cornellappdev.coffee_chats_android.networking.getAllGroups
+import com.cornellappdev.coffee_chats_android.networking.getAllInterests
+import com.cornellappdev.coffee_chats_android.networking.getUser
 import kotlinx.android.synthetic.main.fragment_interests_groups.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class UserFieldFragment : Fragment(), OnFilledOutObservable {
 
@@ -63,49 +62,53 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // initialize lateinit vars
-        fieldTitles = when (category) {
-            Category.INTEREST, Category.TALKING_POINT -> resources.getStringArray(R.array.interest_titles)
-            Category.GOAL -> resources.getStringArray(R.array.goal_titles)
-            Category.GROUP -> emptyArray()
-        }
-        fieldSubtitles =
-            if (category == Category.INTEREST || category == Category.TALKING_POINT)
-                resources.getStringArray(R.array.interest_subtitles)
-            else emptyArray()
-
-        selectedColor = ContextCompat.getColor(requireContext(), R.color.onboardingListSelected)
-        unselectedColor = ContextCompat.getColor(requireContext(), R.color.onboarding_fields)
-
-        // signup_next is disabled until user has chosen at least one field
-        callback!!.onSelectionEmpty()
-
         CoroutineScope(Dispatchers.Main).launch {
-            // fetch fields already selected by user
-            val userFieldEndpoint = when (category) {
-                Category.INTEREST -> Endpoint.getUserInterests()
-                Category.GROUP -> Endpoint.getUserGroups()
-                Category.GOAL -> Endpoint.getUserGoals()
-                Category.TALKING_POINT -> Endpoint.getUserTalkingPoints()
-            }
-            val typeToken = object : TypeToken<ApiResponse<List<String>>>() {}.type
-            userFields = withContext(Dispatchers.IO) {
-                Request.makeRequest<ApiResponse<List<String>>>(
-                    userFieldEndpoint.okHttpRequest(),
-                    typeToken
-                )
-            }!!.data as ArrayList<String>
-            // populate titles when backend requests are needed
-            if (category in searchableContent) {
-                val getGroupsEndpoint = Endpoint.getAllGroups()
-                val groupTitles = withContext(Dispatchers.IO) {
-                    Request.makeRequest<ApiResponse<List<String>>>(
-                        getGroupsEndpoint.okHttpRequest(),
-                        typeToken
-                    )!!.data.toTypedArray()
+            // initialize lateinit vars
+            when (category) {
+                Category.INTEREST -> {
+                    getAllInterests().let { allInterestsList ->
+                        fieldTitles = allInterestsList.map { it.name }.toTypedArray()
+                        fieldSubtitles = allInterestsList.map { it.subtitle }.toTypedArray()
+                    }
                 }
-                fieldTitles += groupTitles
+                Category.TALKING_POINT -> {
+                    getAllInterests().let { allInterestsList ->
+                        fieldTitles = allInterestsList.map { it.name }.toTypedArray()
+                        fieldSubtitles = allInterestsList.map { it.subtitle }.toTypedArray()
+                    }
+                    getAllGroups().let { allGroupsList ->
+                        fieldTitles += allGroupsList.map { it.name }.toTypedArray()
+                        fieldSubtitles += Array(allGroupsList.size) { "" }
+                    }
+                }
+                Category.GOAL -> {
+                    fieldTitles = resources.getStringArray(R.array.goal_titles)
+                    fieldSubtitles = Array(fieldTitles.size) { "" }
+                }
+                Category.GROUP -> {
+                    getAllGroups().let { allGroupsList ->
+                        fieldTitles += allGroupsList.map { it.name }.toTypedArray()
+                        fieldSubtitles += Array(allGroupsList.size) { "" }
+                    }
+                }
             }
+
+            selectedColor = ContextCompat.getColor(requireContext(), R.color.onboardingListSelected)
+            unselectedColor = ContextCompat.getColor(requireContext(), R.color.onboarding_fields)
+
+            // signup_next is disabled until user has chosen at least one field
+            callback!!.onSelectionEmpty()
+
+            val user = getUser()
+            // fetch fields already selected by user
+            userFields = ArrayList(
+                when (category) {
+                    Category.INTEREST -> user.interests
+                    Category.GROUP -> user.groups
+                    Category.GOAL -> if (user.goals.isNullOrEmpty()) emptyList() else user.goals
+                    Category.TALKING_POINT -> if (user.talkingPoints.isNullOrEmpty()) emptyList() else user.talkingPoints
+                }
+            )
             // set up adapter
             fieldAdapterArray = Array(fieldTitles.size) { UserField() }
             val resources = requireContext().resources
@@ -114,17 +117,18 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
                 fieldAdapterArray[i] = UserField(
                     fieldTitles[i],
                     if (i < fieldSubtitles.size) fieldSubtitles[i] else "",
-                    when (category) {
-                        Category.INTEREST -> {
-                            resources.getIdentifier(
-                                "ic_int_${fieldTitles[i].split(" ")[0].toLowerCase()}",
-                                "drawable",
-                                packageName
-                            )
-                        }
-                        Category.GROUP -> if (fieldTitles[i] == "Cornell AppDev") R.drawable.ic_gr_appdev_logo else R.drawable.groups_white
-                        else -> null
-                    }
+                    null
+//                    when (category) {
+//                        Category.INTEREST -> {
+//                            resources.getIdentifier(
+//                                "ic_int_${fieldTitles[i].split(" ")[0].toLowerCase()}",
+//                                "drawable",
+//                                packageName
+//                            )
+//                        }
+//                        Category.GROUP -> if (fieldTitles[i] == "Cornell AppDev") R.drawable.ic_gr_appdev_logo else R.drawable.groups_white
+//                        else -> null
+//                    }
                 )
             }
             fieldAdapterArray.sortBy { u -> u.getText() }
