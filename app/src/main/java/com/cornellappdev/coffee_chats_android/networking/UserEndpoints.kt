@@ -1,5 +1,6 @@
 package com.cornellappdev.coffee_chats_android.networking
 
+import android.util.Log
 import com.cornellappdev.coffee_chats_android.models.*
 import com.google.gson.Gson
 import com.squareup.moshi.Moshi
@@ -19,9 +20,11 @@ private val moshi = Moshi.Builder()
     .build()
 
 /** Helper for generating request bodies for POST requests */
-private fun <T> toRequestBody(data: T, typeToken: Type): RequestBody =
-    moshi.adapter<T>(typeToken).toJson(data)
+private fun <T> toRequestBody(data: T, typeToken: Type): RequestBody {
+    Log.d("REQUEST_BODY", moshi.adapter<T>(typeToken).toJson(data).toString())
+    return moshi.adapter<T>(typeToken).toJson(data)
         .toRequestBody(("application/json; charset=utf-8").toMediaType())
+}
 
 // AUTH
 fun Endpoint.Companion.authenticateUser(idToken: String): Endpoint =
@@ -31,13 +34,10 @@ fun Endpoint.Companion.authenticateUser(idToken: String): Endpoint =
         method = EndpointMethod.POST
     )
 
+// PROFILE
+
 fun Endpoint.Companion.getSelfProfile(): Endpoint =
     Endpoint(path = "/me/", headers = authHeader(), method = EndpointMethod.GET)
-
-// ONBOARDING
-fun Endpoint.Companion.getAllMajors(): Endpoint {
-    return Endpoint(path = "/majors/", headers = authHeader(), method = EndpointMethod.GET)
-}
 
 fun Endpoint.Companion.updateDemographics(demographics: Demographics): Endpoint {
     val requestBody = toRequestBody(demographics, Demographics::class.java)
@@ -47,6 +47,24 @@ fun Endpoint.Companion.updateDemographics(demographics: Demographics): Endpoint 
         body = requestBody,
         method = EndpointMethod.POST
     )
+}
+
+// MAJORS
+
+fun Endpoint.Companion.getAllMajors(): Endpoint {
+    return Endpoint(path = "/majors/", headers = authHeader(), method = EndpointMethod.GET)
+}
+
+// INTERESTS
+
+fun Endpoint.Companion.getAllInterests(): Endpoint {
+    return Endpoint(path = "/interests/", headers = authHeader(), method = EndpointMethod.GET)
+}
+
+// GROUPS
+
+fun Endpoint.Companion.getAllGroups(): Endpoint {
+    return Endpoint(path = "/groups/", headers = authHeader(), method = EndpointMethod.GET)
 }
 
 /* OLD NETWORKING */
@@ -72,15 +90,6 @@ fun getFieldHelper(netID: String, field: String): Endpoint {
 fun Endpoint.Companion.getUser(netID: String = ""): Endpoint = getFieldHelper(netID, "")
 
 // ONBOARDING
-
-fun Endpoint.Companion.getAllInterests(): Endpoint {
-    // TODO: To be integrated once both titles and subtitles are provided
-    return Endpoint(path = "/interest/all", headers = authHeader(), method = EndpointMethod.GET)
-}
-
-fun Endpoint.Companion.getAllGroups(): Endpoint {
-    return Endpoint(path = "/group/all", headers = authHeader(), method = EndpointMethod.GET)
-}
 
 fun Endpoint.Companion.getUserInterests(netID: String = ""): Endpoint =
     getFieldHelper(netID, "interests")

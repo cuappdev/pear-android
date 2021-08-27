@@ -20,7 +20,7 @@ class UserFieldAdapter(
     private val mContext: Context,
     private val fieldList: List<UserField>,
     private val itemColor: ItemColor,
-    private val hideIcon: Boolean = false
+    private val hideIcon: Boolean = true
 ) :
     ArrayAdapter<UserField?>(mContext, 0, fieldList), Filterable {
 
@@ -55,11 +55,11 @@ class UserFieldAdapter(
             viewHolder.clubOrInterestSubtext.visibility = View.GONE
         }
 
-        if (hideIcon) {
-            viewHolder.icon!!.visibility = View.GONE
-        } else {
-            viewHolder.icon!!.setImageDrawable(ContextCompat.getDrawable(mContext, currentClubInterest.drawableId!!))
-        }
+//        if (hideIcon) {
+//            viewHolder.icon!!.visibility = View.GONE
+//        } else {
+//            viewHolder.icon!!.setImageDrawable(ContextCompat.getDrawable(mContext, currentClubInterest.drawableId!!))
+//        }
 
         val selected = ContextCompat.getColor(context, R.color.onboardingListSelected)
         val unselected = ContextCompat.getColor(context, R.color.onboarding_fields)

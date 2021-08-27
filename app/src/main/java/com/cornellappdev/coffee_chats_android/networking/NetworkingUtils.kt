@@ -1,5 +1,6 @@
 package com.cornellappdev.coffee_chats_android.networking
 
+import android.util.Log
 import com.cornellappdev.coffee_chats_android.models.*
 import com.squareup.moshi.Types
 import kotlinx.coroutines.Dispatchers
@@ -8,6 +9,7 @@ import java.lang.reflect.Type
 
 /** Function that should be called before any networking calls are made */
 fun setUpNetworking(accessToken: String) {
+    Log.d("ACCESS_TOKEN", accessToken)
     UserSession.currentAccessToken = accessToken
 }
 
@@ -18,7 +20,7 @@ suspend fun <T> getDataHelper(endpoint: Endpoint, typeToken: Type): T =
             endpoint.okHttpRequest(),
             typeToken
         )
-    }!!.data
+    }!!.data!!
 
 /** Retrieves a list of data */
 suspend fun <T> getListHelper(endpoint: Endpoint, typeToken: Type): List<T> =
@@ -27,7 +29,7 @@ suspend fun <T> getListHelper(endpoint: Endpoint, typeToken: Type): List<T> =
             endpoint.okHttpRequest(),
             Types.newParameterizedType(List::class.java, typeToken)
         )
-    }!!.data
+    }!!.data!!
 
 /** Posts non-list data */
 suspend fun <T> postDataHelper(endpoint: Endpoint, typeToken: Type): ApiResponse<T>? =
@@ -41,7 +43,7 @@ suspend fun <T> postDataHelper(endpoint: Endpoint, typeToken: Type): ApiResponse
 // AUTH
 
 suspend fun authenticateUser(idToken: String): UserSession =
-    postDataHelper<UserSession>(Endpoint.authenticateUser(idToken), UserSession::class.java)!!.data
+    postDataHelper<UserSession>(Endpoint.authenticateUser(idToken), UserSession::class.java)!!.data!!
 
 // PROFILE
 
@@ -53,3 +55,13 @@ suspend fun updateDemographics(demographics: Demographics): ApiResponse<Demograp
 // MAJORS
 
 suspend fun getAllMajors(): List<Major> = getListHelper(Endpoint.getAllMajors(), Major::class.java)
+
+// INTERESTS
+
+suspend fun getAllInterests(): List<Interest> =
+    getListHelper(Endpoint.getAllInterests(), Interest::class.java)
+
+// GROUPS
+
+suspend fun getAllGroups(): List<Group> =
+    getListHelper(Endpoint.getAllGroups(), Group::class.java)

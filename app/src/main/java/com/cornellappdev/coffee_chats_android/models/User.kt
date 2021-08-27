@@ -22,10 +22,10 @@ data class User(
     @Json(name = "graduation_year")
     val graduationYear: String?,
     val pronouns: String?,
-    val goals: List<String>,
+    val goals: List<String>?,
     @Json(name = "talking_points")
-    val talkingPoints: List<String>,
-    val availability: List<String>,
+    val talkingPoints: List<String>?,
+    val availability: List<String>?,
     val locations: List<String>,
     val interests: List<String>,
     val groups: List<String>,

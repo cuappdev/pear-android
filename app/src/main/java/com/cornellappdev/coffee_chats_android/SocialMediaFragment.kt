@@ -53,8 +53,8 @@ class SocialMediaFragment : Fragment(), OnFilledOutObservable {
             }
             instagramEditText.addTextChangedListener(textWatcher)
             facebookEditText.addTextChangedListener(textWatcher)
-            instagramEditText.setText(userSocialMedia.instagram)
-            facebookEditText.setText(userSocialMedia.facebook)
+            instagramEditText.setText(userSocialMedia!!.instagram)
+            facebookEditText.setText(userSocialMedia!!.facebook)
         }
     }
 
