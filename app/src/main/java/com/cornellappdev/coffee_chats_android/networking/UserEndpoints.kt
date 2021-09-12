@@ -12,6 +12,8 @@ import java.lang.reflect.Type
 
 /* NEW NETWORKING */
 
+private val MEDIA_TYPE = ("application/json; charset=utf-8").toMediaType()
+
 private fun authHeader(): Map<String, String> =
     mapOf("Authorization" to "Token ${UserSession.currentAccessToken}")
 
@@ -23,7 +25,12 @@ private val moshi = Moshi.Builder()
 private fun <T> toRequestBody(data: T, typeToken: Type): RequestBody {
     Log.d("REQUEST_BODY", moshi.adapter<T>(typeToken).toJson(data).toString())
     return moshi.adapter<T>(typeToken).toJson(data)
-        .toRequestBody(("application/json; charset=utf-8").toMediaType())
+        .toRequestBody(MEDIA_TYPE)
+}
+
+private fun toListRequestBody(key: String, data: List<Int>): RequestBody {
+    val json = gson.toJson(mapOf(key to data))
+    return json.toString().toRequestBody(MEDIA_TYPE)
 }
 
 // AUTH
@@ -61,10 +68,30 @@ fun Endpoint.Companion.getAllInterests(): Endpoint {
     return Endpoint(path = "/interests/", headers = authHeader(), method = EndpointMethod.GET)
 }
 
+fun Endpoint.Companion.updateInterests(interestIdsList: List<Int>): Endpoint {
+    val requestBody = toListRequestBody("interests", interestIdsList)
+    return Endpoint(
+        path = "/me/",
+        headers = authHeader(),
+        body = requestBody,
+        method = EndpointMethod.POST
+    )
+}
+
 // GROUPS
 
 fun Endpoint.Companion.getAllGroups(): Endpoint {
     return Endpoint(path = "/groups/", headers = authHeader(), method = EndpointMethod.GET)
+}
+
+fun Endpoint.Companion.updateGroups(groupIdsList: List<Int>): Endpoint {
+    val requestBody = toListRequestBody("groups", groupIdsList)
+    return Endpoint(
+        path = "/me/",
+        headers = authHeader(),
+        body = requestBody,
+        method = EndpointMethod.POST
+    )
 }
 
 /* OLD NETWORKING */
@@ -95,28 +122,6 @@ fun Endpoint.Companion.getUserInterests(netID: String = ""): Endpoint =
     getFieldHelper(netID, "interests")
 
 fun Endpoint.Companion.getUserGroups(netID: String = ""): Endpoint = getFieldHelper(netID, "groups")
-
-fun Endpoint.Companion.updateInterests(interests: List<String>): Endpoint {
-    val json = gson.toJson(mapOf("interests" to interests))
-    val requestBody = json.toString().toRequestBody("application/json; charset=utf-8".toMediaType())
-    return Endpoint(
-        path = "/user/interests",
-        headers = authHeader(),
-        body = requestBody,
-        method = EndpointMethod.POST
-    )
-}
-
-fun Endpoint.Companion.updateGroups(groups: List<String>): Endpoint {
-    val json = gson.toJson(mapOf("groups" to groups))
-    val requestBody = json.toString().toRequestBody("application/json; charset=utf-8".toMediaType())
-    return Endpoint(
-        path = "/user/groups",
-        headers = authHeader(),
-        body = requestBody,
-        method = EndpointMethod.POST
-    )
-}
 
 fun Endpoint.Companion.getUserAvailabilities(netID: String = ""): Endpoint =
     getFieldHelper(netID, "availabilities")

@@ -40,6 +40,15 @@ suspend fun <T> postDataHelper(endpoint: Endpoint, typeToken: Type): ApiResponse
         )
     }
 
+/** Post list data */
+suspend fun <T> postListDataHelper(endpoint: Endpoint, typeToken: Type): ApiResponse<List<T>>? =
+    withContext(Dispatchers.IO) {
+        Request.makeMoshiRequest<List<T>>(
+            endpoint.okHttpRequest(),
+            Types.newParameterizedType(List::class.java, typeToken)
+        )
+    }
+
 // AUTH
 
 suspend fun authenticateUser(idToken: String): UserSession =
@@ -61,7 +70,13 @@ suspend fun getAllMajors(): List<Major> = getListHelper(Endpoint.getAllMajors(),
 suspend fun getAllInterests(): List<Interest> =
     getListHelper(Endpoint.getAllInterests(), Interest::class.java)
 
+suspend fun updateInterests(interestIdsList: List<Int>): ApiResponse<List<Int>>? =
+    postListDataHelper(Endpoint.updateInterests(interestIdsList), Integer::class.java)
+
 // GROUPS
 
 suspend fun getAllGroups(): List<Group> =
     getListHelper(Endpoint.getAllGroups(), Group::class.java)
+
+suspend fun updateGroups(groupIdsList: List<Int>): ApiResponse<List<Int>>? =
+    postListDataHelper(Endpoint.updateGroups(groupIdsList), Integer::class.java)
