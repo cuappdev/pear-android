@@ -10,24 +10,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import com.cornellappdev.coffee_chats_android.models.ApiResponse
 import com.cornellappdev.coffee_chats_android.models.User
 import com.cornellappdev.coffee_chats_android.models.UserField
 import com.cornellappdev.coffee_chats_android.models.UserSession
-import com.cornellappdev.coffee_chats_android.networking.Endpoint
-import com.cornellappdev.coffee_chats_android.networking.Request
-import com.cornellappdev.coffee_chats_android.networking.getSelfProfile
 import com.cornellappdev.coffee_chats_android.networking.getUser
-import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_onboarding.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
     PromptsFragment.PromptsContainer {
 
+    // TODO Figure out if this is necessary - fetching user from backend in every fragment maintains consistency
     /** Current user profile- will be mutated as user fills out information in onboarding */
     private lateinit var user: User
 
@@ -42,13 +37,12 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
             Content.GROUPS,
             Content.PROMPTS,
             Content.GOALS,
-            Content.TALKING_POINTS,
             Content.SOCIAL_MEDIA
         )
 
     /** Pages that display the Add Later button */
     private val addLaterPages =
-        listOf(Content.GROUPS, Content.GOALS, Content.TALKING_POINTS, Content.SOCIAL_MEDIA)
+        listOf(Content.GROUPS, Content.GOALS, Content.SOCIAL_MEDIA)
 
     /** All onboarding pages */
     enum class Content {
@@ -57,7 +51,6 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
         GROUPS,
         PROMPTS,
         GOALS,
-        TALKING_POINTS,
         SOCIAL_MEDIA
     }
 
@@ -169,7 +162,6 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
                 Content.GROUPS -> UserFieldFragment.newInstance(UserField.Category.GROUP)
                 Content.PROMPTS -> PromptsFragment()
                 Content.GOALS -> UserFieldFragment.newInstance(UserField.Category.GOAL)
-                Content.TALKING_POINTS -> UserFieldFragment.newInstance(UserField.Category.TALKING_POINT)
                 Content.SOCIAL_MEDIA -> SocialMediaFragment()
             }
             val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
@@ -190,7 +182,6 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
             Content.GROUPS -> getString(R.string.groups_header)
             Content.PROMPTS -> getString(R.string.prompts_header)
             Content.GOALS -> getString(R.string.goals_header)
-            Content.TALKING_POINTS -> getString(R.string.talking_pointers_header)
             Content.SOCIAL_MEDIA -> getString(R.string.social_media_header)
         }
         back_button.visibility = if (content == Content.CREATE_PROFILE) View.GONE else View.VISIBLE

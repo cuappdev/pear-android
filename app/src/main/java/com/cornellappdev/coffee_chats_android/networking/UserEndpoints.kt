@@ -177,17 +177,3 @@ fun Endpoint.Companion.updateGoals(goals: List<String>): Endpoint {
         method = EndpointMethod.POST
     )
 }
-
-fun Endpoint.Companion.getUserTalkingPoints(netID: String = ""): Endpoint =
-    getFieldHelper(netID, "talkingPoints")
-
-fun Endpoint.Companion.updateTalkingPoints(talkingPoints: List<String>): Endpoint {
-    val json = gson.toJson(mapOf("talkingPoints" to talkingPoints))
-    val requestBody = json.toString().toRequestBody("application/json; charset=utf-8".toMediaType())
-    return Endpoint(
-        path = "/user/talkingPoints",
-        headers = authHeader(),
-        body = requestBody,
-        method = EndpointMethod.POST
-    )
-}
