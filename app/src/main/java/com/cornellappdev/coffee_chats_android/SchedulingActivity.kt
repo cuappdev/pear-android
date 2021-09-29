@@ -103,7 +103,10 @@ class SchedulingActivity :
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        setUpDrawerLayout()
+        CoroutineScope(Dispatchers.Main).launch {
+            user = getUser()
+            setUpDrawerLayout()
+        }
     }
 
     /**

@@ -80,3 +80,8 @@ suspend fun getAllGroups(): List<Group> =
 
 suspend fun updateGroups(groupIdsList: List<Int>): ApiResponse<List<Int>>? =
     postListDataHelper(Endpoint.updateGroups(groupIdsList), Integer::class.java)
+
+// SOCIAL MEDIA
+
+suspend fun updateSocialMedia(socialMedia: SocialMedia): ApiResponse<SocialMedia>? =
+    postDataHelper(Endpoint.updateSocialMedia(socialMedia), SocialMedia::class.java)

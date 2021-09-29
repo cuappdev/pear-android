@@ -17,6 +17,8 @@ private val MEDIA_TYPE = ("application/json; charset=utf-8").toMediaType()
 private fun authHeader(): Map<String, String> =
     mapOf("Authorization" to "Token ${UserSession.currentAccessToken}")
 
+private val gson = Gson()
+
 private val moshi = Moshi.Builder()
     .addLast(KotlinJsonAdapterFactory())
     .build()
@@ -94,9 +96,19 @@ fun Endpoint.Companion.updateGroups(groupIdsList: List<Int>): Endpoint {
     )
 }
 
-/* OLD NETWORKING */
+// SOCIAL MEDIA
 
-private val gson = Gson()
+fun Endpoint.Companion.updateSocialMedia(socialMedia: SocialMedia): Endpoint {
+    val requestBody = toRequestBody(socialMedia, SocialMedia::class.java)
+    return Endpoint(
+        path = "/me/",
+        headers = authHeader(),
+        body = requestBody,
+        method = EndpointMethod.POST
+    )
+}
+
+/* OLD NETWORKING */
 
 private fun <K, V> mapToRequestBody(map: Map<K, V>): RequestBody =
     gson.toJson(map).toRequestBody("application/json; charset=utf-8".toMediaType())
@@ -145,20 +157,6 @@ fun Endpoint.Companion.updateLocations(locations: List<Location>): Endpoint {
     val requestBody = json.toString().toRequestBody("application/json; charset=utf-8".toMediaType())
     return Endpoint(
         path = "/user/preferredLocations",
-        headers = authHeader(),
-        body = requestBody,
-        method = EndpointMethod.POST
-    )
-}
-
-fun Endpoint.Companion.getUserSocialMedia(netID: String = ""): Endpoint =
-    getFieldHelper(netID, "socialMedia")
-
-fun Endpoint.Companion.updateSocialMedia(socialMedia: SocialMedia): Endpoint {
-    val requestBody =
-        gson.toJson(socialMedia).toRequestBody("application/json; charset=utf-8".toMediaType())
-    return Endpoint(
-        path = "/user/socialMedia",
         headers = authHeader(),
         body = requestBody,
         method = EndpointMethod.POST
