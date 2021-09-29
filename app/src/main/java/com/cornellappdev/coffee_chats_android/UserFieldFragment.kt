@@ -28,18 +28,12 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
 
     private lateinit var category: Category
 
-    /** pages that have a search bar */
-    private val searchableContent = listOf(Category.GROUP, Category.TALKING_POINT)
+    /** pages that have a search bar - kept as a list to facilitate adding searchable fragments */
+    private val searchableContent = listOf(Category.GROUP)
 
     lateinit var adapter: UserFieldAdapter
     private lateinit var fieldAdapterArray: Array<UserField>
     private lateinit var currFieldAdapterArray: Array<UserField>
-
-    /** master list of all valid options for this field */
-    private lateinit var fieldTitles: Array<String>
-
-    /** master list of all subtitles for this field */
-    private lateinit var fieldSubtitles: Array<String>
 
     /** fields selected by the user */
     private lateinit var userFields: ArrayList<String>
@@ -64,34 +58,18 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         CoroutineScope(Dispatchers.Main).launch {
             // initialize lateinit vars
-            when (category) {
+            fieldAdapterArray = when (category) {
                 Category.INTEREST -> {
-                    getAllInterests().let { allInterestsList ->
-                        fieldTitles = allInterestsList.map { it.name }.toTypedArray()
-                        fieldSubtitles = allInterestsList.map { it.subtitle }.toTypedArray()
-                    }
-                }
-                Category.TALKING_POINT -> {
-                    getAllInterests().let { allInterestsList ->
-                        fieldTitles = allInterestsList.map { it.name }.toTypedArray()
-                        fieldSubtitles = allInterestsList.map { it.subtitle }.toTypedArray()
-                    }
-                    getAllGroups().let { allGroupsList ->
-                        fieldTitles += allGroupsList.map { it.name }.toTypedArray()
-                        fieldSubtitles += Array(allGroupsList.size) { "" }
-                    }
+                    getAllInterests().map { UserField(it.name, it.subtitle, null, it.id) }
                 }
                 Category.GOAL -> {
-                    fieldTitles = resources.getStringArray(R.array.goal_titles)
-                    fieldSubtitles = Array(fieldTitles.size) { "" }
+                    resources.getStringArray(R.array.goal_titles)
+                        .map { UserField(it, "", null, -1) }
                 }
                 Category.GROUP -> {
-                    getAllGroups().let { allGroupsList ->
-                        fieldTitles += allGroupsList.map { it.name }.toTypedArray()
-                        fieldSubtitles += Array(allGroupsList.size) { "" }
-                    }
+                    getAllGroups().map { UserField(it.name, "", null, it.id) }
                 }
-            }
+            }.toTypedArray()
 
             selectedColor = ContextCompat.getColor(requireContext(), R.color.onboardingListSelected)
             unselectedColor = ContextCompat.getColor(requireContext(), R.color.onboarding_fields)
@@ -101,43 +79,22 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
 
             val user = getUser()
             // fetch fields already selected by user
+            // TODO- refactor to only store IDs?
             userFields = ArrayList(
                 when (category) {
-                    Category.INTEREST -> user.interests
-                    Category.GROUP -> user.groups
+                    Category.INTEREST -> user.interests.map { it.name }
+                    Category.GROUP -> user.groups.map { it.name }
                     Category.GOAL -> if (user.goals.isNullOrEmpty()) emptyList() else user.goals
-                    Category.TALKING_POINT -> if (user.talkingPoints.isNullOrEmpty()) emptyList() else user.talkingPoints
                 }
             )
             // set up adapter
-            fieldAdapterArray = Array(fieldTitles.size) { UserField() }
-            val resources = requireContext().resources
-            val packageName = requireContext().packageName
-            for (i in fieldTitles.indices) {
-                fieldAdapterArray[i] = UserField(
-                    fieldTitles[i],
-                    if (i < fieldSubtitles.size) fieldSubtitles[i] else "",
-                    null
-//                    when (category) {
-//                        Category.INTEREST -> {
-//                            resources.getIdentifier(
-//                                "ic_int_${fieldTitles[i].split(" ")[0].toLowerCase()}",
-//                                "drawable",
-//                                packageName
-//                            )
-//                        }
-//                        Category.GROUP -> if (fieldTitles[i] == "Cornell AppDev") R.drawable.ic_gr_appdev_logo else R.drawable.groups_white
-//                        else -> null
-//                    }
-                )
-            }
             fieldAdapterArray.sortBy { u -> u.getText() }
             adapter =
                 UserFieldAdapter(
                     requireContext(),
                     fieldAdapterArray.toList(),
                     UserFieldAdapter.ItemColor.TOGGLE,
-                    category in listOf(Category.GOAL, Category.TALKING_POINT)
+                    true // TODO- display icons
                 )
             interests_or_groups.adapter = adapter
             // display selected fields
@@ -208,7 +165,7 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
                             requireContext(),
                             currFieldAdapterArray.toList(),
                             UserFieldAdapter.ItemColor.TOGGLE,
-                            category in listOf(Category.GOAL, Category.TALKING_POINT)
+                            category == Category.GOAL
                         )
                     interests_or_groups.adapter = adapter
                     for (i in currFieldAdapterArray.indices) {
@@ -236,7 +193,8 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
     }
 
     override fun saveInformation() {
-        val items = userFields
+        val items =
+            userFields.map { userField -> fieldAdapterArray.first { it.getText() == userField }.id }
         if (category in searchableContent) {
             group_search.setQuery("", false)
         }

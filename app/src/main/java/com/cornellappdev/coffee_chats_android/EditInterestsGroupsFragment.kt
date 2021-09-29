@@ -235,10 +235,6 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
     }
 
     override fun saveInformation() {
-        updateUserField(
-            requireContext(),
-            selectedItems.map { item -> item.getText() },
-            if (isInterest) UserField.Category.INTEREST else UserField.Category.GROUP
-        )
+        TODO("Implement updated networking call")
     }
 }

@@ -1,4 +1,5 @@
 package com.cornellappdev.coffee_chats_android.models
+
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -27,8 +28,8 @@ data class User(
     val talkingPoints: List<String>?,
     val availability: List<String>?,
     val locations: List<String>,
-    val interests: List<String>,
-    val groups: List<String>,
+    val interests: List<Interest>,
+    val groups: List<Group>,
     @Json(name = "has_onboarded")
     val hasOnboarded: Boolean,
     @Json(name = "pending_feedback")

@@ -1,20 +1,24 @@
 package com.cornellappdev.coffee_chats_android.models
 
-class UserField(private var text: String = "", private var subtext: String = "", val drawableId: Int? = null) {
+class UserField(
+    private var text: String = "",
+    private var subtext: String = "",
+    val drawableId: Int? = null,
+    val id: Int = -1
+) {
     enum class Category {
         INTEREST,
         GROUP,
-        GOAL,
-        TALKING_POINT
+        GOAL
     }
 
     private var selected: Boolean = false
 
-    fun getText() : String {
+    fun getText(): String {
         return text
     }
 
-    fun getSubtext() : String {
+    fun getSubtext(): String {
         return subtext
     }
 
@@ -26,7 +30,7 @@ class UserField(private var text: String = "", private var subtext: String = "",
         selected = true
     }
 
-    fun isSelected() : Boolean {
+    fun isSelected(): Boolean {
         return selected
     }
 }

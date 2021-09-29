@@ -7,8 +7,8 @@ import android.view.View
 import android.widget.Toast
 import com.cornellappdev.coffee_chats_android.models.ApiResponse
 import com.cornellappdev.coffee_chats_android.models.UserField.Category
-import com.cornellappdev.coffee_chats_android.networking.*
-import com.google.gson.reflect.TypeToken
+import com.cornellappdev.coffee_chats_android.networking.updateGroups
+import com.cornellappdev.coffee_chats_android.networking.updateInterests
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,6 +42,7 @@ fun increaseHitArea(view: View, padding: Int = 100) {
 interface OnFilledOutListener {
     /** Actions to be taken when all required fields are filled out */
     fun onFilledOut()
+
     /** Actions to be taken when not all required fields are filled out */
     fun onSelectionEmpty()
 }
@@ -52,6 +53,7 @@ interface OnFilledOutListener {
 interface OnFilledOutObservable {
     /** Passes the observable the listener needs to notify when status of fields changes */
     fun setOnFilledOutListener(callback: OnFilledOutListener)
+
     /** Saves user-entered information in the current fragment on the backend */
     fun saveInformation()
 }
@@ -61,20 +63,14 @@ interface OnFilledOutObservable {
  * if `isInterest` is true, and groups otherwise. An error message is displayed via a Toast if an
  * error occurs.
  */
-fun updateUserField(applicationContext: Context, items: List<String>, category: Category) {
+fun updateUserField(applicationContext: Context, items: List<Int>, category: Category) {
     CoroutineScope(Dispatchers.Main).launch {
-        val updateEndpoint = when (category) {
-            Category.INTEREST -> Endpoint.updateInterests(items)
-            Category.GROUP -> Endpoint.updateGroups(items)
-            Category.GOAL -> Endpoint.updateGoals(items)
-            Category.TALKING_POINT -> Endpoint.updateTalkingPoints(items)
-        }
-        val typeToken = object : TypeToken<ApiResponse<String>>() {}.type
         val updateResponse = withContext(Dispatchers.IO) {
-            Request.makeRequest<ApiResponse<String>>(
-                updateEndpoint.okHttpRequest(),
-                typeToken
-            )
+            when (category) {
+                Category.INTEREST -> updateInterests(items)
+                Category.GROUP -> updateGroups(items)
+                Category.GOAL -> ApiResponse(true, null, null) // TODO after goals get ids
+            }
         }
         if (updateResponse == null || !updateResponse.success) {
             Toast.makeText(applicationContext, "Failed to save information", Toast.LENGTH_LONG)
