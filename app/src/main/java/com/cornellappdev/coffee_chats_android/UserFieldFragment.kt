@@ -193,7 +193,8 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
     }
 
     override fun saveInformation() {
-        val items = userFields.map { userField -> fieldAdapterArray.first { it.getText() == userField }.id }
+        val items =
+            userFields.map { userField -> fieldAdapterArray.first { it.getText() == userField }.id }
         if (category in searchableContent) {
             group_search.setQuery("", false)
         }

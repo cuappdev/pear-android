@@ -8,16 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.cornellappdev.coffee_chats_android.models.ApiResponse
-import com.cornellappdev.coffee_chats_android.models.Location
 import com.cornellappdev.coffee_chats_android.models.SocialMedia
-import com.cornellappdev.coffee_chats_android.networking.*
-import com.google.gson.reflect.TypeToken
+import com.cornellappdev.coffee_chats_android.networking.getUser
+import com.cornellappdev.coffee_chats_android.networking.updateSocialMedia
 import kotlinx.android.synthetic.main.fragment_social_media.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class SocialMediaFragment : Fragment(), OnFilledOutObservable {
 
@@ -35,7 +32,13 @@ class SocialMediaFragment : Fragment(), OnFilledOutObservable {
             val textWatcher = object : TextWatcher {
                 override fun afterTextChanged(s: Editable) {}
 
-                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+                override fun beforeTextChanged(
+                    s: CharSequence,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
 
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                     toggleSaveButton()
@@ -63,7 +66,10 @@ class SocialMediaFragment : Fragment(), OnFilledOutObservable {
     }
 
     override fun saveInformation() {
-        val socialMedia = SocialMedia(facebookEditText.text.toString().trim(), instagramEditText.text.toString().trim())
+        val socialMedia = SocialMedia(
+            facebookEditText.text.toString().trim(),
+            instagramEditText.text.toString().trim()
+        )
         CoroutineScope(Dispatchers.Main).launch {
             val updateSocialMediaResponse = updateSocialMedia(socialMedia)
             if (updateSocialMediaResponse == null || !updateSocialMediaResponse.success) {

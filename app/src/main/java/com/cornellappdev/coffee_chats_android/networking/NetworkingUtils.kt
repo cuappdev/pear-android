@@ -52,7 +52,10 @@ suspend fun <T> postListDataHelper(endpoint: Endpoint, typeToken: Type): ApiResp
 // AUTH
 
 suspend fun authenticateUser(idToken: String): UserSession =
-    postDataHelper<UserSession>(Endpoint.authenticateUser(idToken), UserSession::class.java)!!.data!!
+    postDataHelper<UserSession>(
+        Endpoint.authenticateUser(idToken),
+        UserSession::class.java
+    )!!.data!!
 
 // PROFILE
 

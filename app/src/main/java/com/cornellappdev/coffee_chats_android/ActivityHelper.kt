@@ -7,8 +7,8 @@ import android.view.View
 import android.widget.Toast
 import com.cornellappdev.coffee_chats_android.models.ApiResponse
 import com.cornellappdev.coffee_chats_android.models.UserField.Category
-import com.cornellappdev.coffee_chats_android.networking.*
-import com.google.gson.reflect.TypeToken
+import com.cornellappdev.coffee_chats_android.networking.updateGroups
+import com.cornellappdev.coffee_chats_android.networking.updateInterests
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,6 +42,7 @@ fun increaseHitArea(view: View, padding: Int = 100) {
 interface OnFilledOutListener {
     /** Actions to be taken when all required fields are filled out */
     fun onFilledOut()
+
     /** Actions to be taken when not all required fields are filled out */
     fun onSelectionEmpty()
 }
@@ -52,6 +53,7 @@ interface OnFilledOutListener {
 interface OnFilledOutObservable {
     /** Passes the observable the listener needs to notify when status of fields changes */
     fun setOnFilledOutListener(callback: OnFilledOutListener)
+
     /** Saves user-entered information in the current fragment on the backend */
     fun saveInformation()
 }
