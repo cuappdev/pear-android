@@ -23,6 +23,7 @@ data class User(
     @Json(name = "graduation_year")
     val graduationYear: String?,
     val pronouns: String?,
+    val prompts: List<Prompt>,
     val purposes: List<Purpose>,
     val goals: List<String>?,
     @Json(name = "talking_points")

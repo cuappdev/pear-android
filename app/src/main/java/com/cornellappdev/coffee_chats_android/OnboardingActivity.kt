@@ -207,6 +207,6 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
     }
 
     companion object {
-        private const val DISPLAY_PROMPTS = false
+        private const val DISPLAY_PROMPTS = true
     }
 }

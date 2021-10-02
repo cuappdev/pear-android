@@ -11,8 +11,15 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.cornellappdev.coffee_chats_android.adapters.PromptsAdapter
 import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter
+import com.cornellappdev.coffee_chats_android.models.Prompt
 import com.cornellappdev.coffee_chats_android.models.UserField
+import com.cornellappdev.coffee_chats_android.networking.getAllPrompts
+import com.cornellappdev.coffee_chats_android.networking.getUser
+import com.cornellappdev.coffee_chats_android.networking.updatePrompts
 import kotlinx.android.synthetic.main.fragment_interests_groups.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.PromptsActionListener {
 
@@ -30,7 +37,6 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
     /** prompt user is currently responding to */
     private var currentPrompt: String = ""
     private lateinit var prompts: Array<UserField>
-    private lateinit var promptsList: Array<String>
 
     /** prompts and user responses */
     private val responseAdapterArray = Array(3) { UserField() }
@@ -48,9 +54,19 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         group_search.visibility = View.GONE
         callback!!.onSelectionEmpty()
-        promptsList = resources.getStringArray(R.array.prompts)
-        prompts = Array(promptsList.size) { i -> UserField(promptsList[i]) }
-        setUpPage()
+        CoroutineScope(Dispatchers.Main).launch {
+            prompts =
+                getAllPrompts().map { p -> UserField(text = p.name, id = p.id) }.toTypedArray()
+            val selectedPrompts = getUser().prompts.map { p ->
+                UserField(
+                    text = p.name,
+                    subtext = p.answer,
+                    id = p.id
+                )
+            }.toTypedArray()
+            selectedPrompts.copyInto(responseAdapterArray)
+            setUpPage()
+        }
     }
 
     private fun setUpPage() {
@@ -59,10 +75,10 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
                 container.setHeaderText(getString(R.string.prompts_header))
                 interests_or_groups.adapter =
                     PromptsAdapter(requireContext(), responseAdapterArray, this)
-                // only move on to next step once all cells have a response
+                // only move on to next step once at least one prompt has a response
                 if (responseAdapterArray.filterNot {
                         it.getText().isEmpty()
-                    }.size == responseAdapterArray.size) {
+                    }.isNotEmpty()) {
                     callback!!.onFilledOut()
                 } else {
                     callback!!.onSelectionEmpty()
@@ -108,7 +124,8 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
                         start: Int,
                         count: Int,
                         after: Int
-                    ) {}
+                    ) {
+                    }
 
                     override fun onTextChanged(
                         s: CharSequence,
@@ -129,11 +146,11 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
         if (content == Content.EDIT_RESPONSE) {
             interests_or_groups.visibility = View.GONE
             edit_prompt_view.visibility = View.VISIBLE
-            container.setActionButtonText("Save")
+            container.setActionButtonText(getString(R.string.save))
         } else {
             interests_or_groups.visibility = View.VISIBLE
             edit_prompt_view.visibility = View.GONE
-            container.setActionButtonText("Next")
+            container.setActionButtonText(getString(R.string.next))
         }
         container.setActionButtonVisibility(content != Content.DISPLAY_PROMPTS)
     }
@@ -149,9 +166,10 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
 
     /** Saves user response to the current prompt */
     fun saveCurrentPromptResponse() {
+        val prompt = prompts.filter { it.getText() == currentPrompt }[0]
         responseAdapterArray[editPosition] =
-            UserField(currentPrompt, response_edit_text.text.toString())
-        prompts[promptsList.indexOf(currentPrompt)].setSelected()
+            UserField(currentPrompt, response_edit_text.text.toString(), id = prompt.id)
+        prompt.setSelected()
         content = Content.DISPLAY_RESPONSES
         setUpPage()
     }
@@ -168,7 +186,10 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
     }
 
     override fun saveInformation() {
-        // TODO implement after backend routes for prompts are finished
+        CoroutineScope(Dispatchers.Main).launch {
+            updatePrompts(
+                responseAdapterArray.toList().map { Prompt(answer = it.getSubtext(), id = it.id) })
+        }
     }
 
     override fun onAddPrompt(position: Int) {
@@ -179,7 +200,7 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
     }
 
     override fun onClearPrompt(position: Int) {
-        prompts[promptsList.indexOf(responseAdapterArray[position].getText())].toggleSelected()
+        prompts.filter { it.getText() == responseAdapterArray[position].getText() }[0].toggleSelected()
         responseAdapterArray[position] = UserField()
         setUpPage()
     }
