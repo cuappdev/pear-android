@@ -96,6 +96,22 @@ fun Endpoint.Companion.updateGroups(groupIdsList: List<Int>): Endpoint {
     )
 }
 
+// PURPOSES
+
+fun Endpoint.Companion.getAllPurposes(): Endpoint {
+    return Endpoint(path = "/purposes/", headers = authHeader(), method = EndpointMethod.GET)
+}
+
+fun Endpoint.Companion.updatePurposes(purposeIdsList: List<Int>): Endpoint {
+    val requestBody = toListRequestBody("purposes", purposeIdsList)
+    return Endpoint(
+        path = "/me/",
+        headers = authHeader(),
+        body = requestBody,
+        method = EndpointMethod.POST
+    )
+}
+
 // SOCIAL MEDIA
 
 fun Endpoint.Companion.updateSocialMedia(socialMedia: SocialMedia): Endpoint {

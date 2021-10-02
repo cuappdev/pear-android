@@ -5,10 +5,10 @@ import android.graphics.Rect
 import android.view.TouchDelegate
 import android.view.View
 import android.widget.Toast
-import com.cornellappdev.coffee_chats_android.models.ApiResponse
 import com.cornellappdev.coffee_chats_android.models.UserField.Category
 import com.cornellappdev.coffee_chats_android.networking.updateGroups
 import com.cornellappdev.coffee_chats_android.networking.updateInterests
+import com.cornellappdev.coffee_chats_android.networking.updatePurposes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -59,9 +59,8 @@ interface OnFilledOutObservable {
 }
 
 /**
- * Makes backend request to update interests or groups with given `items`. Items are interests
- * if `isInterest` is true, and groups otherwise. An error message is displayed via a Toast if an
- * error occurs.
+ * Makes backend request to update interests or groups with given `items`. An error message is
+ * displayed via a Toast if an error occurs.
  */
 fun updateUserField(applicationContext: Context, items: List<Int>, category: Category) {
     CoroutineScope(Dispatchers.Main).launch {
@@ -69,7 +68,7 @@ fun updateUserField(applicationContext: Context, items: List<Int>, category: Cat
             when (category) {
                 Category.INTEREST -> updateInterests(items)
                 Category.GROUP -> updateGroups(items)
-                Category.GOAL -> ApiResponse(true, null, null) // TODO after goals get ids
+                Category.GOAL -> updatePurposes(items)
             }
         }
         if (updateResponse == null || !updateResponse.success) {
