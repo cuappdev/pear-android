@@ -104,3 +104,8 @@ suspend fun updatePurposes(purposeIdsList: List<Int>): ApiResponse<List<Int>>? =
 
 suspend fun updateSocialMedia(socialMedia: SocialMedia): ApiResponse<SocialMedia>? =
     postDataHelper(Endpoint.updateSocialMedia(socialMedia), SocialMedia::class.java)
+
+// ONBOARDING STATUS
+
+suspend fun updateOnboardingStatus(hasOnboarded: Boolean): ApiResponse<OnboardingStatus>? =
+    postDataHelper(Endpoint.updateOnboardingStatus(hasOnboarded), OnboardingStatus::class.java)

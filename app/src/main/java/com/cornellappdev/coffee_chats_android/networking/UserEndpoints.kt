@@ -144,6 +144,18 @@ fun Endpoint.Companion.updateSocialMedia(socialMedia: SocialMedia): Endpoint {
     )
 }
 
+// ONBOARDING STATUS
+
+fun Endpoint.Companion.updateOnboardingStatus(hasOnboarded: Boolean): Endpoint {
+    val requestBody = toRequestBody(OnboardingStatus(hasOnboarded), OnboardingStatus::class.java)
+    return Endpoint(
+        path = "/me/",
+        headers = authHeader(),
+        body = requestBody,
+        method = EndpointMethod.POST
+    )
+}
+
 /* OLD NETWORKING */
 
 private fun <K, V> mapToRequestBody(map: Map<K, V>): RequestBody =
