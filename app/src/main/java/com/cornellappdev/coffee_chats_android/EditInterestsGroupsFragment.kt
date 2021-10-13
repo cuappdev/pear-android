@@ -11,17 +11,17 @@ import android.widget.ListView
 import androidx.fragment.app.Fragment
 import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter
 import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter.ItemColor
-import com.cornellappdev.coffee_chats_android.models.ApiResponse
 import com.cornellappdev.coffee_chats_android.models.UserField
-import com.cornellappdev.coffee_chats_android.networking.*
-import com.google.gson.reflect.TypeToken
+import com.cornellappdev.coffee_chats_android.models.UserField.Category
+import com.cornellappdev.coffee_chats_android.networking.getAllGroups
+import com.cornellappdev.coffee_chats_android.networking.getAllInterests
+import com.cornellappdev.coffee_chats_android.networking.getUser
 import kotlinx.android.synthetic.main.fragment_edit_interests.*
 import kotlinx.android.synthetic.main.fragment_edit_interests.view.*
 import kotlinx.android.synthetic.main.interest_group_list_with_header.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlin.math.max
 import kotlin.math.min
 
@@ -32,10 +32,6 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
     private val moreItems = ArrayList<UserField>()
     private lateinit var selectedItemsAdapter: UserFieldAdapter
     private lateinit var moreItemsAdapter: UserFieldAdapter
-
-    private lateinit var interestTitles: Array<String>
-    private lateinit var interestSubtitles: Array<String>
-    private lateinit var groupTitles: Array<String>
 
     /** whether to display all selected items, or just the first 3 */
     private var showExcessSelectedItems = false
@@ -56,38 +52,18 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        interestTitles = resources.getStringArray(R.array.interest_titles)
-        interestSubtitles = resources.getStringArray(R.array.interest_subtitles)
-
-        if (isInterest) {
-            selected_items.list_title.text = getString(R.string.menu_interests)
-        } else {
-            selected_items.list_title.text = getString(R.string.menu_groups)
-        }
+        selected_items.list_title.text =
+            getString(if (isInterest) R.string.menu_interests else R.string.menu_groups)
         more_items.list_title.text = getString(R.string.more_items, itemString)
         more_items.list_subtitle.text = getString(R.string.tap_to_add)
 
         CoroutineScope(Dispatchers.Main).launch {
-            val packageName = requireContext().packageName
+            val user = getUser()
             if (isInterest) {
-                val getUserInterestsEndpoint = Endpoint.getUserInterests()
-                val interestTypeToken = object : TypeToken<ApiResponse<List<String>>>() {}.type
-                val userInterests = withContext(Dispatchers.IO) {
-                    Request.makeRequest<ApiResponse<List<String>>>(
-                        getUserInterestsEndpoint.okHttpRequest(),
-                        interestTypeToken
-                    )
-                }!!.data as ArrayList<String>
-                for ((i, interest) in interestTitles.withIndex()) {
-                    val item = UserField(
-                        interestTitles[i],
-                        if (i < interestSubtitles.size) interestSubtitles[i] else "",
-                        resources.getIdentifier(
-                            "ic_int_${interestTitles[i].split(" ")[0].toLowerCase()}",
-                            "drawable",
-                            packageName
-                        )
-                    )
+                val userInterests = user.interests
+                val allInterests = getAllInterests()
+                for (interest in allInterests) {
+                    val item = UserField(interest.name, interest.subtitle, id = interest.id)
                     if (interest in userInterests) {
                         selectedItems.add(item)
                     } else {
@@ -95,26 +71,10 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
                     }
                 }
             } else {
-                val getGroupsEndpoint = Endpoint.getAllGroups()
-                val groupTypeToken = object : TypeToken<ApiResponse<List<String>>>() {}.type
-                groupTitles = withContext(Dispatchers.IO) {
-                    Request.makeRequest<ApiResponse<List<String>>>(
-                        getGroupsEndpoint.okHttpRequest(),
-                        groupTypeToken
-                    )!!.data!!.toTypedArray()
-                }
-                val getUserGroupsEndpoint = Endpoint.getUserGroups()
-                val userGroups = withContext(Dispatchers.IO) {
-                    Request.makeRequest<ApiResponse<List<String>>>(
-                        getUserGroupsEndpoint.okHttpRequest(),
-                        groupTypeToken
-                    )
-                }!!.data as ArrayList<String>
-                for ((i, group) in groupTitles.withIndex()) {
-                    val item = UserField(
-                        groupTitles[i],
-                        drawableId = if (groupTitles[i] == "Cornell AppDev") R.drawable.ic_gr_appdev_logo else R.drawable.groups_white
-                    )
+                val userGroups = user.groups
+                val allGroups = getAllGroups()
+                for (group in allGroups) {
+                    val item = UserField(group.name, id = group.id)
                     if (group in userGroups) {
                         selectedItems.add(item)
                     } else {
@@ -235,6 +195,11 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
     }
 
     override fun saveInformation() {
-        TODO("Implement updated networking call")
+        val idList = selectedItems.map { it.id }
+        updateUserField(
+            requireContext(),
+            idList,
+            if (isInterest) Category.INTEREST else Category.GROUP
+        )
     }
 }
