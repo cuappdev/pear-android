@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.cornellappdev.coffee_chats_android.models.SocialMedia
 import com.cornellappdev.coffee_chats_android.networking.getUser
+import com.cornellappdev.coffee_chats_android.networking.updateOnboardingStatus
 import com.cornellappdev.coffee_chats_android.networking.updateSocialMedia
 import kotlinx.android.synthetic.main.fragment_social_media.*
 import kotlinx.coroutines.CoroutineScope
@@ -76,6 +77,8 @@ class SocialMediaFragment : Fragment(), OnFilledOutObservable {
                 Toast.makeText(requireContext(), "Failed to save information", Toast.LENGTH_LONG)
                     .show()
             }
+            // let backend know user has finished onboarding
+            updateOnboardingStatus(true)
         }
     }
 }

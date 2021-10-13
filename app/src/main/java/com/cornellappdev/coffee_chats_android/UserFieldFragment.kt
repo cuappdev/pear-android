@@ -18,6 +18,7 @@ import com.cornellappdev.coffee_chats_android.models.UserField
 import com.cornellappdev.coffee_chats_android.models.UserField.Category
 import com.cornellappdev.coffee_chats_android.networking.getAllGroups
 import com.cornellappdev.coffee_chats_android.networking.getAllInterests
+import com.cornellappdev.coffee_chats_android.networking.getAllPurposes
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import kotlinx.android.synthetic.main.fragment_interests_groups.*
 import kotlinx.coroutines.CoroutineScope
@@ -60,14 +61,19 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
             // initialize lateinit vars
             fieldAdapterArray = when (category) {
                 Category.INTEREST -> {
-                    getAllInterests().map { UserField(it.name, it.subtitle, null, it.id) }
+                    getAllInterests().map {
+                        UserField(
+                            text = it.name,
+                            subtext = it.subtitle,
+                            id = it.id
+                        )
+                    }
                 }
                 Category.GOAL -> {
-                    resources.getStringArray(R.array.goal_titles)
-                        .map { UserField(it, "", null, -1) }
+                    getAllPurposes().map { UserField(text = it.name, id = it.id) }
                 }
                 Category.GROUP -> {
-                    getAllGroups().map { UserField(it.name, "", null, it.id) }
+                    getAllGroups().map { UserField(text = it.name, id = it.id) }
                 }
             }.toTypedArray()
 
@@ -84,7 +90,7 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
                 when (category) {
                     Category.INTEREST -> user.interests.map { it.name }
                     Category.GROUP -> user.groups.map { it.name }
-                    Category.GOAL -> if (user.goals.isNullOrEmpty()) emptyList() else user.goals
+                    Category.GOAL -> user.purposes.map { it.name }
                 }
             )
             // set up adapter

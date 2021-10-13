@@ -84,7 +84,28 @@ suspend fun getAllGroups(): List<Group> =
 suspend fun updateGroups(groupIdsList: List<Int>): ApiResponse<List<Int>>? =
     postListDataHelper(Endpoint.updateGroups(groupIdsList), Integer::class.java)
 
+// PROMPTS
+
+suspend fun getAllPrompts(): List<Prompt> =
+    getListHelper(Endpoint.getAllPrompts(), Prompt::class.java)
+
+suspend fun updatePrompts(promptList: List<Prompt>): ApiResponse<List<Prompt>>? =
+    postListDataHelper(Endpoint.updatePrompts(promptList), Prompt::class.java)
+
+// PURPOSES
+
+suspend fun getAllPurposes(): List<Purpose> =
+    getListHelper(Endpoint.getAllPurposes(), Purpose::class.java)
+
+suspend fun updatePurposes(purposeIdsList: List<Int>): ApiResponse<List<Int>>? =
+    postListDataHelper(Endpoint.updatePurposes(purposeIdsList), Integer::class.java)
+
 // SOCIAL MEDIA
 
 suspend fun updateSocialMedia(socialMedia: SocialMedia): ApiResponse<SocialMedia>? =
     postDataHelper(Endpoint.updateSocialMedia(socialMedia), SocialMedia::class.java)
+
+// ONBOARDING STATUS
+
+suspend fun updateOnboardingStatus(hasOnboarded: Boolean): ApiResponse<OnboardingStatus>? =
+    postDataHelper(Endpoint.updateOnboardingStatus(hasOnboarded), OnboardingStatus::class.java)

@@ -30,7 +30,7 @@ private fun <T> toRequestBody(data: T, typeToken: Type): RequestBody {
         .toRequestBody(MEDIA_TYPE)
 }
 
-private fun toListRequestBody(key: String, data: List<Int>): RequestBody {
+private fun <T> toListRequestBody(key: String, data: List<T>): RequestBody {
     val json = gson.toJson(mapOf(key to data))
     return json.toString().toRequestBody(MEDIA_TYPE)
 }
@@ -96,10 +96,58 @@ fun Endpoint.Companion.updateGroups(groupIdsList: List<Int>): Endpoint {
     )
 }
 
+// PROMPTS
+
+fun Endpoint.Companion.getAllPrompts(): Endpoint {
+    return Endpoint(path = "/prompts/", headers = authHeader(), method = EndpointMethod.GET)
+}
+
+fun Endpoint.Companion.updatePrompts(promptList: List<Prompt>): Endpoint {
+    // only send non-empty prompt responses
+    val promptResponsesList =
+        promptList.filter { it.answer.isNotEmpty() && it.id != -1 }
+            .map { Prompt(answer = it.answer, id = it.id) }
+    val requestBody = toListRequestBody("prompts", promptResponsesList)
+    return Endpoint(
+        path = "/me/",
+        headers = authHeader(),
+        body = requestBody,
+        method = EndpointMethod.POST
+    )
+}
+
+// PURPOSES
+
+fun Endpoint.Companion.getAllPurposes(): Endpoint {
+    return Endpoint(path = "/purposes/", headers = authHeader(), method = EndpointMethod.GET)
+}
+
+fun Endpoint.Companion.updatePurposes(purposeIdsList: List<Int>): Endpoint {
+    val requestBody = toListRequestBody("purposes", purposeIdsList)
+    return Endpoint(
+        path = "/me/",
+        headers = authHeader(),
+        body = requestBody,
+        method = EndpointMethod.POST
+    )
+}
+
 // SOCIAL MEDIA
 
 fun Endpoint.Companion.updateSocialMedia(socialMedia: SocialMedia): Endpoint {
     val requestBody = toRequestBody(socialMedia, SocialMedia::class.java)
+    return Endpoint(
+        path = "/me/",
+        headers = authHeader(),
+        body = requestBody,
+        method = EndpointMethod.POST
+    )
+}
+
+// ONBOARDING STATUS
+
+fun Endpoint.Companion.updateOnboardingStatus(hasOnboarded: Boolean): Endpoint {
+    val requestBody = toRequestBody(OnboardingStatus(hasOnboarded), OnboardingStatus::class.java)
     return Endpoint(
         path = "/me/",
         headers = authHeader(),
