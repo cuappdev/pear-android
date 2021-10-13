@@ -115,9 +115,9 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
                     return
                 }
             }
-            // skip prompts if needed
+            // special handling for prompts
             content =
-                if (DISPLAY_PROMPTS && content == navigationList[navigationList.indexOf(Content.PROMPTS) + 1]) {
+                if (content == navigationList[navigationList.indexOf(Content.PROMPTS) + 1]) {
                     navigationList[navigationList.indexOf(content) - 2]
                 } else {
                     navigationList[navigationList.indexOf(content) - 1]
@@ -152,10 +152,6 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
         currFragment.saveInformation()
         if (content != navigationList.last()) {
             content = navigationList[navigationList.indexOf(content) + 1]
-            // skip prompts if not enabled
-            if (content == Content.PROMPTS && !DISPLAY_PROMPTS) {
-                content = navigationList[navigationList.indexOf(content) + 1]
-            }
             val fragment: Fragment = when (content) {
                 Content.CREATE_PROFILE -> CreateProfileFragment()
                 Content.INTERESTS -> UserFieldFragment.newInstance(UserField.Category.INTEREST)
@@ -204,9 +200,5 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
 
     override fun onSelectionEmpty() {
         onboarding_next.isEnabled = false
-    }
-
-    companion object {
-        private const val DISPLAY_PROMPTS = true
     }
 }
