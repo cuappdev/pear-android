@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.models.UserField
 
@@ -54,6 +55,10 @@ class UserFieldAdapter(
         } else {
             viewHolder.clubOrInterestSubtext.visibility = View.GONE
         }
+
+        Glide.with(context)
+            .load(currentClubInterest.drawableUrl)
+            .into(viewHolder.icon!!)
 
 //        if (hideIcon) {
 //            viewHolder.icon!!.visibility = View.GONE

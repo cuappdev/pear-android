@@ -3,7 +3,7 @@ package com.cornellappdev.coffee_chats_android.models
 class UserField(
     private var text: String = "",
     private var subtext: String = "",
-    val drawableId: Int? = null,
+    val drawableUrl: String = "",
     val id: Int = -1
 ) {
     enum class Category {
