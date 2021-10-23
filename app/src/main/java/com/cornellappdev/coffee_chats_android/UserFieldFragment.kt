@@ -65,6 +65,7 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
                         UserField(
                             text = it.name,
                             subtext = it.subtitle,
+                            drawableUrl = it.imageUrl,
                             id = it.id
                         )
                     }
@@ -73,7 +74,7 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
                     getAllPurposes().map { UserField(text = it.name, id = it.id) }
                 }
                 Category.GROUP -> {
-                    getAllGroups().map { UserField(text = it.name, id = it.id) }
+                    getAllGroups().map { UserField(text = it.name, drawableUrl = it.imageUrl, id = it.id) }
                 }
             }.toTypedArray()
 
