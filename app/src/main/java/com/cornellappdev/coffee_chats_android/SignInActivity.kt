@@ -19,16 +19,20 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
 class SignInActivity : AppCompatActivity() {
 
     private lateinit var mGoogleSignInClient: GoogleSignInClient
+    private lateinit var auth: FirebaseAuth
     private val RC_SIGN_IN = 10032
 
     private val preferencesHelper: PreferencesHelper by lazy {
@@ -44,7 +48,7 @@ class SignInActivity : AppCompatActivity() {
             .requestEmail()
             .requestIdToken(BuildConfig.web_client_id)
             .build()
-
+        auth = Firebase.auth
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
@@ -94,9 +98,11 @@ class SignInActivity : AppCompatActivity() {
                     val index = personEmail.indexOf('@')
                     val domain: String? =
                         if (index == -1) null else personEmail.substring(index + 1)
-                    if (domain != null && domain == "cornell.edu") {
-                        // authenticate with backend
+                    if ((domain != null && domain == "cornell.edu") || personEmail == "cornellpearapp@gmail.com") {
                         CoroutineScope(Dispatchers.Main).launch {
+                            // authenticate with Firebase
+                            firebaseAuthWithGoogle(account.idToken!!)
+                            // authenticate with our backend
                             val userSession = authenticateUser(account.idToken!!)
                             preferencesHelper.accessToken = userSession.accessToken
                             setUpNetworking(userSession.accessToken)
@@ -123,6 +129,16 @@ class SignInActivity : AppCompatActivity() {
             Log.w("account error", "signInResult:failed code=" + e.statusCode)
             Toast.makeText(applicationContext, "Sign-in failed", Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (!task.isSuccessful) {
+                    Log.w("FirebaseAuthError", "signInWithCredential:failure", task.exception)
+                }
+            }
     }
 
     private fun signOut() {

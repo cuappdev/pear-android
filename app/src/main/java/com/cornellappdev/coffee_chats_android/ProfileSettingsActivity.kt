@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_scheduling.*
 
 class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
@@ -133,6 +135,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
                     .requestProfile()
                     .build()
                 GoogleSignIn.getClient(this, gso).signOut()
+                Firebase.auth.signOut()
                 val data = Intent()
                 setResult(Activity.RESULT_OK, data)
                 finish()
