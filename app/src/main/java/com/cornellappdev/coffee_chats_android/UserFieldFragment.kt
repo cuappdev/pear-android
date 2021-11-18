@@ -101,7 +101,7 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
                     requireContext(),
                     fieldAdapterArray.toList(),
                     UserFieldAdapter.ItemColor.TOGGLE,
-                    true // TODO- display icons
+                    category == Category.GOAL
                 )
             interests_or_groups.adapter = adapter
             // display selected fields

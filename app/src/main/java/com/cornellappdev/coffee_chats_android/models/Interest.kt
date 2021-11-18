@@ -9,5 +9,5 @@ data class Interest(
     val name: String,
     val subtitle: String,
     @Json(name = "img_url")
-    val imageUrl: String
+    val imageUrl: String = ""
 )
