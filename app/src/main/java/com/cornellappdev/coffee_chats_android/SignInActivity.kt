@@ -102,7 +102,8 @@ class SignInActivity : AppCompatActivity() {
                             setUpNetworking(userSession.accessToken)
                             val user = getUser()
                             val intent = if (user.hasOnboarded) {
-                                Intent(applicationContext, SchedulingActivity::class.java)
+                                //Intent(applicationContext, SchedulingActivity::class.java)
+                                Intent(applicationContext, OnboardingActivity::class.java)
                             } else {
                                 Intent(applicationContext, OnboardingActivity::class.java)
                             }

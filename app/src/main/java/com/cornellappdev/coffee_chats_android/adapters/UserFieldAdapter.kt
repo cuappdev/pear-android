@@ -3,6 +3,7 @@ package com.cornellappdev.coffee_chats_android.adapters
 import android.content.Context
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,6 +50,7 @@ class UserFieldAdapter(
         }
 
         val currentClubInterest = fieldList[position]
+
         viewHolder.clubOrInterestText.text = currentClubInterest.getText()
         if (currentClubInterest.getSubtext().isNotEmpty()) {
             viewHolder.clubOrInterestSubtext.text = currentClubInterest.getSubtext()
@@ -60,11 +62,17 @@ class UserFieldAdapter(
             .load(currentClubInterest.drawableUrl)
             .into(viewHolder.icon!!)
 
+
 //        if (hideIcon) {
 //            viewHolder.icon!!.visibility = View.GONE
 //        } else {
 //            viewHolder.icon!!.setImageDrawable(ContextCompat.getDrawable(mContext, currentClubInterest.drawableId!!))
 //        }
+
+        //code for hideIcon
+        if (hideIcon) {
+            viewHolder.icon!!.visibility = View.GONE
+        }
 
         val selected = ContextCompat.getColor(context, R.color.onboardingListSelected)
         val unselected = ContextCompat.getColor(context, R.color.onboarding_fields)

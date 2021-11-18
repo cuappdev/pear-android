@@ -47,7 +47,9 @@ class SchedulingActivity :
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scheduling)
         drawerLayout = findViewById(R.id.drawer_layout)
+
         // determine if the app should show scheduling page, sign-in, or onboarding
+
         val account = GoogleSignIn.getLastSignedInAccount(this)
         if (account != null && preferencesHelper.accessToken != null && preferencesHelper.accessToken!!.isNotEmpty()) {
             // user is already signed in - get user profile
