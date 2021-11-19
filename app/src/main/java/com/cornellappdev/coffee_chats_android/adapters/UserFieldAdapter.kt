@@ -3,7 +3,6 @@ package com.cornellappdev.coffee_chats_android.adapters
 import android.content.Context
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,6 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.models.UserField
-
 
 class UserFieldAdapter(
     private val mContext: Context,
@@ -62,14 +60,6 @@ class UserFieldAdapter(
             .load(currentClubInterest.drawableUrl)
             .into(viewHolder.icon!!)
 
-
-//        if (hideIcon) {
-//            viewHolder.icon!!.visibility = View.GONE
-//        } else {
-//            viewHolder.icon!!.setImageDrawable(ContextCompat.getDrawable(mContext, currentClubInterest.drawableId!!))
-//        }
-
-        //code for hideIcon
         if (hideIcon) {
             viewHolder.icon!!.visibility = View.GONE
         }

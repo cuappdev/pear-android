@@ -2,7 +2,6 @@ package com.cornellappdev.coffee_chats_android
 
 import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ListView
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
 import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter
 import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter.ItemColor
 import com.cornellappdev.coffee_chats_android.models.UserField
@@ -65,9 +63,7 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
                 val userInterests = user.interests
                 val allInterests = getAllInterests()
                 for (interest in allInterests) {
-                    val item = UserField(interest.name, interest.subtitle, id = interest.id)
-                    //added "interest.imageUrl"
-                    //val item = UserField( interest.name, interest.subtitle, interest.imageUrl, id = interest.id)
+                    val item = UserField( interest.name, interest.subtitle, interest.imageUrl, id = interest.id)
                     if (interest in userInterests) {
                         selectedItems.add(item)
                     } else {
@@ -78,15 +74,12 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
                 val userGroups = user.groups
                 val allGroups = getAllGroups()
                 for (group in allGroups) {
-                    //added "group.imageUrl"
                     val item = UserField(group.name, drawableUrl = group.imageUrl, id = group.id)
                     if (group in userGroups) {
                         selectedItems.add(item)
                     } else {
                         moreItems.add(item)
                     }
-
-
                 }
             }
 

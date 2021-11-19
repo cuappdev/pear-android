@@ -36,6 +36,5 @@ data class User(
     val hasOnboarded: Boolean,
     @Json(name = "pending_feedback")
     val pendingFeedback: Boolean
-//    @Json(name = "current_match")
-//    val currentMatch: Match?
+    // TODO add current match field
 )
