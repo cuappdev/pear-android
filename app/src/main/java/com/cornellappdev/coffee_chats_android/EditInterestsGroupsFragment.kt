@@ -63,7 +63,7 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
                 val userInterests = user.interests
                 val allInterests = getAllInterests()
                 for (interest in allInterests) {
-                    val item = UserField(interest.name, interest.subtitle, id = interest.id)
+                    val item = UserField(interest.name, interest.subtitle, interest.imageUrl, id = interest.id)
                     if (interest in userInterests) {
                         selectedItems.add(item)
                     } else {
@@ -74,7 +74,7 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
                 val userGroups = user.groups
                 val allGroups = getAllGroups()
                 for (group in allGroups) {
-                    val item = UserField(group.name, id = group.id)
+                    val item = UserField(group.name, drawableUrl = group.imageUrl, id = group.id)
                     if (group in userGroups) {
                         selectedItems.add(item)
                     } else {
@@ -82,11 +82,12 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
                     }
                 }
             }
+
             selectedItemsAdapter =
-                UserFieldAdapter(requireContext(), selectedItems, ItemColor.GREEN)
+                UserFieldAdapter(requireContext(), selectedItems, ItemColor.GREEN, false)
             selected_items.item_list.adapter = selectedItemsAdapter
             moreItemsAdapter =
-                UserFieldAdapter(requireContext(), moreItems, ItemColor.WHITE)
+                UserFieldAdapter(requireContext(), moreItems, ItemColor.WHITE, false)
             more_items.item_list.adapter = moreItemsAdapter
             view_other_items.setOnClickListener {
                 showExcessSelectedItems = !showExcessSelectedItems

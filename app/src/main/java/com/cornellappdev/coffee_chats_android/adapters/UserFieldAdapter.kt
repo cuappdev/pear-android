@@ -16,7 +16,6 @@ import com.bumptech.glide.Glide
 import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.models.UserField
 
-
 class UserFieldAdapter(
     private val mContext: Context,
     private val fieldList: List<UserField>,
@@ -49,6 +48,7 @@ class UserFieldAdapter(
         }
 
         val currentClubInterest = fieldList[position]
+
         viewHolder.clubOrInterestText.text = currentClubInterest.getText()
         if (currentClubInterest.getSubtext().isNotEmpty()) {
             viewHolder.clubOrInterestSubtext.text = currentClubInterest.getSubtext()
@@ -60,11 +60,9 @@ class UserFieldAdapter(
             .load(currentClubInterest.drawableUrl)
             .into(viewHolder.icon!!)
 
-//        if (hideIcon) {
-//            viewHolder.icon!!.visibility = View.GONE
-//        } else {
-//            viewHolder.icon!!.setImageDrawable(ContextCompat.getDrawable(mContext, currentClubInterest.drawableId!!))
-//        }
+        if (hideIcon) {
+            viewHolder.icon!!.visibility = View.GONE
+        }
 
         val selected = ContextCompat.getColor(context, R.color.onboardingListSelected)
         val unselected = ContextCompat.getColor(context, R.color.onboarding_fields)
