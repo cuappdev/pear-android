@@ -63,7 +63,7 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
                 val userInterests = user.interests
                 val allInterests = getAllInterests()
                 for (interest in allInterests) {
-                    val item = UserField( interest.name, interest.subtitle, interest.imageUrl, id = interest.id)
+                    val item = UserField(interest.name, interest.subtitle, interest.imageUrl, id = interest.id)
                     if (interest in userInterests) {
                         selectedItems.add(item)
                     } else {
