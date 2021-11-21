@@ -62,11 +62,11 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
             Content.SOCIAL_MEDIA -> SocialMediaFragment()
             Content.ABOUT -> AboutFragment()
         }
-        ft.add(body_fragment.id, fragment, content.name).addToBackStack("ft").commit()
+        ft.add(fragmentContainer.id, fragment, content.name).addToBackStack("ft").commit()
 
         scheduling_finish.visibility = View.GONE
-        increaseHitArea(nav_button)
-        nav_button.setOnClickListener { onBackPressed() }
+        increaseHitArea(backButton)
+        backButton.setOnClickListener { onBackPressed() }
         save_button.setOnClickListener { onSave(it) }
         setUpCurrentPage()
     }
@@ -105,28 +105,28 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
             R.id.nav_availabilities -> {
                 content = Content.EDIT_TIME
                 setUpCurrentPage()
-                ft.replace(body_fragment.id, SchedulingTimeFragment(), content.name)
+                ft.replace(fragmentContainer.id, SchedulingTimeFragment(), content.name)
                     .addToBackStack("ft")
                     .commit()
             }
             R.id.nav_location -> {
                 content = Content.EDIT_LOCATION
                 setUpCurrentPage()
-                ft.replace(body_fragment.id, SchedulingPlaceFragment(), content.name)
+                ft.replace(fragmentContainer.id, SchedulingPlaceFragment(), content.name)
                     .addToBackStack("ft")
                     .commit()
             }
             R.id.nav_social_media -> {
                 content = Content.SOCIAL_MEDIA
                 setUpCurrentPage()
-                ft.replace(body_fragment.id, SocialMediaFragment(), content.name)
+                ft.replace(fragmentContainer.id, SocialMediaFragment(), content.name)
                     .addToBackStack("ft")
                     .commit()
             }
             R.id.nav_about -> {
                 content = Content.ABOUT
                 setUpCurrentPage()
-                ft.replace(body_fragment.id, AboutFragment(), content.name)
+                ft.replace(fragmentContainer.id, AboutFragment(), content.name)
                     .addToBackStack("ft")
                     .commit()
             }
@@ -145,7 +145,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     }
 
     private fun setUpCurrentPage() {
-        scheduling_header.text = when (content) {
+        headerText.text = when (content) {
             Content.EDIT_INTERESTS -> getString(R.string.edit_interests)
             Content.EDIT_GROUPS -> getString(R.string.edit_groups)
             Content.SETTINGS -> getString(R.string.settings)
