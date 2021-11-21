@@ -11,6 +11,9 @@
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         android:usesCleartextTraffic="${usesCleartextTraffic}">
         <activity
+            android:name=".MessagingActivity"
+            android:exported="false" />
+        <activity
             android:name=".ProfileSettingsActivity"
             android:theme="@style/noAnimTheme" />
         <activity
