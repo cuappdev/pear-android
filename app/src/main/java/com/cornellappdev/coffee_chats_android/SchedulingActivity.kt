@@ -72,14 +72,16 @@ class SchedulingActivity :
         }
 
         // add fragment to body_fragment
-        ft.add(body_fragment.id, NoMatchFragment()).addToBackStack(noMatchTag)
+        ft.add(fragmentContainer.id, NoMatchFragment()).addToBackStack(noMatchTag)
         ft.commit()
-
-        scheduling_finish.setOnClickListener { onNextPage() }
 
         // initialize more lateinit vars
         nextButton = findViewById(R.id.scheduling_finish)
-        backButton = findViewById(R.id.nav_button)
+        backButton = findViewById(R.id.backButton)
+
+        nextButton.setOnClickListener {
+            onSendMessageClick()
+        }
 
         // set up navigation view
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
@@ -186,6 +188,13 @@ class SchedulingActivity :
         setUpCurrentPage()
     }
 
+    private fun onSendMessageClick() {
+        val messagingIntent = Intent(this, MessagingActivity::class.java).apply {
+            putExtra(MessagingActivity.USER_ID, user.id)
+        }
+        startActivity(messagingIntent)
+    }
+
     private fun onNextPage() {
         if (page == 2) {
             val locationFragment =
@@ -199,12 +208,12 @@ class SchedulingActivity :
         if (page < 2) page++
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
         if (page == 1) {
-            ft.replace(body_fragment.id, SchedulingTimeFragment(), scheduleTimeTag)
+            ft.replace(fragmentContainer.id, SchedulingTimeFragment(), scheduleTimeTag)
         } else {
             val timeFragment =
                 supportFragmentManager.findFragmentByTag(scheduleTimeTag) as SchedulingTimeFragment
             timeFragment.saveInformation()
-            ft.replace(body_fragment.id, SchedulingPlaceFragment(), schedulePlaceTag)
+            ft.replace(fragmentContainer.id, SchedulingPlaceFragment(), schedulePlaceTag)
         }
         setUpCurrentPage()
         ft.addToBackStack("ft")
@@ -227,7 +236,7 @@ class SchedulingActivity :
                     drawerLayout.open()
                 }
             }
-            scheduling_header.text = getString(R.string.no_match_header)
+            headerText.text = getString(R.string.no_match_header)
             nextButton.text = getString(R.string.no_match_availability)
             nextButton.isEnabled = true
             nextButton.setPadding(100, 0, 100, 0)
@@ -239,20 +248,21 @@ class SchedulingActivity :
                 width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10f, displayMetrics)
                     .toInt()
             }
-            increaseHitArea(nav_button)
+            increaseHitArea(backButton)
             backButton.setOnClickListener {
                 onBackPage()
             }
             nextButton.isEnabled = false
             nextButton.setPadding(180, 0, 180, 0)
             if (page == 1) {
-                scheduling_header.text = getString(R.string.scheduling_time_header)
+                headerText.text = getString(R.string.scheduling_time_header)
                 nextButton.text = getString(R.string.scheduling_time_button)
             } else {
-                scheduling_header.text = getString(R.string.scheduling_place_header)
+                headerText.text = getString(R.string.scheduling_place_header)
                 nextButton.text = getString(R.string.scheduling_place_button)
             }
         }
+        nextButton.text = getString(R.string.send_message)
     }
 
     companion object {
