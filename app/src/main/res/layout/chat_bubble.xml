@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/chat_bubble_padding">
+
+    <TextView
+        android:id="@+id/userChatTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/chat_bubble_margin"
+        android:background="@drawable/dark_green_chat_bubble"
+        android:fontFamily="@font/circular_book"
+        android:maxWidth="@dimen/chat_bubble_max_width"
+        android:padding="@dimen/chat_bubble_padding"
+        android:textColor="@color/white"
+        android:textSize="@dimen/chat_text_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/scheduling_time_header" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
