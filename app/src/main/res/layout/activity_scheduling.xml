@@ -15,26 +15,26 @@
         android:background="@color/background_green">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/header_layout"
+            android:id="@+id/headerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageButton
-                android:id="@+id/nav_button"
+                android:id="@+id/backButton"
                 android:layout_width="10dp"
                 android:layout_height="20dp"
                 android:layout_marginStart="24dp"
                 android:background="@drawable/ic_back_carrot"
                 android:clickable="true"
                 android:focusable="true"
-                app:layout_constraintBottom_toBottomOf="@id/scheduling_header"
+                app:layout_constraintBottom_toBottomOf="@id/headerText"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="@id/scheduling_header" />
+                app:layout_constraintTop_toTopOf="@id/headerText" />
 
             <TextView
-                android:id="@+id/scheduling_header"
+                android:id="@+id/headerText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="70dp"
@@ -60,18 +60,18 @@
                 android:textColor="@color/save_button_text_color"
                 android:textSize="20sp"
                 android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@id/scheduling_header"
+                app:layout_constraintBottom_toBottomOf="@id/headerText"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/scheduling_header" />
+                app:layout_constraintTop_toTopOf="@id/headerText" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <FrameLayout
-            android:id="@+id/body_fragment"
+            android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@id/scheduling_finish"
-            app:layout_constraintTop_toBottomOf="@id/header_layout" />
+            app:layout_constraintTop_toBottomOf="@id/headerLayout" />
 
 
         <Button

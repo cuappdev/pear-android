@@ -66,7 +66,7 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
             }
             user = getUser()
             val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-            ft.replace(body_fragment.id, CreateProfileFragment(), content.name)
+            ft.replace(fragmentContainer.id, CreateProfileFragment(), content.name)
                 .addToBackStack("ft")
                 .commit()
             setUpCurrentPage()
@@ -161,7 +161,7 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
                 Content.SOCIAL_MEDIA -> SocialMediaFragment()
             }
             val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-            ft.replace(body_fragment.id, fragment, content.name).addToBackStack("ft").commit()
+            ft.replace(fragmentContainer.id, fragment, content.name).addToBackStack("ft").commit()
             setUpCurrentPage()
         } else {
             // onboarding done, launch SchedulingActivity
