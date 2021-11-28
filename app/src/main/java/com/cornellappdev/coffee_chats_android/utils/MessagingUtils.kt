@@ -18,28 +18,14 @@ val database = FirebaseDatabase.getInstance().reference
  * listener that notifies observer of new messages
  */
 fun getMessages(currUserId: Int, otherUserId: Int, observer: MessageObserver) {
-    val messageIdsRef: DatabaseReference = database.child("user-messages/$currUserId/$otherUserId")
-    messageIdsRef.get().addOnSuccessListener {
-        val messages = it.value as Map<String, Int>
-        val messageIds = messages.keys
-        for (id in messageIds) {
-            Log.d(TAG, "Message id: $id")
-            val messageRef = database.child("messages/$id")
-            messageRef.get().addOnSuccessListener { snapshot ->
-                observer.onMessageReceived(snapshot.getValue<Message>() as Message)
-            }
-        }
-    }.addOnFailureListener {
-        Log.e(TAG, "Error getting data", it)
-    }
-}
-
-fun addMessagesListener(currUserId: Int, otherUserId: Int, observer: MessageObserver) {
     val messageEventListener = object : ChildEventListener {
         override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-            val message = snapshot.getValue<Message>()!!
-            if (message.recipientId == currUserId && message.senderId == otherUserId || message.recipientId == otherUserId && message.senderId == currUserId) {
-                observer.onMessageReceived(message)
+            val messageId = snapshot.key
+            val messageRef = database.child("messages/$messageId")
+            messageRef.get().addOnSuccessListener {
+                observer.onMessageReceived(it.getValue<Message>() as Message)
+            }.addOnFailureListener {
+                Log.e(TAG, "Error getting new message", it)
             }
         }
 
@@ -51,7 +37,7 @@ fun addMessagesListener(currUserId: Int, otherUserId: Int, observer: MessageObse
 
         override fun onCancelled(error: DatabaseError) {}
     }
-    database.child("messages").addChildEventListener(messageEventListener)
+    database.child("user-messages/$currUserId/$otherUserId").addChildEventListener(messageEventListener)
 }
 
 /**
