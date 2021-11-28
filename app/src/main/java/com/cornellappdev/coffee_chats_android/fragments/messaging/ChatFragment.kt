@@ -10,7 +10,6 @@ import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.adapters.ChatAdapter
 import com.cornellappdev.coffee_chats_android.models.Message
 import com.cornellappdev.coffee_chats_android.utils.MessageObserver
-import com.cornellappdev.coffee_chats_android.utils.addMessagesListener
 import com.cornellappdev.coffee_chats_android.utils.getMessages
 import com.cornellappdev.coffee_chats_android.utils.sendMessage
 import kotlinx.android.synthetic.main.fragment_chat.*

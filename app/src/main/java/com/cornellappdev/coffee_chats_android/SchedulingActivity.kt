@@ -190,7 +190,11 @@ class SchedulingActivity :
 
     private fun onSendMessageClick() {
         val messagingIntent = Intent(this, MessagingActivity::class.java).apply {
+            putExtra(MessagingActivity.STAGE, MessagingActivity.Stage.CHAT)
             putExtra(MessagingActivity.USER_ID, user.id)
+            putExtra(MessagingActivity.PEAR_ID, DUMMY_PEAR_ID)
+            putExtra(MessagingActivity.PEAR_FIRST_NAME, DUMMY_PEAR_NAME)
+            putExtra(MessagingActivity.PEAR_PROFILE_PIC_URL, DUMMY_PEAR_PROFILE_PIC_URL)
         }
         startActivity(messagingIntent)
     }
@@ -267,5 +271,8 @@ class SchedulingActivity :
 
     companion object {
         private const val SETTINGS_CODE = 10032
+        private const val DUMMY_PEAR_ID = -1
+        private const val DUMMY_PEAR_NAME = ""
+        private const val DUMMY_PEAR_PROFILE_PIC_URL = ""
     }
 }

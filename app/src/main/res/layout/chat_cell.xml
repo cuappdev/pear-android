@@ -12,7 +12,6 @@
         android:layout_height="@dimen/chat_profile_pic_size"
         android:layout_marginStart="@dimen/chat_bubble_margin"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@mipmap/ic_launcher_round" />
@@ -29,7 +28,6 @@
         android:textColor="@color/black"
         android:textSize="@dimen/chat_text_size"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/pearProfileImageView"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/scheduling_time_header" />
