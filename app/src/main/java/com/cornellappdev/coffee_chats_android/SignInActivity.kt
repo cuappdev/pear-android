@@ -7,11 +7,9 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.cornellappdev.coffee_chats_android.models.ApiResponse
-import com.cornellappdev.coffee_chats_android.models.User
-import com.cornellappdev.coffee_chats_android.models.UserSession
-import com.cornellappdev.coffee_chats_android.networking.*
+import com.cornellappdev.coffee_chats_android.networking.authenticateUser
 import com.cornellappdev.coffee_chats_android.networking.getUser
+import com.cornellappdev.coffee_chats_android.networking.setUpNetworking
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -23,11 +21,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class SignInActivity : AppCompatActivity() {
 

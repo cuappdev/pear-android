@@ -23,7 +23,7 @@ class MessagingActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
                 setReorderingAllowed(true)
-                add(R.id.fragmentContainer, ChatFragment.newInstance(intent.extras!!.getInt(USER_ID), DUMMY_PEAR_ID))
+                add(R.id.fragmentContainer, ChatFragment.newInstance(intent.extras!!.getInt(USER_ID), DUMMY_PEAR_ID, DUMMY_PEAR_PROFILE_PIC_URL))
             }
         }
     }
@@ -42,5 +42,6 @@ class MessagingActivity : AppCompatActivity() {
     companion object {
         const val USER_ID = "userId"
         private const val DUMMY_PEAR_ID = -1
+        private const val DUMMY_PEAR_PROFILE_PIC_URL = ""
     }
 }
