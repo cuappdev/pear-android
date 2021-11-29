@@ -2,7 +2,10 @@ package com.cornellappdev.coffee_chats_android.utils
 
 import android.util.Log
 import com.cornellappdev.coffee_chats_android.models.Message
-import com.google.firebase.database.*
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.getValue
 
 /**
@@ -37,7 +40,8 @@ fun getMessages(currUserId: Int, otherUserId: Int, observer: MessageObserver) {
 
         override fun onCancelled(error: DatabaseError) {}
     }
-    database.child("user-messages/$currUserId/$otherUserId").addChildEventListener(messageEventListener)
+    database.child("user-messages/$currUserId/$otherUserId")
+        .addChildEventListener(messageEventListener)
 }
 
 /**

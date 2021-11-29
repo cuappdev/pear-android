@@ -15,7 +15,6 @@ import com.cornellappdev.coffee_chats_android.models.UserField
 import com.cornellappdev.coffee_chats_android.models.UserSession
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import kotlinx.android.synthetic.main.activity_onboarding.*
-import kotlinx.android.synthetic.main.activity_onboarding.fragmentContainer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

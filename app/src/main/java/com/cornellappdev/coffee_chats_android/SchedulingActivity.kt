@@ -6,7 +6,6 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
-import android.widget.Button
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout

@@ -59,10 +59,12 @@ class ChatAdapter(
             holder.dateStamp.visibility = View.VISIBLE
             holder.dateStamp.text = currDate
         }
-        holder.itemView.setOnClickListener { hideKeyboard(holder.itemView.context, holder.itemView) }
+        holder.itemView.setOnClickListener {
+            hideKeyboard(holder.itemView.context, holder.itemView)
+        }
     }
 
-    private fun getFormattedDate(message: Message) : String {
+    private fun getFormattedDate(message: Message): String {
         val timestamp = message.time.toDouble().roundToLong()
         calendar.timeInMillis = timestamp * 1000L
         return formatter.format(calendar.time)
