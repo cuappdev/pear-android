@@ -64,7 +64,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
         }
         ft.add(fragmentContainer.id, fragment, content.name).addToBackStack("ft").commit()
 
-        scheduling_finish.visibility = View.GONE
+        primaryActionButton.visibility = View.GONE
         increaseHitArea(backButton)
         backButton.setOnClickListener { onBackPressed() }
         save_button.setOnClickListener { onSave(it) }

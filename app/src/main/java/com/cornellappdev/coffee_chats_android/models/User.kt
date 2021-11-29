@@ -14,7 +14,7 @@ data class User(
     val lastName: String,
     val hometown: String?,
     @Json(name = "profile_pic_url")
-    val profilePictureUrl: String?,
+    val profilePicUrl: String?,
     @Json(name = "facebook_url")
     val facebookUrl: String?,
     @Json(name = "instagram_username")
@@ -35,6 +35,7 @@ data class User(
     @Json(name = "has_onboarded")
     val hasOnboarded: Boolean,
     @Json(name = "pending_feedback")
-    val pendingFeedback: Boolean
-    // TODO add current match field
+    val pendingFeedback: Boolean,
+    @Json(name = "current_match")
+    val currentMatch: Match?
 )
