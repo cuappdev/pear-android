@@ -105,6 +105,7 @@
     <string name="messages_subheader">Keep in touch with each other : )</string>
     <string name="chat_header">Chat with %1$s</string>
     <string name="long_string">This is a very, very, very, very, very long string. It contains n characters for a somewhat large n.</string>
+    <string name="dummy_date">Aug 25, 2021</string>
 
     <!--SCHEDULING TIME-->
     <string name="scheduling_time_header">When are you free?</string>
