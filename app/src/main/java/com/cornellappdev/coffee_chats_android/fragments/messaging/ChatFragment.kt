@@ -42,6 +42,7 @@ class ChatFragment : Fragment(), MessageObserver {
         adapter = ChatAdapter(messages, userId!!, pearProfilePicUrl!!)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        sendMessageButton.setOnClickListener { sendMessage() }
     }
 
     override fun onMessageReceived(message: Message) {
@@ -52,6 +53,7 @@ class ChatFragment : Fragment(), MessageObserver {
             }
         messages.add(insertionIndex, message)
         adapter.notifyItemInserted(insertionIndex)
+        recyclerView.scrollToPosition(adapter.itemCount - 1)
     }
 
     override fun onMessageSendFailed() {
@@ -59,8 +61,8 @@ class ChatFragment : Fragment(), MessageObserver {
     }
 
     private fun sendMessage() {
-        // TODO - add EditText UI
-        sendMessage("Hello yet again", userId!!, pearId!!, this)
+        sendMessage(sendMessageEditText.text.toString(), userId!!, pearId!!, this)
+        sendMessageEditText.text.clear()
     }
 
     companion object {
@@ -73,6 +75,7 @@ class ChatFragment : Fragment(), MessageObserver {
                     putString(PEAR_PROFILE_PIC_URL, pearProfilePicUrl)
                 }
             }
+
         private const val USER_ID = "userId"
         private const val PEAR_ID = "pearId"
         private const val PEAR_PROFILE_PIC_URL = "pearProfilePicUrl"

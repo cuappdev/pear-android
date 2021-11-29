@@ -15,6 +15,7 @@ import com.cornellappdev.coffee_chats_android.models.UserField
 import com.cornellappdev.coffee_chats_android.models.UserSession
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import kotlinx.android.synthetic.main.activity_onboarding.*
+import kotlinx.android.synthetic.main.activity_onboarding.fragmentContainer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -101,9 +102,7 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
     }
 
     override fun onBackPressed() {
-        // hide keyboard
-        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(back_button.applicationWindowToken, 0)
+        hideKeyboard(this, back_button)
         if (content == navigationList.first()) {
             finish()
         } else {

@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cornellappdev.coffee_chats_android.R
+import com.cornellappdev.coffee_chats_android.hideKeyboard
 import com.cornellappdev.coffee_chats_android.models.Message
 import kotlinx.android.synthetic.main.chat_cell.view.*
 
@@ -43,6 +44,7 @@ class ChatAdapter(
                 .circleCrop()
                 .into(holder.pearProfileImageView)
         }
+        holder.itemView.setOnClickListener { hideKeyboard(holder.itemView.context, holder.itemView) }
     }
 
     override fun getItemCount(): Int {

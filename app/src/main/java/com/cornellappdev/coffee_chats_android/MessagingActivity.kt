@@ -25,6 +25,7 @@ class MessagingActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             initialStage = intent.extras!!.getSerializable(STAGE) as Stage
             stage = initialStage
+            increaseHitArea(backButton)
             backButton.setOnClickListener { onBackPressed() }
             when (stage) {
                 Stage.CHAT -> {
@@ -56,6 +57,7 @@ class MessagingActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        hideKeyboard(this, backButton)
         when (initialStage) {
             Stage.MESSAGES -> {
                 TODO("Unimplemented")

@@ -12,7 +12,8 @@
         android:usesCleartextTraffic="${usesCleartextTraffic}">
         <activity
             android:name=".MessagingActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/noAnimTheme" />
         <activity
             android:name=".ProfileSettingsActivity"
             android:theme="@style/noAnimTheme" />
