@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".fragments.messaging.ChatFragment">
 
+    <ImageView
+        android:id="@+id/emptyChatView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/empty_chat_margin_top"
+        android:src="@drawable/ic_empty_chat"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="0dp"

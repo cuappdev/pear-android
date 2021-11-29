@@ -9,4 +9,5 @@
     <dimen name="chat_profile_pic_size">35dp</dimen>
     <dimen name="chat_profile_pic_margin">6dp</dimen>
     <dimen name="chat_edit_text_max_height">100dp</dimen>
+    <dimen name="empty_chat_margin_top">100dp</dimen>
 </resources>

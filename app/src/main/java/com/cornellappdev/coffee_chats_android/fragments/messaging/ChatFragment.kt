@@ -54,6 +54,9 @@ class ChatFragment : Fragment(), MessageObserver {
         messages.add(insertionIndex, message)
         adapter.notifyItemInserted(insertionIndex)
         recyclerView.scrollToPosition(adapter.itemCount - 1)
+        if (emptyChatView.visibility == View.VISIBLE) {
+            emptyChatView.visibility = View.GONE
+        }
     }
 
     override fun onMessageSendFailed() {
