@@ -7,6 +7,46 @@
     android:paddingTop="@dimen/chat_bubble_padding">
 
     <TextView
+        android:id="@+id/dateStamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/circular_book"
+        android:paddingBottom="@dimen/chat_bubble_padding"
+        android:textColor="@color/faded_text"
+        android:textSize="@dimen/time_stamp_text_size"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/dummy_date" />
+
+    <ImageView
+        android:id="@+id/pearProfileImageView"
+        android:layout_width="@dimen/chat_profile_pic_size"
+        android:layout_height="@dimen/chat_profile_pic_size"
+        android:layout_marginStart="@dimen/chat_bubble_margin"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dateStamp"
+        tools:src="@mipmap/ic_launcher_round" />
+
+    <TextView
+        android:id="@+id/pearChatTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/chat_profile_pic_margin"
+        android:background="@drawable/light_green_chat_bubble"
+        android:fontFamily="@font/circular_book"
+        android:maxWidth="@dimen/chat_bubble_max_width"
+        android:padding="@dimen/chat_bubble_padding"
+        android:textColor="@color/black"
+        android:textSize="@dimen/chat_text_size"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@id/pearProfileImageView"
+        app:layout_constraintTop_toBottomOf="@id/dateStamp"
+        tools:text="@string/scheduling_time_header" />
+
+    <TextView
         android:id="@+id/userChatTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,9 +57,10 @@
         android:padding="@dimen/chat_bubble_padding"
         android:textColor="@color/white"
         android:textSize="@dimen/chat_text_size"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dateStamp"
         tools:text="@string/scheduling_time_header" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

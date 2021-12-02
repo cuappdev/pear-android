@@ -38,7 +38,7 @@ class PromptsAdapter(
         } else {
             listItem.prompt_header.visibility = View.GONE
             listItem.prompt_response.text = mContext.getString(R.string.select_prompt)
-            listItem.prompt_response.setTextColor(mContext.getColor(R.color.onboardingButtonDisabled))
+            listItem.prompt_response.setTextColor(mContext.getColor(R.color.secondary_green_grey))
             listItem.add_response.visibility = View.VISIBLE
             listItem.setOnClickListener { callback.onAddPrompt(position) }
         }

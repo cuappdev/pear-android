@@ -6,13 +6,10 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
-import android.widget.Button
-import android.widget.ImageButton
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.cornellappdev.coffee_chats_android.models.User
@@ -30,10 +27,7 @@ import kotlinx.coroutines.launch
 class SchedulingActivity :
     AppCompatActivity(),
     OnFilledOutListener {
-    private lateinit var nextButton: Button
-    private lateinit var backButton: ImageButton
     private lateinit var user: User
-    private lateinit var drawerLayout: DrawerLayout
     private var page = 0        // 0: no match; 1: time scheduling; 2: place scheduling
     private val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
     private val preferencesHelper: PreferencesHelper by lazy {
@@ -46,7 +40,6 @@ class SchedulingActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scheduling)
-        drawerLayout = findViewById(R.id.drawer_layout)
 
         // determine if the app should show scheduling page, sign-in, or onboarding
 
@@ -62,8 +55,10 @@ class SchedulingActivity :
                     intent.putExtra(ACCESS_TOKEN_TAG, preferencesHelper.accessToken!!)
                     startActivity(intent)
                 } else {
-                    // set up drawer if user has onboarded
                     setUpDrawerLayout()
+                    if (user.currentMatch == null) {
+                        primaryActionButton.visibility = View.GONE
+                    }
                 }
             }
         } else {
@@ -75,11 +70,7 @@ class SchedulingActivity :
         ft.add(fragmentContainer.id, NoMatchFragment()).addToBackStack(noMatchTag)
         ft.commit()
 
-        // initialize more lateinit vars
-        nextButton = findViewById(R.id.scheduling_finish)
-        backButton = findViewById(R.id.backButton)
-
-        nextButton.setOnClickListener {
+        primaryActionButton.setOnClickListener {
             onSendMessageClick()
         }
 
@@ -156,11 +147,11 @@ class SchedulingActivity :
     }
 
     override fun onFilledOut() {
-        nextButton.isEnabled = true
+        primaryActionButton.isEnabled = true
     }
 
     override fun onSelectionEmpty() {
-        nextButton.isEnabled = false
+        primaryActionButton.isEnabled = false
     }
 
     override fun onBackPressed() {
@@ -189,10 +180,17 @@ class SchedulingActivity :
     }
 
     private fun onSendMessageClick() {
-        val messagingIntent = Intent(this, MessagingActivity::class.java).apply {
-            putExtra(MessagingActivity.USER_ID, user.id)
+        user.currentMatch?.let {
+            val match = it.matchedUser
+            val messagingIntent = Intent(this, MessagingActivity::class.java).apply {
+                putExtra(MessagingActivity.STAGE, MessagingActivity.Stage.CHAT)
+                putExtra(MessagingActivity.USER_ID, user.id)
+                putExtra(MessagingActivity.PEAR_ID, match.id)
+                putExtra(MessagingActivity.PEAR_FIRST_NAME, match.firstName)
+                putExtra(MessagingActivity.PEAR_PROFILE_PIC_URL, match.profilePicUrl)
+            }
+            startActivity(messagingIntent)
         }
-        startActivity(messagingIntent)
     }
 
     private fun onNextPage() {
@@ -237,9 +235,9 @@ class SchedulingActivity :
                 }
             }
             headerText.text = getString(R.string.no_match_header)
-            nextButton.text = getString(R.string.no_match_availability)
-            nextButton.isEnabled = true
-            nextButton.setPadding(100, 0, 100, 0)
+            primaryActionButton.text = getString(R.string.no_match_availability)
+            primaryActionButton.isEnabled = true
+            primaryActionButton.setPadding(100, 0, 100, 0)
         } else {
             backButton.background = ContextCompat.getDrawable(this, R.drawable.ic_back_carrot)
             backButton.layoutParams = backButton.layoutParams.apply {
@@ -252,17 +250,17 @@ class SchedulingActivity :
             backButton.setOnClickListener {
                 onBackPage()
             }
-            nextButton.isEnabled = false
-            nextButton.setPadding(180, 0, 180, 0)
+            primaryActionButton.isEnabled = false
+            primaryActionButton.setPadding(180, 0, 180, 0)
             if (page == 1) {
                 headerText.text = getString(R.string.scheduling_time_header)
-                nextButton.text = getString(R.string.scheduling_time_button)
+                primaryActionButton.text = getString(R.string.scheduling_time_button)
             } else {
                 headerText.text = getString(R.string.scheduling_place_header)
-                nextButton.text = getString(R.string.scheduling_place_button)
+                primaryActionButton.text = getString(R.string.scheduling_place_button)
             }
         }
-        nextButton.text = getString(R.string.send_message)
+        primaryActionButton.text = getString(R.string.send_message)
     }
 
     companion object {

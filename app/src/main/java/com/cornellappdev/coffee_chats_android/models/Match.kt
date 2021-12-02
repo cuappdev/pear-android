@@ -6,5 +6,5 @@ data class Match(
     val id: Int,
     val status: String,
     @Json(name = "matched_user")
-    val matchedUser: User
+    val matchedUser: MatchedUser
 )

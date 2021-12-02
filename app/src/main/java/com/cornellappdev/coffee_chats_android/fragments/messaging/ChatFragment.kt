@@ -10,17 +10,14 @@ import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.adapters.ChatAdapter
 import com.cornellappdev.coffee_chats_android.models.Message
 import com.cornellappdev.coffee_chats_android.utils.MessageObserver
-import com.cornellappdev.coffee_chats_android.utils.addMessagesListener
 import com.cornellappdev.coffee_chats_android.utils.getMessages
 import com.cornellappdev.coffee_chats_android.utils.sendMessage
 import kotlinx.android.synthetic.main.fragment_chat.*
 
-private const val USER_ID = "userId"
-private const val PEAR_ID = "pearId"
-
 class ChatFragment : Fragment(), MessageObserver {
     private var userId: Int? = null
     private var pearId: Int? = null
+    private var pearProfilePicUrl: String? = null
     private val messages: MutableList<Message> = mutableListOf()
     private lateinit var adapter: ChatAdapter
 
@@ -29,6 +26,7 @@ class ChatFragment : Fragment(), MessageObserver {
         arguments?.let {
             userId = it.getInt(USER_ID)
             pearId = it.getInt(PEAR_ID)
+            pearProfilePicUrl = it.getString(PEAR_PROFILE_PIC_URL)
         }
     }
 
@@ -41,9 +39,10 @@ class ChatFragment : Fragment(), MessageObserver {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         getMessages(userId!!, pearId!!, this)
-        adapter = ChatAdapter(messages, userId!!)
+        adapter = ChatAdapter(messages, userId!!, pearProfilePicUrl!!)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        sendMessageButton.setOnClickListener { sendMessage() }
     }
 
     override fun onMessageReceived(message: Message) {
@@ -54,6 +53,10 @@ class ChatFragment : Fragment(), MessageObserver {
             }
         messages.add(insertionIndex, message)
         adapter.notifyItemInserted(insertionIndex)
+        recyclerView.scrollToPosition(adapter.itemCount - 1)
+        if (emptyChatView.visibility == View.VISIBLE) {
+            emptyChatView.visibility = View.GONE
+        }
     }
 
     override fun onMessageSendFailed() {
@@ -61,18 +64,23 @@ class ChatFragment : Fragment(), MessageObserver {
     }
 
     private fun sendMessage() {
-        // TODO - add EditText UI
-        sendMessage("Hello yet again", userId!!, pearId!!, this)
+        sendMessage(sendMessageEditText.text.toString(), userId!!, pearId!!, this)
+        sendMessageEditText.text.clear()
     }
 
     companion object {
         @JvmStatic
-        fun newInstance(userId: Int, pearId: Int) =
+        fun newInstance(userId: Int, pearId: Int, pearProfilePicUrl: String) =
             ChatFragment().apply {
                 arguments = Bundle().apply {
                     putInt(USER_ID, userId)
                     putInt(PEAR_ID, pearId)
+                    putString(PEAR_PROFILE_PIC_URL, pearProfilePicUrl)
                 }
             }
+
+        private const val USER_ID = "userId"
+        private const val PEAR_ID = "pearId"
+        private const val PEAR_PROFILE_PIC_URL = "pearProfilePicUrl"
     }
 }
