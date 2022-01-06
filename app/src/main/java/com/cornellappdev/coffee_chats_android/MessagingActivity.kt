@@ -5,6 +5,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import com.cornellappdev.coffee_chats_android.fragments.messaging.ChatFragment
+import com.cornellappdev.coffee_chats_android.fragments.messaging.MessagesFragment
 import kotlinx.android.synthetic.main.activity_messaging.*
 
 class MessagingActivity : AppCompatActivity() {
@@ -51,7 +52,19 @@ class MessagingActivity : AppCompatActivity() {
                         }
                     }
                 }
-                Stage.MESSAGES -> TODO("Unimplemented")
+                Stage.MESSAGES -> {
+                    intent.extras?.let {
+                        headerText.text = getString(R.string.messages_header)
+                        headerSubtext.text = getString(R.string.messages_subheader)
+                        supportFragmentManager.commit {
+                            setReorderingAllowed(true)
+                            add(
+                                R.id.fragmentContainer,
+                                MessagesFragment.newInstance(it.getInt(USER_ID))
+                            )
+                        }
+                    }
+                }
             }
         }
     }
