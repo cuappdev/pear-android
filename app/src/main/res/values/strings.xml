@@ -106,6 +106,9 @@
     <string name="chat_header">Chat with %1$s</string>
     <string name="long_string">This is a very, very, very, very, very long string. It contains n characters for a somewhat large n.</string>
     <string name="dummy_date">Aug 25, 2021</string>
+    <string name="current_pear">Current Pear</string>
+    <string name="default_week_stamp">1 Week ago</string>
+    <string name="week_stamp">%1$d Weeks ago</string>
 
     <!--SCHEDULING TIME-->
     <string name="scheduling_time_header">When are you free?</string>
