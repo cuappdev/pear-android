@@ -14,6 +14,9 @@ import com.cornellappdev.coffee_chats_android.utils.getMessages
 import com.cornellappdev.coffee_chats_android.utils.sendMessage
 import kotlinx.android.synthetic.main.fragment_chat.*
 
+/**
+ * Displays a conversation with a single pear
+ */
 class ChatFragment : Fragment(), MessageObserver {
     private var userId: Int? = null
     private var pearId: Int? = null

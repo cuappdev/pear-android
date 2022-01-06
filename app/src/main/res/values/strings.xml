@@ -211,6 +211,7 @@
     <string name="menu_groups">Your groups</string>
     <string name="menu_interests">Your interests</string>
     <string name="menu_prompts">Your prompts</string>
+    <string name="menu_messages">Messages</string>
     <string name="settings">Settings</string>
     <string name="drawer_open">Open navigation drawer menu</string>
     <string name="drawer_close">Close navigation drawer menu</string>
