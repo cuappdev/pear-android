@@ -41,7 +41,7 @@ class MessagesFragment : Fragment() {
         CoroutineScope(Dispatchers.Main).launch {
             val currentPearId = getCurrentMatch()?.matchedUser?.id
             adapter = MessageAdapter(getSelfMatches(userId!!), currentPearId) {
-                container.addChatFragment(userId!!, it.id, it.profilePicUrl!!)
+                container.addChatFragment(userId!!, it.id, it.firstName, it.profilePicUrl!!)
             }
             recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -69,6 +69,6 @@ class MessagesFragment : Fragment() {
     }
 
     interface MessagesContainer {
-        fun addChatFragment(userId: Int, pearId: Int, pearProfilePicUrl: String)
+        fun addChatFragment(userId: Int, pearId: Int, pearFirstName: String, pearProfilePicUrl: String)
     }
 }
