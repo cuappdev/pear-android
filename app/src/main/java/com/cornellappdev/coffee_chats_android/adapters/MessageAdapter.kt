@@ -11,7 +11,13 @@ import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.models.MatchedUser
 import kotlinx.android.synthetic.main.message_cell.view.*
 
-class MessageAdapter(private val matches: List<MatchedUser>) :
+/**
+ * Adapter for use in MessagesFragment, displaying a list of pears that can be messaged
+ */
+class MessageAdapter(
+    private val matches: List<MatchedUser>,
+    private val onClickListener: (MatchedUser) -> Unit
+) :
     RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
 
     class ViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
@@ -23,7 +29,8 @@ class MessageAdapter(private val matches: List<MatchedUser>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.message_cell, parent, false) as View
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.message_cell, parent, false) as View
         return ViewHolder(view)
     }
 
@@ -35,12 +42,14 @@ class MessageAdapter(private val matches: List<MatchedUser>) :
             .centerInside()
             .circleCrop()
             .into(holder.pearProfileImageView)
-        holder.pearName.text = context.getString(R.string.user_name, match.firstName, match.lastName)
+        holder.pearName.text =
+            context.getString(R.string.user_name, match.firstName, match.lastName)
         if (position == 0) {
             holder.currentPearView.visibility = View.VISIBLE
         } else {
             holder.weekStamp.text = context.getString(R.string.week_stamp, position + 1)
         }
+        holder.itemView.setOnClickListener { onClickListener(match) }
     }
 
     override fun getItemCount(): Int {

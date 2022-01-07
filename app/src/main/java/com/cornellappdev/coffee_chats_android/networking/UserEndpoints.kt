@@ -156,6 +156,11 @@ fun Endpoint.Companion.updateOnboardingStatus(hasOnboarded: Boolean): Endpoint {
     )
 }
 
+// MATCHES
+
+fun Endpoint.Companion.getSelfMatches(): Endpoint =
+    Endpoint(path = "/matches/", headers = authHeader(), method = EndpointMethod.GET)
+
 /* OLD NETWORKING */
 
 private fun <K, V> mapToRequestBody(map: Map<K, V>): RequestBody =

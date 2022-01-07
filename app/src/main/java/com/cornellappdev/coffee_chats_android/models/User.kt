@@ -37,5 +37,5 @@ data class User(
     @Json(name = "pending_feedback")
     val pendingFeedback: Boolean,
     @Json(name = "current_match")
-    val currentMatch: Match?
+    val currentMatch: SingleMatch?
 )

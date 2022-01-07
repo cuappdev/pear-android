@@ -8,9 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.adapters.MessageAdapter
-import com.cornellappdev.coffee_chats_android.models.Major
-import com.cornellappdev.coffee_chats_android.models.MatchedUser
+import com.cornellappdev.coffee_chats_android.networking.getSelfMatches
 import kotlinx.android.synthetic.main.fragment_chat.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Displays list of all pears that can be messages
@@ -18,6 +20,7 @@ import kotlinx.android.synthetic.main.fragment_chat.*
 class MessagesFragment : Fragment() {
     private var userId: Int? = null
     private lateinit var adapter: MessageAdapter
+    private lateinit var container: MessagesContainer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,10 +37,17 @@ class MessagesFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // TODO populate adapter with networking info
-        adapter = MessageAdapter(listOf())
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        CoroutineScope(Dispatchers.Main).launch {
+            adapter = MessageAdapter(getSelfMatches(userId!!)) {
+                container.addChatFragment(userId!!, it.id, it.profilePicUrl!!)
+            }
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        }
+    }
+
+    fun setContainer(container: MessagesContainer) {
+        this.container = container
     }
 
     companion object {
@@ -54,5 +64,9 @@ class MessagesFragment : Fragment() {
             }
 
         private const val USER_ID = "userId"
+    }
+
+    interface MessagesContainer {
+        fun addChatFragment(userId: Int, pearId: Int, pearProfilePicUrl: String)
     }
 }

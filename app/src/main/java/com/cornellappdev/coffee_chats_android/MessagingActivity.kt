@@ -3,12 +3,13 @@ package com.cornellappdev.coffee_chats_android
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.cornellappdev.coffee_chats_android.fragments.messaging.ChatFragment
 import com.cornellappdev.coffee_chats_android.fragments.messaging.MessagesFragment
 import kotlinx.android.synthetic.main.activity_messaging.*
 
-class MessagingActivity : AppCompatActivity() {
+class MessagingActivity : AppCompatActivity(), MessagesFragment.MessagesContainer {
 
     enum class Stage {
         // list of all past matches
@@ -39,17 +40,11 @@ class MessagingActivity : AppCompatActivity() {
                         )
                         headerSubtext.visibility = View.GONE
                         // set up chat fragment
-                        supportFragmentManager.commit {
-                            setReorderingAllowed(true)
-                            add(
-                                R.id.fragmentContainer,
-                                ChatFragment.newInstance(
-                                    it.getInt(USER_ID),
-                                    it.getInt(PEAR_ID),
-                                    it.getString(PEAR_PROFILE_PIC_URL)!!
-                                )
-                            )
-                        }
+                        addChatFragment(
+                            it.getInt(USER_ID),
+                            it.getInt(PEAR_ID),
+                            it.getString(PEAR_PROFILE_PIC_URL)!!
+                        )
                     }
                 }
                 Stage.MESSAGES -> {
@@ -58,7 +53,7 @@ class MessagingActivity : AppCompatActivity() {
                         headerSubtext.text = getString(R.string.messages_subheader)
                         supportFragmentManager.commit {
                             setReorderingAllowed(true)
-                            add(
+                            replace(
                                 R.id.fragmentContainer,
                                 MessagesFragment.newInstance(it.getInt(USER_ID))
                             )
@@ -69,16 +64,18 @@ class MessagingActivity : AppCompatActivity() {
         }
     }
 
+    override fun onAttachFragment(fragment: Fragment) {
+        if (fragment is MessagesFragment) {
+            fragment.setContainer(this)
+        }
+    }
+
     override fun onBackPressed() {
         hideKeyboard(this, backButton)
-        when (initialStage) {
-            Stage.MESSAGES -> {
-                TODO("Unimplemented")
-            }
-            Stage.CHAT -> {
-                super.onBackPressed()
-            }
+        if (initialStage == Stage.CHAT) {
+            supportFragmentManager.popBackStack()
         }
+        super.onBackPressed()
     }
 
     companion object {
@@ -87,5 +84,17 @@ class MessagingActivity : AppCompatActivity() {
         const val PEAR_ID = "pearId"
         const val PEAR_FIRST_NAME = "pearFirstName"
         const val PEAR_PROFILE_PIC_URL = "pearProfilePicUrl"
+    }
+
+    override fun addChatFragment(userId: Int, pearId: Int, pearProfilePicUrl: String) {
+        stage = Stage.CHAT
+        supportFragmentManager.commit {
+            setReorderingAllowed(true)
+            replace(
+                R.id.fragmentContainer,
+                ChatFragment.newInstance(userId, pearId, pearProfilePicUrl)
+            )
+            addToBackStack(Stage.CHAT.toString())
+        }
     }
 }

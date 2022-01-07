@@ -2,7 +2,7 @@ package com.cornellappdev.coffee_chats_android.models
 
 import com.squareup.moshi.Json
 
-data class Match(
+data class SingleMatch(
     val id: Int,
     val status: String,
     @Json(name = "matched_user")

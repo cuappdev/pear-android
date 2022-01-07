@@ -109,3 +109,11 @@ suspend fun updateSocialMedia(socialMedia: SocialMedia): ApiResponse<SocialMedia
 
 suspend fun updateOnboardingStatus(hasOnboarded: Boolean): ApiResponse<OnboardingStatus>? =
     postDataHelper(Endpoint.updateOnboardingStatus(hasOnboarded), OnboardingStatus::class.java)
+
+// MATCHES
+
+suspend fun getSelfMatches(userId: Int): List<MatchedUser> =
+    getListHelper<DoubleMatch>(
+        Endpoint.getSelfMatches(),
+        DoubleMatch::class.java
+    ).map { it.users.first { matchedUser -> matchedUser.id != userId } }
