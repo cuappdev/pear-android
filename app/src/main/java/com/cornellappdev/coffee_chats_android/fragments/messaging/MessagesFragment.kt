@@ -69,6 +69,11 @@ class MessagesFragment : Fragment() {
     }
 
     interface MessagesContainer {
-        fun addChatFragment(userId: Int, pearId: Int, pearFirstName: String, pearProfilePicUrl: String)
+        fun addChatFragment(
+            userId: Int,
+            pearId: Int,
+            pearFirstName: String,
+            pearProfilePicUrl: String
+        )
     }
 }

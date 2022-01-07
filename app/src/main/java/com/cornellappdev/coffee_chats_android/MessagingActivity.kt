@@ -100,7 +100,12 @@ class MessagingActivity : AppCompatActivity(), MessagesFragment.MessagesContaine
         const val PEAR_PROFILE_PIC_URL = "pearProfilePicUrl"
     }
 
-    override fun addChatFragment(userId: Int, pearId: Int, pearFirstName: String, pearProfilePicUrl: String) {
+    override fun addChatFragment(
+        userId: Int,
+        pearId: Int,
+        pearFirstName: String,
+        pearProfilePicUrl: String
+    ) {
         stage = Stage.CHAT
         setUpHeader(pearFirstName)
         supportFragmentManager.commit {
