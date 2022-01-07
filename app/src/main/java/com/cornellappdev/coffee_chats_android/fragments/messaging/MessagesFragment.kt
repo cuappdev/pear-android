@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.adapters.MessageAdapter
+import com.cornellappdev.coffee_chats_android.networking.getCurrentMatch
 import com.cornellappdev.coffee_chats_android.networking.getSelfMatches
 import kotlinx.android.synthetic.main.fragment_chat.*
 import kotlinx.coroutines.CoroutineScope
@@ -38,7 +39,8 @@ class MessagesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         CoroutineScope(Dispatchers.Main).launch {
-            adapter = MessageAdapter(getSelfMatches(userId!!)) {
+            val currentPearId = getCurrentMatch()?.matchedUser?.id
+            adapter = MessageAdapter(getSelfMatches(userId!!), currentPearId) {
                 container.addChatFragment(userId!!, it.id, it.profilePicUrl!!)
             }
             recyclerView.adapter = adapter

@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.message_cell.view.*
  */
 class MessageAdapter(
     private val matches: List<MatchedUser>,
+    private val currentPearId: Int?,
     private val onClickListener: (MatchedUser) -> Unit
 ) :
     RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
@@ -24,7 +25,6 @@ class MessageAdapter(
         val pearProfileImageView: ImageView = view.pearProfileImageView
         val pearName: TextView = view.pearName
         val currentPearView: View = view.currentPear
-        val weekStamp: TextView = view.weekStamp
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -44,10 +44,8 @@ class MessageAdapter(
             .into(holder.pearProfileImageView)
         holder.pearName.text =
             context.getString(R.string.user_name, match.firstName, match.lastName)
-        if (position == 0) {
+        if (match.id == currentPearId) {
             holder.currentPearView.visibility = View.VISIBLE
-        } else {
-            holder.weekStamp.text = context.getString(R.string.week_stamp, position + 1)
         }
         holder.itemView.setOnClickListener { onClickListener(match) }
     }
