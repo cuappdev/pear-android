@@ -90,6 +90,13 @@ class SchedulingActivity :
             when (menuItem.itemId) {
                 R.id.nav_settings -> startActivityForResult(intent, SETTINGS_CODE)
                 R.id.nav_interests, R.id.nav_groups -> startActivity(intent)
+                R.id.nav_messages -> {
+                    val messagingIntent = Intent(this, MessagingActivity::class.java).apply {
+                        putExtra(MessagingActivity.STAGE, MessagingActivity.Stage.MESSAGES)
+                        putExtra(MessagingActivity.USER_ID, user.id)
+                    }
+                    startActivity(messagingIntent)
+                }
             }
             true
         }

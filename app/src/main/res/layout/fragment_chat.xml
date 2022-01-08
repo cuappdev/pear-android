@@ -40,7 +40,7 @@
             android:id="@+id/sendMessageEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/chat_bubble_margin"
+            android:layout_marginEnd="@dimen/profile_pic_margin"
             android:background="@drawable/rounded_edittext"
             android:fontFamily="@font/circular_book"
             android:hint="@string/send_message_hint"
