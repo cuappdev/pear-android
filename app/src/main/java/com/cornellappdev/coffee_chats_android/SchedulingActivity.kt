@@ -34,6 +34,7 @@ class SchedulingActivity :
         PreferencesHelper(this)
     }
     private val noMatchTag = "NO_MATCH"
+    private val matchTag = "MATCH"
     private val scheduleTimeTag = "SCHEDULING_TIME"
     private val schedulePlaceTag = "SCHEDULING_PLACE"
 
@@ -58,6 +59,14 @@ class SchedulingActivity :
                     setUpDrawerLayout()
                     if (user.currentMatch == null) {
                         primaryActionButton.visibility = View.GONE
+                        ft.add(fragmentContainer.id, NoMatchFragment()).addToBackStack(noMatchTag)
+                        ft.commit()
+                    } else {
+                        ft.add(
+                            fragmentContainer.id,
+                            ProfileFragment.newInstance(user.currentMatch!!.matchedUser)
+                        ).addToBackStack(matchTag)
+                        ft.commit()
                     }
                 }
             }
@@ -65,10 +74,6 @@ class SchedulingActivity :
             // prompt user to log in
             signIn()
         }
-
-        // add fragment to body_fragment
-        ft.add(fragmentContainer.id, NoMatchFragment()).addToBackStack(noMatchTag)
-        ft.commit()
 
         primaryActionButton.setOnClickListener {
             onSendMessageClick()

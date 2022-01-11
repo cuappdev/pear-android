@@ -6,5 +6,5 @@ import com.squareup.moshi.JsonClass
 data class DoubleMatch(
     val id: Int,
     val status: String,
-    val users: List<MatchedUser>
+    val users: List<PearUser>
 )

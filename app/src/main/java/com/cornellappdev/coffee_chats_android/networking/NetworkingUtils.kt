@@ -115,7 +115,7 @@ suspend fun updateOnboardingStatus(hasOnboarded: Boolean): ApiResponse<Onboardin
 suspend fun getCurrentMatch(): SingleMatch? =
     getDataHelper(Endpoint.getCurrentMatch(), SingleMatch::class.java)
 
-suspend fun getSelfMatches(userId: Int): List<MatchedUser> =
+suspend fun getSelfMatches(userId: Int): List<PearUser> =
     getListHelper<DoubleMatch>(
         Endpoint.getSelfMatches(),
         DoubleMatch::class.java

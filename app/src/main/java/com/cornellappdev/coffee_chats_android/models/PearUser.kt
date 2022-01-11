@@ -1,8 +1,14 @@
 package com.cornellappdev.coffee_chats_android.models
 
+import android.os.Parcelable
 import com.squareup.moshi.Json
+import kotlinx.android.parcel.Parcelize
 
-data class MatchedUser(
+/**
+ * General user's profile info. Less detailed than `User`.
+ */
+@Parcelize
+data class PearUser(
     val id: Int,
     @Json(name = "net_id")
     val netId: String,
@@ -20,4 +26,4 @@ data class MatchedUser(
     val interests: List<Interest>,
     val groups: List<Group>,
     val prompts: List<Prompt>
-)
+) : Parcelable

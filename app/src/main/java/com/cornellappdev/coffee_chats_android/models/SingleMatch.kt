@@ -6,5 +6,5 @@ data class SingleMatch(
     val id: Int,
     val status: String,
     @Json(name = "matched_user")
-    val matchedUser: MatchedUser
+    val matchedUser: PearUser
 )

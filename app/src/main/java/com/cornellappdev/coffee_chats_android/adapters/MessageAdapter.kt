@@ -8,16 +8,16 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cornellappdev.coffee_chats_android.R
-import com.cornellappdev.coffee_chats_android.models.MatchedUser
+import com.cornellappdev.coffee_chats_android.models.PearUser
 import kotlinx.android.synthetic.main.message_cell.view.*
 
 /**
  * Adapter for use in MessagesFragment, displaying a list of pears that can be messaged
  */
 class MessageAdapter(
-    private val matches: List<MatchedUser>,
+    private val matches: List<PearUser>,
     private val currentPearId: Int?,
-    private val onClickListener: (MatchedUser) -> Unit
+    private val onClickListener: (PearUser) -> Unit
 ) :
     RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
 
