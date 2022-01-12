@@ -94,7 +94,7 @@ class SchedulingActivity :
                 R.id.nav_settings -> ProfileSettingsActivity.Content.SETTINGS
                 else -> null
             }
-            contentTag?.let { intent.putExtra("content", contentTag) }
+            contentTag?.let { intent.putExtra(ProfileSettingsActivity.CONTENT, contentTag) }
             when (menuItem.itemId) {
                 R.id.nav_settings -> startActivityForResult(intent, SETTINGS_CODE)
                 R.id.nav_interests, R.id.nav_groups -> startActivity(intent)
@@ -138,6 +138,12 @@ class SchedulingActivity :
         )
         drawerLayout.user_hometown.text = getString(R.string.user_hometown, user.hometown)
         val content = findViewById<ConstraintLayout>(R.id.activity_main)
+        drawerLayout.edit_info.setOnClickListener {
+            Intent(this, ProfileSettingsActivity::class.java).apply {
+                putExtra(ProfileSettingsActivity.CONTENT, ProfileSettingsActivity.Content.EDIT_INFO)
+                startActivity(this)
+            }
+        }
         drawerLayout.addDrawerListener(object : ActionBarDrawerToggle(
             this,
             drawerLayout,

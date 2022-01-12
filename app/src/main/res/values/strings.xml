@@ -14,6 +14,7 @@
     <string name="goals_header">How do you want to use Pear?</string>
     <string name="talking_pointers_header">What do you most want to talk about?</string>
     <string name="add_later_button">I\'ll add later</string>
+    <string  name="upload_image">Upload New Picture</string>
     <string name="major">Major</string>
     <string name="hometown">Hometown</string>
     <!--INTERESTS-->
@@ -212,7 +213,7 @@
     <string name="no_match_availability">Enter Availability</string>
 
     <!--DRAWER MENU-->
-    <string name="edit_profile">Edit Info</string>
+    <string name="edit_info">Edit Info</string>
     <string name="user_name">%1$s %2$s</string>
     <string name="user_hometown">From %1$s</string>
     <string name="user_major_year">%1$s %2$s</string>

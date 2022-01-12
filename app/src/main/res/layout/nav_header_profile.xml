@@ -28,6 +28,7 @@
             app:srcCompat="@mipmap/ic_launcher_round" />
 
         <Button
+            android:id="@+id/edit_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="90dp"
@@ -38,7 +39,7 @@
             android:minHeight="0dp"
             android:paddingHorizontal="12dp"
             android:paddingVertical="8dp"
-            android:text="@string/edit_profile"
+            android:text="@string/edit_info"
             android:textAllCaps="false"
             android:textColor="@color/accent_orange"
             android:textSize="12sp"

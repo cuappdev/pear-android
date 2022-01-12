@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.cornellappdev.coffee_chats_android.models.Demographics
 import com.cornellappdev.coffee_chats_android.models.Major
 import com.cornellappdev.coffee_chats_android.models.User
@@ -58,6 +59,11 @@ class CreateProfileFragment : Fragment(), OnFilledOutObservable {
         CoroutineScope(Dispatchers.Main).launch {
             user = getUser()
             // pre-fills existing user profile information
+            if (!user.profilePicUrl.isNullOrBlank()) {
+                Glide.with(requireContext()).load(user.profilePicUrl).centerInside().circleCrop()
+                    .into(user_image)
+            }
+
             if (!user.hometown.isNullOrBlank()) {
                 hometownEditText.setText(user.hometown)
                 hometownFilled = true
