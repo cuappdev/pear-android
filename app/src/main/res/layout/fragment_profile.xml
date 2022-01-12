@@ -178,7 +178,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:id="@+id/prompt_responses_list"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

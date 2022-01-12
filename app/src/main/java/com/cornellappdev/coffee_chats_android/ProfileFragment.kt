@@ -93,7 +93,8 @@ class ProfileFragment : Fragment() {
         groups_pill_flow.referencedIds = ids.toIntArray()
 
         user.prompts.forEach {
-            LayoutInflater.from(c).inflate(R.layout.prompt_response_view, prompt_responses_list, false).apply {
+            LayoutInflater.from(c)
+                .inflate(R.layout.prompt_response_view, prompt_responses_list, false).apply {
                 id = View.generateViewId()
                 prompt.text = it.name
                 response.text = it.answer
