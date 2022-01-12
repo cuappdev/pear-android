@@ -12,6 +12,7 @@ import com.cornellappdev.coffee_chats_android.models.PearUser
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.pill_view.view.*
+import kotlinx.android.synthetic.main.prompt_response_view.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -90,6 +91,15 @@ class ProfileFragment : Fragment() {
             }
         }
         groups_pill_flow.referencedIds = ids.toIntArray()
+
+        user.prompts.forEach {
+            LayoutInflater.from(c).inflate(R.layout.prompt_response_view, prompt_responses_list, false).apply {
+                id = View.generateViewId()
+                prompt.text = it.name
+                response.text = it.answer
+                prompt_responses_list.addView(this)
+            }
+        }
     }
 
     companion object {
