@@ -1,8 +1,8 @@
 package com.cornellappdev.coffee_chats_android.adapters
 
 import android.content.Context
-import android.graphics.BlendMode
-import android.graphics.BlendModeColorFilter
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,14 +61,14 @@ class UserFieldAdapter(
             .into(viewHolder.icon!!)
 
         if (hideIcon) {
-            viewHolder.icon!!.visibility = View.GONE
+            viewHolder.icon.visibility = View.GONE
         }
 
         val selected = ContextCompat.getColor(context, R.color.onboardingListSelected)
         val unselected = ContextCompat.getColor(context, R.color.onboarding_fields)
         val drawableBox = viewHolder.layout!!.background
-        val greenFilter = BlendModeColorFilter(selected, BlendMode.MULTIPLY)
-        val whiteFilter = BlendModeColorFilter(unselected, BlendMode.MULTIPLY)
+        val greenFilter = PorterDuffColorFilter(selected, PorterDuff.Mode.MULTIPLY)
+        val whiteFilter = PorterDuffColorFilter(unselected, PorterDuff.Mode.MULTIPLY)
         drawableBox.colorFilter = when (itemColor) {
             ItemColor.WHITE -> whiteFilter
             ItemColor.GREEN -> greenFilter

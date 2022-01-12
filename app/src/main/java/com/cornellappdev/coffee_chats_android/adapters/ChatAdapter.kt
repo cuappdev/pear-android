@@ -1,5 +1,6 @@
 package com.cornellappdev.coffee_chats_android.adapters
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.cornellappdev.coffee_chats_android.ProfileActivity
 import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.hideKeyboard
 import com.cornellappdev.coffee_chats_android.models.Message
@@ -46,12 +48,19 @@ class ChatAdapter(
         textView.text = message.message
         textView.visibility = View.VISIBLE
         if (!isUserMessage) {
+            val c = holder.itemView.context
             holder.pearProfileImageView.visibility = View.VISIBLE
-            Glide.with(holder.itemView.context)
+            Glide.with(c)
                 .load(pearProfilePicUrl)
                 .centerInside()
                 .circleCrop()
                 .into(holder.pearProfileImageView)
+            holder.pearProfileImageView.setOnClickListener {
+                Intent(c, ProfileActivity::class.java).apply {
+                    putExtra(ProfileActivity.USER_ID, message.senderId)
+                    c.startActivity(this)
+                }
+            }
         }
         // display date as needed
         val currDate = getFormattedDate(messages[position])

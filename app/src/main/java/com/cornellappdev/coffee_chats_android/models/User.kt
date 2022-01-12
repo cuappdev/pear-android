@@ -3,6 +3,9 @@ package com.cornellappdev.coffee_chats_android.models
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
+/**
+ * Current user's profile info. More detailed than `PearUser`.
+ */
 @JsonClass(generateAdapter = true)
 data class User(
     val id: Int,

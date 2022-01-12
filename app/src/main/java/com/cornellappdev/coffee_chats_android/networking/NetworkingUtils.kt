@@ -61,6 +61,9 @@ suspend fun authenticateUser(idToken: String): UserSession =
 
 suspend fun getUser(): User = getDataHelper(Endpoint.getSelfProfile(), User::class.java)
 
+suspend fun getUser(userId: Int): PearUser =
+    getDataHelper(Endpoint.getUserProfile(userId), PearUser::class.java)
+
 suspend fun updateDemographics(demographics: Demographics): ApiResponse<Demographics>? =
     postDataHelper(Endpoint.updateDemographics(demographics), Demographics::class.java)
 
@@ -115,7 +118,7 @@ suspend fun updateOnboardingStatus(hasOnboarded: Boolean): ApiResponse<Onboardin
 suspend fun getCurrentMatch(): SingleMatch? =
     getDataHelper(Endpoint.getCurrentMatch(), SingleMatch::class.java)
 
-suspend fun getSelfMatches(userId: Int): List<MatchedUser> =
+suspend fun getSelfMatches(userId: Int): List<PearUser> =
     getListHelper<DoubleMatch>(
         Endpoint.getSelfMatches(),
         DoubleMatch::class.java
