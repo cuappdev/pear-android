@@ -193,7 +193,7 @@
     <string name="collegetown">Collegetown</string>
 
     <!--MATCH PAGE-->
-    <string name="match_header">Meet your Pear</string>
+    <string name="match_header">Weekly Pear</string>
     <string name="match_loves">You both love…</string>
     <string name="match_shared_clubs">You\'re both part of…</string>
     <string name="match_enjoys">%1$s also enjoys…</string>

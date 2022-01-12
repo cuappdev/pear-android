@@ -12,6 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.bumptech.glide.Glide
 import com.cornellappdev.coffee_chats_android.models.User
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.cornellappdev.coffee_chats_android.networking.setUpNetworking
@@ -61,12 +62,14 @@ class SchedulingActivity :
                         primaryActionButton.visibility = View.GONE
                         ft.add(fragmentContainer.id, NoMatchFragment()).addToBackStack(noMatchTag)
                         ft.commit()
+                        headerText.text = getString(R.string.no_match_header)
                     } else {
                         ft.add(
                             fragmentContainer.id,
                             ProfileFragment.newInstance(user.currentMatch!!.matchedUser)
                         ).addToBackStack(matchTag)
                         ft.commit()
+                        headerText.text = getString(R.string.match_header)
                     }
                 }
             }
@@ -122,6 +125,10 @@ class SchedulingActivity :
      * page move when the drawer slides.
      */
     private fun setUpDrawerLayout() {
+        Glide.with(applicationContext).load(user.profilePicUrl).centerInside().circleCrop()
+            .into(drawerLayout.user_image)
+        Glide.with(applicationContext).load(user.profilePicUrl).centerInside().circleCrop()
+            .into(backButton)
         drawerLayout.user_name.text =
             getString(R.string.user_name, user.firstName, user.lastName)
         drawerLayout.user_major_year.text = getString(
@@ -246,7 +253,6 @@ class SchedulingActivity :
                     drawerLayout.open()
                 }
             }
-            headerText.text = getString(R.string.no_match_header)
             primaryActionButton.text = getString(R.string.no_match_availability)
             primaryActionButton.isEnabled = true
             primaryActionButton.setPadding(100, 0, 100, 0)
