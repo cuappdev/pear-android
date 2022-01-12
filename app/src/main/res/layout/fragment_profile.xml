@@ -39,13 +39,14 @@
             android:gravity="center"
             android:textColor="@color/black"
             android:textSize="24sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/user_image_card_view"
             tools:text="First Last" />
 
         <TextView
-            android:id="@+id/reach_me_at"
+            android:id="@+id/reach_me"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/circular_book"
@@ -71,7 +72,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/reach_me_at" />
+            app:layout_constraintTop_toBottomOf="@id/reach_me" />
 
         <TextView
             android:id="@+id/basic_info"

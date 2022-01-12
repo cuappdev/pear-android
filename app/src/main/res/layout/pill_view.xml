@@ -8,6 +8,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginVertical="5dp"
         android:background="@drawable/rounded_shape_green"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -17,13 +18,14 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:id="@+id/icon"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:scaleType="fitXY"
             tools:src="@drawable/ic_interests_icon" />
 
         <TextView
-            android:id="@+id/basic_info"
+            android:id="@+id/text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"

@@ -110,6 +110,10 @@
     <string name="default_week_stamp">1 Week ago</string>
     <string name="week_stamp">%1$d Weeks ago</string>
 
+    <!--PROFILE-->
+    <string name="reach_me">Reach me at %1$s</string>
+    <string name="basic_profile_info">I study &lt;b>%1$s&lt;/b> in the class of &lt;b>%2$s&lt;/b>, and my home is in &lt;b>%3$s&lt;/b>! My pronouns are &lt;b>%4$s&lt;/b>.</string>
+
     <!--SCHEDULING TIME-->
     <string name="scheduling_time_header">When are you free?</string>
     <string name="next">Next</string>

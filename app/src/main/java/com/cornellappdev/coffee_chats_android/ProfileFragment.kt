@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.HtmlCompat
+import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.cornellappdev.coffee_chats_android.models.PearUser
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.pill_view.view.*
@@ -36,33 +39,47 @@ class ProfileFragment : Fragment() {
         if (user == null) {
             // make network call to get user profile
         }
-
-        val interests = listOf("Reading", "Coding", "Crosswords", "Jigsaw", "Jenga")
-        (interests.indices).forEach { i ->
-            val pillView = LayoutInflater.from(requireContext()).inflate(
+        val c = requireContext()
+        Glide.with(c).load(user?.profilePicUrl).centerInside().circleCrop()
+            .into(user_image)
+        name.text = c.getString(R.string.user_name, user?.firstName, user?.lastName)
+        reach_me.text = c.getString(R.string.reach_me, user?.netId)
+        val basicInfo = c.getString(
+            R.string.basic_profile_info,
+            user?.majors?.first()?.name, user?.graduationYear, user?.hometown, user?.pronouns
+        )
+        basic_info.text = HtmlCompat.fromHtml(basicInfo, FROM_HTML_MODE_LEGACY)
+        val ids = mutableListOf<Int>()
+        user!!.interests.forEach {
+            LayoutInflater.from(c).inflate(
                 R.layout.pill_view,
                 interests_pill_list,
                 false
             ).apply {
                 id = View.generateViewId()
+                ids.add(id)
+                text_view.text = it.name
+                Glide.with(c).load(it.imageUrl).into(icon)
+                interests_pill_list.addView(this)
             }
-            pillView.basic_info.text = interests[i]
-            interests_pill_list.addView(pillView)
-            interests_pill_flow.addView(pillView)
         }
-        val groups = listOf("Flat Earth Society", "Cornell AppDev")
-        (groups.indices).forEach { i ->
-            val pillView = LayoutInflater.from(requireContext()).inflate(
+        interests_pill_flow.referencedIds = ids.toIntArray()
+
+        ids.clear()
+        user!!.groups.forEach {
+            LayoutInflater.from(c).inflate(
                 R.layout.pill_view,
                 groups_pill_list,
                 false
             ).apply {
                 id = View.generateViewId()
+                ids.add(id)
+                text_view.text = it.name
+                Glide.with(c).load(it.imageUrl).into(icon)
+                groups_pill_list.addView(this)
             }
-            pillView.basic_info.text = groups[i]
-            groups_pill_list.addView(pillView)
-            groups_pill_flow.addView(pillView)
         }
+        groups_pill_flow.referencedIds = ids.toIntArray()
     }
 
     companion object {
