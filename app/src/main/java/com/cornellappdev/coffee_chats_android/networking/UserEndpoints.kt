@@ -48,6 +48,9 @@ fun Endpoint.Companion.authenticateUser(idToken: String): Endpoint =
 fun Endpoint.Companion.getSelfProfile(): Endpoint =
     Endpoint(path = "/me/", headers = authHeader(), method = EndpointMethod.GET)
 
+fun Endpoint.Companion.getUserProfile(userId: Int): Endpoint =
+    Endpoint(path = "/users/$userId/", headers = authHeader(), method = EndpointMethod.GET)
+
 fun Endpoint.Companion.updateDemographics(demographics: Demographics): Endpoint {
     val requestBody = toRequestBody(demographics, Demographics::class.java)
     return Endpoint(

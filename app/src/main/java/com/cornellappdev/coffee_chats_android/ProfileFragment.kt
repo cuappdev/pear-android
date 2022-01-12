@@ -9,8 +9,12 @@ import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.cornellappdev.coffee_chats_android.models.PearUser
+import com.cornellappdev.coffee_chats_android.networking.getUser
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.pill_view.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class ProfileFragment : Fragment() {
@@ -36,21 +40,27 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (user == null) {
-            // make network call to get user profile
+        CoroutineScope(Dispatchers.Main).launch {
+            if (user == null) {
+                user = getUser(userId!!)
+            }
+            setUpView(user!!)
         }
+    }
+
+    private fun setUpView(user: PearUser) {
         val c = requireContext()
-        Glide.with(c).load(user?.profilePicUrl).centerInside().circleCrop()
+        Glide.with(c).load(user.profilePicUrl).centerInside().circleCrop()
             .into(user_image)
-        name.text = c.getString(R.string.user_name, user?.firstName, user?.lastName)
-        reach_me.text = c.getString(R.string.reach_me, user?.netId)
+        name.text = c.getString(R.string.user_name, user.firstName, user.lastName)
+        reach_me.text = c.getString(R.string.reach_me, user.netId)
         val basicInfo = c.getString(
             R.string.basic_profile_info,
-            user?.majors?.first()?.name, user?.graduationYear, user?.hometown, user?.pronouns
+            user.majors.first().name, user.graduationYear, user.hometown, user.pronouns
         )
         basic_info.text = HtmlCompat.fromHtml(basicInfo, FROM_HTML_MODE_LEGACY)
         val ids = mutableListOf<Int>()
-        user!!.interests.forEach {
+        user.interests.forEach {
             LayoutInflater.from(c).inflate(
                 R.layout.pill_view,
                 interests_pill_list,
@@ -66,7 +76,7 @@ class ProfileFragment : Fragment() {
         interests_pill_flow.referencedIds = ids.toIntArray()
 
         ids.clear()
-        user!!.groups.forEach {
+        user.groups.forEach {
             LayoutInflater.from(c).inflate(
                 R.layout.pill_view,
                 groups_pill_list,

@@ -61,6 +61,9 @@ suspend fun authenticateUser(idToken: String): UserSession =
 
 suspend fun getUser(): User = getDataHelper(Endpoint.getSelfProfile(), User::class.java)
 
+suspend fun getUser(userId: Int): PearUser =
+    getDataHelper(Endpoint.getUserProfile(userId), PearUser::class.java)
+
 suspend fun updateDemographics(demographics: Demographics): ApiResponse<Demographics>? =
     postDataHelper(Endpoint.updateDemographics(demographics), Demographics::class.java)
 
