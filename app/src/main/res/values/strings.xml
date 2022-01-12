@@ -212,9 +212,10 @@
     <string name="no_match_availability">Enter Availability</string>
 
     <!--DRAWER MENU-->
+    <string name="edit_profile">Edit Info</string>
     <string name="user_name">%1$s %2$s</string>
     <string name="user_hometown">From %1$s</string>
-    <string name="user_major_year">%1$s, \'%2$s</string>
+    <string name="user_major_year">%1$s %2$s</string>
     <string name="menu_groups">Your groups</string>
     <string name="menu_interests">Your interests</string>
     <string name="menu_prompts">Your prompts</string>

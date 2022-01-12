@@ -134,7 +134,7 @@ class SchedulingActivity :
         drawerLayout.user_major_year.text = getString(
             R.string.user_major_year,
             if (user.majors.isNotEmpty()) user.majors.first().name else "",
-            user.graduationYear?.substring(2)
+            user.graduationYear
         )
         drawerLayout.user_hometown.text = getString(R.string.user_hometown, user.hometown)
         val content = findViewById<ConstraintLayout>(R.id.activity_main)
