@@ -1,5 +1,6 @@
 package com.cornellappdev.coffee_chats_android.networking
 
+import android.graphics.Bitmap
 import android.util.Log
 import com.cornellappdev.coffee_chats_android.models.*
 import com.squareup.moshi.Types
@@ -66,6 +67,9 @@ suspend fun getUser(userId: Int): PearUser =
 
 suspend fun updateDemographics(demographics: Demographics): ApiResponse<Demographics>? =
     postDataHelper(Endpoint.updateDemographics(demographics), Demographics::class.java)
+
+suspend fun updateProfilePic(bitmap: Bitmap): ApiResponse<String>? =
+    postDataHelper(Endpoint.updateProfilePic(bitmap), String::class.java)
 
 // MAJORS
 

@@ -189,6 +189,15 @@ class SchedulingActivity :
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        CoroutineScope(Dispatchers.Main).launch {
+            user = getUser()
+            setUpDrawerLayout()
+            setUpCurrentPage()
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         // user has logged out from Settings

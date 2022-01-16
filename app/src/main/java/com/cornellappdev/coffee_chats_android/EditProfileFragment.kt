@@ -20,6 +20,7 @@ import com.cornellappdev.coffee_chats_android.models.User
 import com.cornellappdev.coffee_chats_android.networking.getAllMajors
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.cornellappdev.coffee_chats_android.networking.updateDemographics
+import com.cornellappdev.coffee_chats_android.networking.updateProfilePic
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -187,15 +188,18 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
         val major = majorACTV.text.toString()
         val majorIndex = allMajorsList.firstOrNull { it.name == major }?.id
         val hometown = hometownEditText.text.toString()
-        val demographics = Demographics(
-            pronouns,
-            graduationYear,
-            if (majorIndex != null) listOf(majorIndex) else emptyList(),
-            hometown,
-            null
-        )
 
         CoroutineScope(Dispatchers.IO).launch {
+            val photoUrl = bitmap?.let {
+                return@let updateProfilePic(it)?.data
+            }
+            val demographics = Demographics(
+                pronouns,
+                graduationYear,
+                if (majorIndex != null) listOf(majorIndex) else emptyList(),
+                hometown,
+                photoUrl
+            )
             val updateDemographicsResponse = updateDemographics(demographics)
             if (updateDemographicsResponse == null || !updateDemographicsResponse.success) {
                 Toast.makeText(requireContext(), "Failed to save information", Toast.LENGTH_LONG)

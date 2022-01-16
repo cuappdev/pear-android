@@ -13,14 +13,15 @@ class Endpoint(
     private val path: String,
     private val headers: Map<String, String> = mapOf(),
     private val body: RequestBody? = null,
-    private val method: EndpointMethod
+    private val method: EndpointMethod,
+    private val useDefaultHost: Boolean = true
 ) {
     private val host = "http://${BuildConfig.BACKEND_URI}/api"
 
     companion object
 
     fun okHttpRequest(): Request {
-        val endpoint = host + path
+        val endpoint = if (useDefaultHost) host + path else path
         val headers = headers.toHeaders()
 
         return when (method) {
