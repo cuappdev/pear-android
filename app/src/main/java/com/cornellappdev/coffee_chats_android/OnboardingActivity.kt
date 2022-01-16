@@ -66,7 +66,7 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
             }
             user = getUser()
             val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-            ft.replace(fragmentContainer.id, CreateProfileFragment(), content.name)
+            ft.replace(fragmentContainer.id, EditProfileFragment(), content.name)
                 .addToBackStack("ft")
                 .commit()
             setUpCurrentPage()
@@ -151,7 +151,7 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
         if (content != navigationList.last()) {
             content = navigationList[navigationList.indexOf(content) + 1]
             val fragment: Fragment = when (content) {
-                Content.CREATE_PROFILE -> CreateProfileFragment()
+                Content.CREATE_PROFILE -> EditProfileFragment()
                 Content.INTERESTS -> UserFieldFragment.newInstance(UserField.Category.INTEREST)
                 Content.GROUPS -> UserFieldFragment.newInstance(UserField.Category.GROUP)
                 Content.PROMPTS -> PromptsFragment()

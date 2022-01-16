@@ -1,6 +1,10 @@
 package com.cornellappdev.coffee_chats_android
 
+import android.app.Activity
+import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -16,19 +20,19 @@ import com.cornellappdev.coffee_chats_android.models.User
 import com.cornellappdev.coffee_chats_android.networking.getAllMajors
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.cornellappdev.coffee_chats_android.networking.updateDemographics
-import kotlinx.android.synthetic.main.fragment_create_profile.*
+import kotlinx.android.synthetic.main.fragment_edit_profile.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
-class CreateProfileFragment : Fragment(), OnFilledOutObservable {
-
+class EditProfileFragment : Fragment(), OnFilledOutObservable {
     // variables to keep track if editTexts are filled out
     private var majorFilled = false
     private var hometownFilled = false
     private var year = Calendar.getInstance().get(Calendar.YEAR)
+    private var bitmap: Bitmap? = null
 
     private lateinit var user: User
 
@@ -38,7 +42,7 @@ class CreateProfileFragment : Fragment(), OnFilledOutObservable {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_create_profile, container, false)
+        return inflater.inflate(R.layout.fragment_edit_profile, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -107,6 +111,21 @@ class CreateProfileFragment : Fragment(), OnFilledOutObservable {
                 }
             )
         }
+        upload_image.setOnClickListener {
+            Intent(Intent.ACTION_PICK).apply {
+                type = "image/*"
+                putExtra("crop", "true")
+                putExtra("scale", "true")
+                putExtra("outputX", 250)
+                putExtra("outputY", 250)
+                putExtra("aspectX", 1)
+                putExtra("aspectY", 1)
+                putExtra("return-data", true)
+                if (resolveActivity(requireContext().packageManager) != null) {
+                    startActivityForResult(this, REQUEST_IMAGE_GET)
+                }
+            }
+        }
 
         // monitor changes in major editText and enable button if both major and hometown != empty
         majorACTV.addTextChangedListener(object : TextWatcher {
@@ -131,6 +150,20 @@ class CreateProfileFragment : Fragment(), OnFilledOutObservable {
                 toggleNextButton()
             }
         })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_GET) {
+            (data?.getParcelableExtra("data") as Bitmap?)?.let {
+                bitmap = it
+            }
+            if (bitmap == null) {
+                data?.data?.let {
+                    bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, it)
+                }
+            }
+            Glide.with(this).load(bitmap).centerInside().circleCrop().into(user_image)
+        }
     }
 
     // checks whether the major and hometown fields are completed, enabling or disabling the next button accordingly
@@ -169,5 +202,9 @@ class CreateProfileFragment : Fragment(), OnFilledOutObservable {
                     .show()
             }
         }
+    }
+
+    companion object {
+        private const val REQUEST_IMAGE_GET = 42
     }
 }

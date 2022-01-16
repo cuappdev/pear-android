@@ -57,7 +57,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
         setContentView(R.layout.activity_scheduling)
         content = intent.getSerializableExtra(CONTENT) as Content
         val fragment: Fragment = when (content) {
-            Content.EDIT_INFO -> CreateProfileFragment()
+            Content.EDIT_INFO -> EditProfileFragment()
             Content.EDIT_INTERESTS -> EditInterestsGroupsFragment.newInstance(true)
             Content.EDIT_GROUPS -> EditInterestsGroupsFragment.newInstance(false)
             Content.SETTINGS -> SettingsFragment()
