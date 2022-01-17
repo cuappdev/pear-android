@@ -194,10 +194,12 @@ class SchedulingActivity :
         if (drawerLayout.isOpen) {
             drawerLayout.close()
         }
-        CoroutineScope(Dispatchers.Main).launch {
-            user = getUser()
-            setUpDrawerLayout()
-            setUpCurrentPage()
+        if (::user.isInitialized) {
+            CoroutineScope(Dispatchers.Main).launch {
+                user = getUser()
+                setUpDrawerLayout()
+                setUpCurrentPage()
+            }
         }
     }
 
