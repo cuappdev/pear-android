@@ -155,13 +155,11 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_GET) {
-            (data?.getParcelableExtra("data") as Bitmap?)?.let {
-                bitmap = it
-            }
-            if (bitmap == null) {
-                data?.data?.let {
-                    bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, it)
-                }
+            bitmap = (data?.getParcelableExtra("data") as Bitmap?) ?: data?.data?.let {
+                return@let MediaStore.Images.Media.getBitmap(
+                    requireContext().contentResolver,
+                    it
+                )
             }
             Glide.with(this).load(bitmap).centerInside().circleCrop().into(user_image)
         }

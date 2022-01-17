@@ -191,6 +191,9 @@ class SchedulingActivity :
 
     override fun onResume() {
         super.onResume()
+        if (drawerLayout.isOpen) {
+            drawerLayout.close()
+        }
         CoroutineScope(Dispatchers.Main).launch {
             user = getUser()
             setUpDrawerLayout()

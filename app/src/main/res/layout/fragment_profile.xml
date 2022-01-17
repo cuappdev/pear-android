@@ -22,11 +22,11 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/user_image"
+                android:id="@+id/userImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/ic_launcher_round" />
+                tools:src="@mipmap/ic_launcher_round" />
         </androidx.cardview.widget.CardView>
 
 
