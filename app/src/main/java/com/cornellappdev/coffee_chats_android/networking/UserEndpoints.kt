@@ -1,6 +1,9 @@
 package com.cornellappdev.coffee_chats_android.networking
 
+import android.graphics.Bitmap
+import android.util.Base64
 import android.util.Log
+import com.cornellappdev.coffee_chats_android.BuildConfig
 import com.cornellappdev.coffee_chats_android.models.*
 import com.google.gson.Gson
 import com.squareup.moshi.Moshi
@@ -8,6 +11,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.ByteArrayOutputStream
 import java.lang.reflect.Type
 
 /* NEW NETWORKING */
@@ -58,6 +62,25 @@ fun Endpoint.Companion.updateDemographics(demographics: Demographics): Endpoint 
         headers = authHeader(),
         body = requestBody,
         method = EndpointMethod.POST
+    )
+}
+
+fun bitmapToBase64String(bitmap: Bitmap): String {
+    ByteArrayOutputStream().let { outputStream ->
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+        return Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP)
+    }
+}
+
+fun Endpoint.Companion.updateProfilePic(bitmap: Bitmap): Endpoint {
+    val profilePicStr = "data:image/png;base64,${bitmapToBase64String(bitmap)}"
+    val requestBody = toRequestBody(ProfilePicBase64(profilePicStr), ProfilePicBase64::class.java)
+    return Endpoint(
+        path = "${BuildConfig.PHOTO_SERVER_URI}/upload/",
+        headers = authHeader(),
+        body = requestBody,
+        method = EndpointMethod.POST,
+        useDefaultHost = false
     )
 }
 

@@ -52,7 +52,7 @@ class ProfileFragment : Fragment() {
     private fun setUpView(user: PearUser) {
         val c = requireContext()
         Glide.with(c).load(user.profilePicUrl).centerInside().circleCrop()
-            .into(user_image)
+            .into(userImage)
         name.text = c.getString(R.string.user_name, user.firstName, user.lastName)
         reach_me.text = c.getString(R.string.reach_me, user.netId)
         val basicInfo = c.getString(

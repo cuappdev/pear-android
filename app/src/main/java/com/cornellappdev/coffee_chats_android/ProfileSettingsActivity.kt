@@ -20,7 +20,8 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     private lateinit var content: Content
 
     /** Pages directly reachable from drawer */
-    private val basePages = listOf(Content.EDIT_INTERESTS, Content.EDIT_GROUPS, Content.SETTINGS)
+    private val basePages =
+        listOf(Content.EDIT_INFO, Content.EDIT_INTERESTS, Content.EDIT_GROUPS, Content.SETTINGS)
 
     /** Fragments nested within settings */
     private val settingsSubPages = listOf(
@@ -32,6 +33,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
 
     /** Fragments where users can edit and save information */
     private val editPages = listOf(
+        Content.EDIT_INFO,
         Content.EDIT_TIME,
         Content.EDIT_GROUPS,
         Content.EDIT_LOCATION,
@@ -40,6 +42,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     )
 
     enum class Content {
+        EDIT_INFO,
         EDIT_INTERESTS,
         EDIT_GROUPS,
         SETTINGS,
@@ -52,8 +55,9 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scheduling)
-        content = intent.getSerializableExtra("content") as Content
+        content = intent.getSerializableExtra(CONTENT) as Content
         val fragment: Fragment = when (content) {
+            Content.EDIT_INFO -> EditProfileFragment()
             Content.EDIT_INTERESTS -> EditInterestsGroupsFragment.newInstance(true)
             Content.EDIT_GROUPS -> EditInterestsGroupsFragment.newInstance(false)
             Content.SETTINGS -> SettingsFragment()
@@ -146,6 +150,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
 
     private fun setUpCurrentPage() {
         headerText.text = when (content) {
+            Content.EDIT_INFO -> getString(R.string.edit_info)
             Content.EDIT_INTERESTS -> getString(R.string.edit_interests)
             Content.EDIT_GROUPS -> getString(R.string.edit_groups)
             Content.SETTINGS -> getString(R.string.settings)
@@ -162,5 +167,9 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
 
     override fun onSelectionEmpty() {
         save_button.isEnabled = false
+    }
+
+    companion object {
+        const val CONTENT = "content"
     }
 }

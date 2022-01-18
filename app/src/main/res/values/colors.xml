@@ -6,7 +6,6 @@
     <color name="signInGrey">#EEEEEE</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="onboardingButtonEnabled">#FFAC5F</color>
     <color name="secondary_green_grey">#99A899</color>
     <color name="searchHint">#979797</color>
     <color name="faded_text">#5B7E58</color>
@@ -20,6 +19,6 @@
     <color name="text_dark_green">#5B7E58</color>
     <color name="text_green">#698965</color>
     <color name="forest_green">#176027</color>
-    <color name="rounded_button">#FFAC5F</color>
+    <color name="accent_orange">#FFAC5F</color>
     <color name="transparent">#00FFFFFF</color>
 </resources>
