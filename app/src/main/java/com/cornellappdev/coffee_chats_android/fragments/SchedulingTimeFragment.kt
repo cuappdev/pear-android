@@ -1,4 +1,4 @@
-package com.cornellappdev.coffee_chats_android
+package com.cornellappdev.coffee_chats_android.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,6 +12,9 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import com.cornellappdev.coffee_chats_android.OnFilledOutListener
+import com.cornellappdev.coffee_chats_android.OnFilledOutObservable
+import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.adapters.DayAdapter
 import com.cornellappdev.coffee_chats_android.adapters.TimeOptionAdapter
 import com.cornellappdev.coffee_chats_android.models.ApiResponse
