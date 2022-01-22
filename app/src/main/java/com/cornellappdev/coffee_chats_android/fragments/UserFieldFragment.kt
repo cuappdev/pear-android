@@ -1,8 +1,7 @@
 package com.cornellappdev.coffee_chats_android.fragments
 
-import android.graphics.BlendMode
-import android.graphics.BlendModeColorFilter
 import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -78,7 +77,13 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
                     getAllPurposes().map { UserField(text = it.name, id = it.id) }
                 }
                 Category.GROUP -> {
-                    getAllGroups().map { UserField(text = it.name, drawableUrl = it.imageUrl, id = it.id) }
+                    getAllGroups().map {
+                        UserField(
+                            text = it.name,
+                            drawableUrl = it.imageUrl,
+                            id = it.id
+                        )
+                    }
                 }
             }.toTypedArray()
 
@@ -129,13 +134,13 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
                 currObj.toggleSelected()
                 if (currObj.isSelected()) {
                     drawableBox.colorFilter =
-                        BlendModeColorFilter(selectedColor, BlendMode.MULTIPLY)
+                        PorterDuffColorFilter(selectedColor, PorterDuff.Mode.MULTIPLY)
                     userFields.add(currObj.getText())
 
                     callback!!.onFilledOut()
                 } else {
                     drawableBox.colorFilter =
-                        BlendModeColorFilter(unselectedColor, BlendMode.MULTIPLY)
+                        PorterDuffColorFilter(unselectedColor, PorterDuff.Mode.MULTIPLY)
                     userFields.remove(selectedText)
                     if (userFields.isEmpty()) {
                         callback!!.onSelectionEmpty()
