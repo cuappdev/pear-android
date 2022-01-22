@@ -1,4 +1,4 @@
-package com.cornellappdev.coffee_chats_android
+package com.cornellappdev.coffee_chats_android.fragments
 
 import android.os.Bundle
 import android.text.Editable
@@ -8,6 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.cornellappdev.coffee_chats_android.OnFilledOutListener
+import com.cornellappdev.coffee_chats_android.OnFilledOutObservable
+import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.models.SocialMedia
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.cornellappdev.coffee_chats_android.networking.updateOnboardingStatus

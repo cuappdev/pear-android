@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
+import com.cornellappdev.coffee_chats_android.fragments.ProfileFragment
 import kotlinx.android.synthetic.main.activity_onboarding.*
 
 class ProfileActivity : AppCompatActivity() {

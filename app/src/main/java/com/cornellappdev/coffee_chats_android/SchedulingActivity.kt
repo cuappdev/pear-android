@@ -13,6 +13,10 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.bumptech.glide.Glide
+import com.cornellappdev.coffee_chats_android.fragments.NoMatchFragment
+import com.cornellappdev.coffee_chats_android.fragments.ProfileFragment
+import com.cornellappdev.coffee_chats_android.fragments.SchedulingPlaceFragment
+import com.cornellappdev.coffee_chats_android.fragments.SchedulingTimeFragment
 import com.cornellappdev.coffee_chats_android.models.User
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.cornellappdev.coffee_chats_android.networking.setUpNetworking

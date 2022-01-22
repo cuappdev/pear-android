@@ -1,4 +1,4 @@
-package com.cornellappdev.coffee_chats_android
+package com.cornellappdev.coffee_chats_android.fragments
 
 import android.content.res.Resources
 import android.os.Bundle
@@ -9,6 +9,9 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ListView
 import androidx.fragment.app.Fragment
+import com.cornellappdev.coffee_chats_android.OnFilledOutListener
+import com.cornellappdev.coffee_chats_android.OnFilledOutObservable
+import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter
 import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter.ItemColor
 import com.cornellappdev.coffee_chats_android.models.UserField
@@ -16,6 +19,7 @@ import com.cornellappdev.coffee_chats_android.models.UserField.Category
 import com.cornellappdev.coffee_chats_android.networking.getAllGroups
 import com.cornellappdev.coffee_chats_android.networking.getAllInterests
 import com.cornellappdev.coffee_chats_android.networking.getUser
+import com.cornellappdev.coffee_chats_android.updateUserField
 import kotlinx.android.synthetic.main.fragment_edit_interests.*
 import kotlinx.android.synthetic.main.fragment_edit_interests.view.*
 import kotlinx.android.synthetic.main.interest_group_list_with_header.view.*

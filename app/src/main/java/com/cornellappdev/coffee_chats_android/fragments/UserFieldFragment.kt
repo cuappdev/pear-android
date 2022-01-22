@@ -1,8 +1,7 @@
-package com.cornellappdev.coffee_chats_android
+package com.cornellappdev.coffee_chats_android.fragments
 
-import android.graphics.BlendMode
-import android.graphics.BlendModeColorFilter
 import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +12,9 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.cornellappdev.coffee_chats_android.OnFilledOutListener
+import com.cornellappdev.coffee_chats_android.OnFilledOutObservable
+import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter
 import com.cornellappdev.coffee_chats_android.models.UserField
 import com.cornellappdev.coffee_chats_android.models.UserField.Category
@@ -20,6 +22,7 @@ import com.cornellappdev.coffee_chats_android.networking.getAllGroups
 import com.cornellappdev.coffee_chats_android.networking.getAllInterests
 import com.cornellappdev.coffee_chats_android.networking.getAllPurposes
 import com.cornellappdev.coffee_chats_android.networking.getUser
+import com.cornellappdev.coffee_chats_android.updateUserField
 import kotlinx.android.synthetic.main.fragment_interests_groups.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -74,7 +77,13 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
                     getAllPurposes().map { UserField(text = it.name, id = it.id) }
                 }
                 Category.GROUP -> {
-                    getAllGroups().map { UserField(text = it.name, drawableUrl = it.imageUrl, id = it.id) }
+                    getAllGroups().map {
+                        UserField(
+                            text = it.name,
+                            drawableUrl = it.imageUrl,
+                            id = it.id
+                        )
+                    }
                 }
             }.toTypedArray()
 
@@ -125,13 +134,13 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
                 currObj.toggleSelected()
                 if (currObj.isSelected()) {
                     drawableBox.colorFilter =
-                        BlendModeColorFilter(selectedColor, BlendMode.MULTIPLY)
+                        PorterDuffColorFilter(selectedColor, PorterDuff.Mode.MULTIPLY)
                     userFields.add(currObj.getText())
 
                     callback!!.onFilledOut()
                 } else {
                     drawableBox.colorFilter =
-                        BlendModeColorFilter(unselectedColor, BlendMode.MULTIPLY)
+                        PorterDuffColorFilter(unselectedColor, PorterDuff.Mode.MULTIPLY)
                     userFields.remove(selectedText)
                     if (userFields.isEmpty()) {
                         callback!!.onSelectionEmpty()
