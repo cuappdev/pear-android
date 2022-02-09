@@ -17,6 +17,7 @@
     <string  name="upload_image">Upload New Picture</string>
     <string name="major">Major</string>
     <string name="hometown">Hometown</string>
+    <string name="grad_student">Grad Student</string>
     <!--INTERESTS-->
     <string-array name="interest_titles">
         <item>Art</item>
