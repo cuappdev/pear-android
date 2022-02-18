@@ -8,7 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.adapters.PeopleAdapter
+import com.cornellappdev.coffee_chats_android.networking.getAllUsers
+import com.cornellappdev.coffee_chats_android.networking.getUser
 import kotlinx.android.synthetic.main.fragment_people.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class PeopleFragment : Fragment() {
 
@@ -21,7 +26,10 @@ class PeopleFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        recyclerView.adapter = PeopleAdapter(listOf())
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        CoroutineScope(Dispatchers.Main).launch {
+            val users = getAllUsers()
+            recyclerView.adapter = PeopleAdapter(users)
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        }
     }
 }

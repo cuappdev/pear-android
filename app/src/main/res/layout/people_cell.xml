@@ -4,14 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/rounded_edittext">
+    android:background="@drawable/rounded_edittext"
+    android:padding="@dimen/people_cell_padding">
 
     <ImageView
         android:id="@+id/profileImageView"
         android:layout_width="@dimen/chat_profile_pic_size"
         android:layout_height="@dimen/chat_profile_pic_size"
-        android:layout_marginStart="@dimen/profile_pic_margin"
-        android:layout_marginTop="@dimen/profile_pic_margin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@mipmap/ic_launcher_round" />
@@ -19,7 +18,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/profile_pic_margin"
+        android:layout_marginStart="@dimen/people_cell_padding"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/profileImageView"
@@ -53,7 +52,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/profile_pic_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/userInfo">

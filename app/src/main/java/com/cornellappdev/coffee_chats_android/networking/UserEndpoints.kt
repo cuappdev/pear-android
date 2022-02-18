@@ -52,6 +52,9 @@ fun Endpoint.Companion.authenticateUser(idToken: String): Endpoint =
 fun Endpoint.Companion.getSelfProfile(): Endpoint =
     Endpoint(path = "/me/", headers = authHeader(), method = EndpointMethod.GET)
 
+fun Endpoint.Companion.getAllUsers(): Endpoint =
+    Endpoint(path = "/users/", headers = authHeader(), method = EndpointMethod.GET)
+
 fun Endpoint.Companion.getUserProfile(userId: Int): Endpoint =
     Endpoint(path = "/users/$userId/", headers = authHeader(), method = EndpointMethod.GET)
 
