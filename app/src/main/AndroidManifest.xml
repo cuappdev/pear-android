@@ -23,7 +23,8 @@
         <activity
             android:name=".MessagingActivity"
             android:exported="false"
-            android:theme="@style/noAnimTheme" />
+            android:theme="@style/noAnimTheme"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ProfileSettingsActivity"
             android:theme="@style/noAnimTheme" />

@@ -42,11 +42,18 @@ class ChatAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val message = messages[position]
-        // display message and profile image as needed
+        // display message
         val isUserMessage = message.senderId == userId
         val textView = if (isUserMessage) holder.userChatTextView else holder.pearChatTextView
+        // hide other textview
+        if (isUserMessage) {
+            holder.pearChatTextView.visibility = View.GONE
+        } else {
+            holder.userChatTextView.visibility = View.GONE
+        }
         textView.text = message.message
         textView.visibility = View.VISIBLE
+        // display profile picture as needed
         if (!isUserMessage) {
             val c = holder.itemView.context
             holder.pearProfileImageView.visibility = View.VISIBLE
@@ -61,12 +68,16 @@ class ChatAdapter(
                     c.startActivity(this)
                 }
             }
+        } else {
+            holder.pearProfileImageView.visibility = View.GONE
         }
         // display date as needed
         val currDate = getFormattedDate(messages[position])
         if (position == 0 || getFormattedDate(messages[position - 1]) != currDate) {
             holder.dateStamp.visibility = View.VISIBLE
             holder.dateStamp.text = currDate
+        } else {
+            holder.dateStamp.visibility = View.GONE
         }
         holder.itemView.setOnClickListener {
             hideKeyboard(holder.itemView.context, holder.itemView)

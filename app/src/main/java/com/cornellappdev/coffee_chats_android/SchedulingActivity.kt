@@ -40,8 +40,6 @@ class SchedulingActivity :
     }
     private val noMatchTag = "NO_MATCH"
     private val matchTag = "MATCH"
-    private val scheduleTimeTag = "SCHEDULING_TIME"
-    private val schedulePlaceTag = "SCHEDULING_PLACE"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +52,12 @@ class SchedulingActivity :
             // user is already signed in - get user profile
             CoroutineScope(Dispatchers.Main).launch {
                 setUpNetworking(preferencesHelper.accessToken!!)
-                user = getUser()
+                try {
+                    user = getUser()
+                } catch (e : Exception) {
+                    // login error, prompt user to sign in
+                    signIn()
+                }
                 // move to onboarding if user hasn't finished
                 if (!user.hasOnboarded) {
                     val intent = Intent(applicationContext, OnboardingActivity::class.java)
@@ -234,31 +237,6 @@ class SchedulingActivity :
             }
             startActivity(messagingIntent)
         }
-    }
-
-    private fun onNextPage() {
-        if (page == 2) {
-            val locationFragment =
-                supportFragmentManager.findFragmentByTag(schedulePlaceTag) as SchedulingPlaceFragment
-            locationFragment.saveInformation()
-            page = 0
-            setUpCurrentPage()
-            supportFragmentManager.popBackStack(noMatchTag, 0)
-            return
-        }
-        if (page < 2) page++
-        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-        if (page == 1) {
-            ft.replace(fragmentContainer.id, SchedulingTimeFragment(), scheduleTimeTag)
-        } else {
-            val timeFragment =
-                supportFragmentManager.findFragmentByTag(scheduleTimeTag) as SchedulingTimeFragment
-            timeFragment.saveInformation()
-            ft.replace(fragmentContainer.id, SchedulingPlaceFragment(), schedulePlaceTag)
-        }
-        setUpCurrentPage()
-        ft.addToBackStack("ft")
-        ft.commit()
     }
 
     private fun setUpCurrentPage() {

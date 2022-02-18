@@ -55,7 +55,14 @@ class ChatFragment : Fragment(), MessageObserver {
                 if (it == -1) messages.size else it
             }
         messages.add(insertionIndex, message)
+        // update this message and surrounding messages to avoid datestamp issues
         adapter.notifyItemInserted(insertionIndex)
+        if (insertionIndex - 1 >= 0) {
+            adapter.notifyItemChanged(insertionIndex - 1)
+        }
+        if (insertionIndex + 1 < messages.size) {
+            adapter.notifyItemChanged(insertionIndex + 1)
+        }
         recyclerView.scrollToPosition(adapter.itemCount - 1)
         if (emptyChatView.visibility == View.VISIBLE) {
             emptyChatView.visibility = View.GONE
