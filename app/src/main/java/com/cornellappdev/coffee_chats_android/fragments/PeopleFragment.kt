@@ -16,6 +16,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+ * Displays a searchable list of all users
+ */
 class PeopleFragment : Fragment() {
 
     override fun onCreateView(

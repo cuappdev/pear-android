@@ -49,7 +49,7 @@
             tools:text="Major Hometown Pronouns" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/group_interests_pill_list"
+            android:id="@+id/interests_pill_list"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -58,7 +58,7 @@
             app:layout_constraintTop_toBottomOf="@id/userInfo">
 
             <androidx.constraintlayout.helper.widget.Flow
-                android:id="@+id/group_interests_pill_flow"
+                android:id="@+id/interests_pill_flow"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:constraint_referenced_ids=""

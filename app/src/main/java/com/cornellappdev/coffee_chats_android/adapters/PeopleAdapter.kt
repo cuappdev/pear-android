@@ -14,6 +14,9 @@ import com.cornellappdev.coffee_chats_android.models.PearUser
 import kotlinx.android.synthetic.main.people_cell.view.*
 import kotlinx.android.synthetic.main.people_pill_view.view.*
 
+/**
+ * Adapter for use in PeopleFragment, displaying a list of all users
+ */
 class PeopleAdapter(private val people: List<PearUser>) :
     RecyclerView.Adapter<PeopleAdapter.ViewHolder>() {
 
@@ -21,8 +24,8 @@ class PeopleAdapter(private val people: List<PearUser>) :
         val profileImageView: ImageView = view.profileImageView
         val name: TextView = view.name
         val userInfo: TextView = view.userInfo
-        val groupInterestsList: ConstraintLayout = view.group_interests_pill_list
-        val groupInterestsFlow: Flow = view.group_interests_pill_flow
+        val interestsList: ConstraintLayout = view.interests_pill_list
+        val interestsFlow: Flow = view.interests_pill_flow
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -47,21 +50,21 @@ class PeopleAdapter(private val people: List<PearUser>) :
                 user.graduationYear,
                 user.hometown
             )
-            // TODO refactor populating pill views into a single function
+            // populate pill views
             val ids = mutableListOf<Int>()
             user.interests.forEach {
                 LayoutInflater.from(c).inflate(
                     R.layout.people_pill_view,
-                    groupInterestsList,
+                    interestsList,
                     false
                 ).apply {
                     id = View.generateViewId()
                     ids.add(id)
                     text_view.text = it.name
-                    groupInterestsList.addView(this)
+                    interestsList.addView(this)
                 }
             }
-            groupInterestsFlow.referencedIds = ids.toIntArray()
+            interestsFlow.referencedIds = ids.toIntArray()
         }
     }
 
