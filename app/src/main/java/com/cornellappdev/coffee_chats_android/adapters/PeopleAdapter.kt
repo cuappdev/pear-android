@@ -52,6 +52,12 @@ class PeopleAdapter(private val people: List<PearUser>) :
             )
             // populate pill views
             val ids = mutableListOf<Int>()
+            // clear previous pills to prevent UI bugs after scrolling
+            val numChildren = interestsList.childCount
+            if (numChildren > 1) {
+                // start at 1 in order not to remove flow widget
+                interestsList.removeViews(1, numChildren - 1)
+            }
             user.interests.forEach {
                 LayoutInflater.from(c).inflate(
                     R.layout.people_pill_view,
