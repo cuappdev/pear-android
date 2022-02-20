@@ -3,6 +3,7 @@
     <!--SchedulingActivity-->
     <dimen name="default_border_margin">24dp</dimen>
     <dimen name="people_cell_padding">10dp</dimen>
+    <dimen name="search_bar_height">40dp</dimen>
 
     <!-- MESSAGING -->
     <dimen name="profile_pic_margin">15dp</dimen>
