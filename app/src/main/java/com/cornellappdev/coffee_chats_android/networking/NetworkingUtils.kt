@@ -60,6 +60,9 @@ suspend fun authenticateUser(idToken: String): UserSession =
 
 // PROFILE
 
+suspend fun getAllUsers(query: String = ""): List<PearUser> =
+    getListHelper(Endpoint.getAllUsers(query), PearUser::class.java)
+
 suspend fun getUser(): User = getDataHelper(Endpoint.getSelfProfile(), User::class.java)
 
 suspend fun getUser(userId: Int): PearUser =

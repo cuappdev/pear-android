@@ -37,6 +37,7 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
     private var hometownFilled = false
     private var year = Calendar.getInstance().get(Calendar.YEAR)
     private var bitmap: Bitmap? = null
+    private lateinit var gradStudent: String
 
     private lateinit var user: User
 
@@ -57,6 +58,8 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
         for (i in 0..4) {
             classArray.add("Class of " + (year + i))
         }
+        gradStudent = requireContext().getString(R.string.grad_student)
+        classArray.add(gradStudent)
         val classArrayAdapter: ArrayAdapter<String> = ArrayAdapter(
             requireContext(),
             R.layout.profile_spinner_item,
@@ -85,9 +88,14 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
                 callback!!.onSelectionEmpty()
             }
 
-            if (!user.graduationYear.isNullOrBlank()) classSpinner.setSelection(
-                Integer.parseInt(user.graduationYear!!) - year
-            )
+            if (!user.graduationYear.isNullOrBlank()) {
+                classSpinner.setSelection(
+                    when (user.graduationYear) {
+                        gradStudent -> classArray.size - 1
+                        else -> Integer.parseInt(user.graduationYear!!) - year
+                    }
+                )
+            }
 
             // Initializing the major AutoCompleteTextView
             allMajorsList = getAllMajors()
@@ -185,7 +193,9 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
 
     override fun saveInformation() {
         val pronouns = pronounSpinner.selectedItem as String
-        val graduationYear = (classSpinner.selectedItemPosition + year).toString()
+        val graduationYear =
+            if (classSpinner.selectedItem as String == gradStudent) gradStudent
+            else (classSpinner.selectedItemPosition + year).toString()
         val major = majorACTV.text.toString()
         val majorIndex = allMajorsList.firstOrNull { it.name == major }?.id
         val hometown = hometownEditText.text.toString()

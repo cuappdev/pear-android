@@ -52,6 +52,11 @@ fun Endpoint.Companion.authenticateUser(idToken: String): Endpoint =
 fun Endpoint.Companion.getSelfProfile(): Endpoint =
     Endpoint(path = "/me/", headers = authHeader(), method = EndpointMethod.GET)
 
+fun Endpoint.Companion.getAllUsers(query: String): Endpoint {
+    val path = if (query.isEmpty()) "/users/" else "/users/?query=$query"
+    return Endpoint(path = path, headers = authHeader(), method = EndpointMethod.GET)
+}
+
 fun Endpoint.Companion.getUserProfile(userId: Int): Endpoint =
     Endpoint(path = "/users/$userId/", headers = authHeader(), method = EndpointMethod.GET)
 

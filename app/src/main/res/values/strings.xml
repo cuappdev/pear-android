@@ -14,9 +14,10 @@
     <string name="goals_header">How do you want to use Pear?</string>
     <string name="talking_pointers_header">What do you most want to talk about?</string>
     <string name="add_later_button">I\'ll add later</string>
-    <string  name="upload_image">Upload New Picture</string>
+    <string name="upload_image">Upload New Picture</string>
     <string name="major">Major</string>
     <string name="hometown">Hometown</string>
+    <string name="grad_student">Grad Student</string>
     <!--INTERESTS-->
     <string-array name="interest_titles">
         <item>Art</item>
@@ -114,6 +115,10 @@
     <!--PROFILE-->
     <string name="reach_me">Reach me at %1$s</string>
     <string name="basic_profile_info">I study &lt;b>%1$s&lt;/b> in the class of &lt;b>%2$s&lt;/b>, and my home is in &lt;b>%3$s&lt;/b>! My pronouns are &lt;b>%4$s&lt;/b>.</string>
+    <string name="dummy_name">First Last</string>
+
+    <!--PEOPLE-->
+    <string name="user_info">%1$s · %2$s · %3$s</string>
 
     <!--SCHEDULING TIME-->
     <string name="scheduling_time_header">When are you free?</string>
