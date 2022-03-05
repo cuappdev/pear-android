@@ -234,7 +234,7 @@
     <string name="feedback_send">Send feedback</string>
     <string name="feedback_contact">Contact us</string>
     <string name="feedback_report">Report user</string>
-    <string name="form_url">https://docs.google.com/forms/d/e/1FAIpQLSf49KRJQwugXqESmeRlZ8T6dSPHiZl-3BRA60WaOpMhmOjSeQ/viewform</string>
+    <string name="feedback_url">https://docs.google.com/forms/d/e/1FAIpQLSf49KRJQwugXqESmeRlZ8T6dSPHiZl-3BRA60WaOpMhmOjSeQ/viewform</string>
     <string name="feedback_email">team@cornellappdev.com</string>
     <string name="contact_email_subject">Pear Feedback</string>
     <string name="report_email_subject">Report user</string>

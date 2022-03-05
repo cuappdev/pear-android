@@ -3,9 +3,13 @@ package com.cornellappdev.coffee_chats_android
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Resources
+import android.net.Uri
 import android.os.Bundle
 import android.util.TypedValue
+import android.view.ContextThemeWrapper
+import android.view.MenuInflater
 import android.view.View
+import android.widget.PopupMenu
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -112,7 +116,6 @@ class SchedulingActivity :
             }
             true
         }
-
         setUpCurrentPage()
     }
 
@@ -282,6 +285,7 @@ class SchedulingActivity :
             primaryActionButton.setPadding(100, 0, 100, 0)
         } else {
             backButton.background = ContextCompat.getDrawable(this, R.drawable.ic_back_carrot)
+            feedbackButton.background = ContextCompat.getDrawable(this, R.drawable.ic_feedback_button)
             backButton.layoutParams = backButton.layoutParams.apply {
                 height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 18f, displayMetrics)
                     .toInt()
@@ -289,6 +293,7 @@ class SchedulingActivity :
                     .toInt()
             }
             increaseHitArea(backButton)
+            increaseHitArea(feedbackButton)
             backButton.setOnClickListener {
                 onBackPage()
             }
@@ -303,7 +308,54 @@ class SchedulingActivity :
             }
         }
         primaryActionButton.text = getString(R.string.send_message)
+        feedbackButton.visibility = View.VISIBLE
     }
+
+     fun showPopup(v: View) {
+        val wrapper = ContextThemeWrapper(this, R.style.popUpTheme_PopupMenu)
+        val popup = PopupMenu(wrapper, v)
+        val inflater: MenuInflater = popup.menuInflater
+        inflater.inflate(R.menu.feedback_menu, popup.menu)
+        popup.show()
+
+        popup.setOnMenuItemClickListener {
+            when(it.itemId){
+                R.id.nav_send_feedback -> {
+                    val i = Intent(Intent.ACTION_VIEW)
+                    i.data = Uri.parse(getString(R.string.feedback_url))
+                    startActivity(i)
+                    true
+                }
+                R.id.nav_contact_us -> {
+                    sendEmail(getString(R.string.feedback_email),getString(R.string.feedback_contact))
+                    true
+                }
+                R.id.nav_report_user -> {
+                    sendEmail(getString(R.string.feedback_email),getString(R.string.feedback_report))
+                    true
+                }
+            }
+            false
+        }
+    }
+
+
+    private fun sendEmail(recipient: String, subject: String) {
+        val mIntent = Intent(Intent.ACTION_SEND)
+        mIntent.data = Uri.parse("mailto:")
+        mIntent.type = "text/plain"
+
+        //puts in recipient of email
+        mIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(recipient))
+        //puts in the subject for the email
+        mIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
+
+        //opens the email chooser
+        startActivity(Intent.createChooser(mIntent, "Choose Email Application..."))
+
+    }
+
+
 
     companion object {
         private const val SETTINGS_CODE = 10032
