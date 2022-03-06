@@ -312,6 +312,7 @@ class SchedulingActivity :
     }
 
      fun showPopup(v: View) {
+         // style wrapper
         val wrapper = ContextThemeWrapper(this, R.style.popUpTheme_PopupMenu)
         val popup = PopupMenu(wrapper, v)
         val inflater: MenuInflater = popup.menuInflater
