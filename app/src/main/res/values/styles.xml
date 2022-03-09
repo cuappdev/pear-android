@@ -26,7 +26,5 @@
         <item name="android:textColor">@color/black</item>
         <item name="android:fontFamily">@font/circular_book</item>
         <item name="android:textAlignment">center</item>
-        <!--
-  <item name="android:background">@drawable/ic_popup_background</item>   -->
     </style>
 </resources>
