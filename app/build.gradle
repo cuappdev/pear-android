@@ -22,13 +22,11 @@ android {
     buildTypes {
         debug {
             buildConfigField("String", "BACKEND_URI", "\"pear-backend.cornellappdev.com\"")
-            manifestPlaceholders = [usesCleartextTraffic: "true"]
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
             buildConfigField("String", "BACKEND_URI", "\"pear-backend.cornellappdev.com\"")
-            manifestPlaceholders = [usesCleartextTraffic: "false"]
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
