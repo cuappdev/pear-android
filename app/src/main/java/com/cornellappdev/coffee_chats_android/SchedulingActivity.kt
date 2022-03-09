@@ -58,30 +58,30 @@ class SchedulingActivity :
                 setUpNetworking(preferencesHelper.accessToken!!)
                 try {
                     user = getUser()
+                    // move to onboarding if user hasn't finished
+                    if (!user.hasOnboarded) {
+                        val intent = Intent(applicationContext, OnboardingActivity::class.java)
+                        intent.putExtra(ACCESS_TOKEN_TAG, preferencesHelper.accessToken!!)
+                        startActivity(intent)
+                    } else {
+                        setUpDrawerLayout()
+                        if (user.currentMatch == null) {
+                            primaryActionButton.visibility = View.GONE
+                            ft.add(fragmentContainer.id, NoMatchFragment()).addToBackStack(noMatchTag)
+                            ft.commit()
+                            headerText.text = getString(R.string.no_match_header)
+                        } else {
+                            ft.add(
+                                fragmentContainer.id,
+                                ProfileFragment.newInstance(user.currentMatch!!.matchedUser)
+                            ).addToBackStack(matchTag)
+                            ft.commit()
+                            headerText.text = getString(R.string.match_header)
+                        }
+                    }
                 } catch (e : Exception) {
                     // login error, prompt user to sign in
                     signIn()
-                }
-                // move to onboarding if user hasn't finished
-                if (!user.hasOnboarded) {
-                    val intent = Intent(applicationContext, OnboardingActivity::class.java)
-                    intent.putExtra(ACCESS_TOKEN_TAG, preferencesHelper.accessToken!!)
-                    startActivity(intent)
-                } else {
-                    setUpDrawerLayout()
-                    if (user.currentMatch == null) {
-                        primaryActionButton.visibility = View.GONE
-                        ft.add(fragmentContainer.id, NoMatchFragment()).addToBackStack(noMatchTag)
-                        ft.commit()
-                        headerText.text = getString(R.string.no_match_header)
-                    } else {
-                        ft.add(
-                            fragmentContainer.id,
-                            ProfileFragment.newInstance(user.currentMatch!!.matchedUser)
-                        ).addToBackStack(matchTag)
-                        ft.commit()
-                        headerText.text = getString(R.string.match_header)
-                    }
                 }
             }
         } else {
