@@ -289,8 +289,8 @@ class SchedulingActivity :
         feedbackButton.visibility = View.VISIBLE
     }
 
-     fun showPopup(v: View) {
-         // style wrapper
+    fun showPopup(v: View) {
+        // style wrapper
         val wrapper = ContextThemeWrapper(this, R.style.popUpTheme_PopupMenu)
         val popup = PopupMenu(wrapper, v)
         val inflater: MenuInflater = popup.menuInflater
@@ -318,7 +318,6 @@ class SchedulingActivity :
         }
     }
 
-
     private fun sendEmail(recipient: String, subject: String) {
         val mIntent = Intent(Intent.ACTION_SEND)
         mIntent.data = Uri.parse("mailto:")
@@ -331,8 +330,6 @@ class SchedulingActivity :
         //opens the email chooser
         startActivity(Intent.createChooser(mIntent, "Choose Email Application..."))
     }
-
-
 
     companion object {
         private const val SETTINGS_CODE = 10032

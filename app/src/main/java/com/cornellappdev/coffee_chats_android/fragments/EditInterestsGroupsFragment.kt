@@ -20,7 +20,6 @@ import com.cornellappdev.coffee_chats_android.networking.getAllGroups
 import com.cornellappdev.coffee_chats_android.networking.getAllInterests
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.cornellappdev.coffee_chats_android.updateUserField
-import kotlinx.android.synthetic.main.activity_scheduling.*
 import kotlinx.android.synthetic.main.fragment_edit_interests.*
 import kotlinx.android.synthetic.main.fragment_edit_interests.view.*
 import kotlinx.android.synthetic.main.interest_group_list_with_header.view.*
@@ -37,7 +36,6 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
     private val moreItems = ArrayList<UserField>()
     private lateinit var selectedItemsAdapter: UserFieldAdapter
     private lateinit var moreItemsAdapter: UserFieldAdapter
-
 
     /** whether to display all selected items, or just the first 3 */
     private var showExcessSelectedItems = false

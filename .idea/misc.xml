@@ -8,7 +8,7 @@
         <entry key="app/src/main/res/drawable/ic_vector.xml" value="0.2222222222222222" />
         <entry key="app/src/main/res/layout/activity_messaging.xml" value="0.18958333333333333" />
         <entry key="app/src/main/res/layout/activity_onboarding.xml" value="0.3920539423640272" />
-        <entry key="app/src/main/res/layout/activity_scheduling.xml" value="0.3297045101088647" />
+        <entry key="app/src/main/res/layout/activity_scheduling.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_sign_in.xml" value="0.14356884057971014" />
         <entry key="app/src/main/res/layout/chat_cell.xml" value="0.14356884057971014" />
         <entry key="app/src/main/res/layout/fragment_about.xml" value="0.14356884057971014" />
