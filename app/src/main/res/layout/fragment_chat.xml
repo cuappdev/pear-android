@@ -46,6 +46,7 @@
             android:hint="@string/send_message_hint"
             android:maxHeight="@dimen/chat_edit_text_max_height"
             android:padding="@dimen/chat_bubble_padding"
+            android:textColor="@color/black"
             android:textColorHint="@color/secondary_green_grey"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/sendMessageButton"

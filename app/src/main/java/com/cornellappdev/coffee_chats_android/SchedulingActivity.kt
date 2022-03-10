@@ -9,6 +9,7 @@ import android.util.TypedValue
 import android.view.ContextThemeWrapper
 import android.view.MenuInflater
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.PopupMenu
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -16,16 +17,15 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bumptech.glide.Glide
-import com.cornellappdev.coffee_chats_android.fragments.NoMatchFragment
-import com.cornellappdev.coffee_chats_android.fragments.ProfileFragment
-import com.cornellappdev.coffee_chats_android.fragments.SchedulingPlaceFragment
-import com.cornellappdev.coffee_chats_android.fragments.SchedulingTimeFragment
+import com.cornellappdev.coffee_chats_android.fragments.*
 import com.cornellappdev.coffee_chats_android.models.User
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.cornellappdev.coffee_chats_android.networking.setUpNetworking
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_scheduling.*
 import kotlinx.android.synthetic.main.nav_header_profile.view.*
 import kotlinx.coroutines.CoroutineScope
@@ -65,6 +65,24 @@ class SchedulingActivity :
                         startActivity(intent)
                     } else {
                         setUpDrawerLayout()
+                        val c = this@SchedulingActivity
+                        viewPager.adapter =
+                            ViewPagerAdapter(c, user.currentMatch != null)
+                        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+                            tab.text =
+                                if (position == 0) c.getText(R.string.match_header)
+                                else c.getText(R.string.people_header)
+                        }.attach()
+                        // resize tabs so they wrap tab text
+                        tabLayout.apply {
+                            for (i in 0 until NUM_FRAGMENTS) {
+                                val layout = (this.getChildAt(0) as LinearLayout).getChildAt(0) as LinearLayout
+                                val layoutParams = layout.layoutParams as LinearLayout.LayoutParams
+                                layoutParams.weight = 0f
+                                layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT
+                                layout.layoutParams = layoutParams
+                            }
+                        }
                         if (user.currentMatch == null) {
                             primaryActionButton.visibility = View.GONE
                             ft.add(fragmentContainer.id, NoMatchFragment()).addToBackStack(noMatchTag)
@@ -331,7 +349,26 @@ class SchedulingActivity :
         startActivity(Intent.createChooser(mIntent, "Choose Email Application..."))
     }
 
+    // adapter for tabs
+    private inner class ViewPagerAdapter(activity: SchedulingActivity, val isUserMatched: Boolean) :
+        FragmentStateAdapter(activity) {
+        override fun getItemCount(): Int {
+            return NUM_FRAGMENTS
+        }
+
+        override fun createFragment(position: Int): Fragment {
+            return when (position) {
+                0 -> {
+                    if (isUserMatched) ProfileFragment.newInstance(user.currentMatch!!.matchedUser)
+                    else NoMatchFragment()
+                }
+                else -> PeopleFragment()
+            }
+        }
+    }
+
     companion object {
+        private const val NUM_FRAGMENTS = 2
         private const val SETTINGS_CODE = 10032
     }
 }

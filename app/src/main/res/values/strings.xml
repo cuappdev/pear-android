@@ -118,6 +118,7 @@
     <string name="dummy_name">First Last</string>
 
     <!--PEOPLE-->
+    <string name="people_header">People</string>
     <string name="user_info">%1$s · %2$s · %3$s</string>
 
     <!--SCHEDULING TIME-->
