@@ -1,5 +1,6 @@
 package com.cornellappdev.coffee_chats_android.adapters
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.constraintlayout.helper.widget.Flow
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.cornellappdev.coffee_chats_android.ProfileActivity
 import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.models.PearUser
 import kotlinx.android.synthetic.main.people_cell.view.*
@@ -71,6 +73,12 @@ class PeopleAdapter(private val people: List<PearUser>) :
                 }
             }
             interestsFlow.referencedIds = ids.toIntArray()
+            // navigate to user profile on click
+            itemView.setOnClickListener {
+                val intent = Intent(c, ProfileActivity::class.java)
+                intent.putExtra(ProfileActivity.USER_ID, user.id)
+                c.startActivity(intent)
+            }
         }
     }
 
