@@ -106,9 +106,15 @@ class SchedulingActivity :
             // prompt user to log in
             signIn()
         }
-
+        // hide fragment container and header- replaced by TabLayout + ViewPager
+        fragmentContainer.visibility = View.GONE
+        headerText.visibility = View.GONE
+        tabLayout.visibility = View.VISIBLE
         primaryActionButton.setOnClickListener {
             onSendMessageClick()
+        }
+        feedbackButton.setOnClickListener {
+            showPopup(it)
         }
 
         // set up navigation view
