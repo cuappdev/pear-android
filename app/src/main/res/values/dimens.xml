@@ -5,6 +5,9 @@
     <dimen name="people_cell_padding">10dp</dimen>
     <dimen name="search_bar_height">40dp</dimen>
 
+    <!-- NoMatchFragment-->
+    <dimen name="no_match_margin_vertical">20dp</dimen>
+
     <!-- MESSAGING -->
     <dimen name="profile_pic_margin">15dp</dimen>
     <dimen name="text_profile_pic_margin">6dp</dimen>

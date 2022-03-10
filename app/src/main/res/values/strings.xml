@@ -111,6 +111,7 @@
     <string name="current_pear">Current Pear</string>
     <string name="default_week_stamp">1 Week ago</string>
     <string name="week_stamp">%1$d Weeks ago</string>
+    <string name="message_send_error">Message failed to send</string>
 
     <!--PROFILE-->
     <string name="reach_me">Reach me at %1$s</string>
@@ -211,10 +212,10 @@
     <string name="profile_groups_header">Groups I\'m a part of</string>
 
     <!--NO MATCH PAGE-->
-    <string name="no_match_header">Meet your new Pear next Monday</string>
+    <string name="no_match_header">Meet your new Pear next Sunday</string>
     <string name="no_match_subheader">
-        In the meantime, tell me when you\'re
-        usually free to make meeting up easier!
+        In the meantime, browse the people
+        page to see who else is on the app!
     </string>
     <string name="no_match_availability">Enter Availability</string>
 

@@ -69,8 +69,12 @@ class SchedulingActivity :
                     } else {
                         setUpDrawerLayout()
                         val c = this@SchedulingActivity
+                        val isUserMatched = user.currentMatch != null
+                        if (!isUserMatched) {
+                            primaryActionButton.visibility = View.GONE
+                        }
                         viewPager.adapter =
-                            ViewPagerAdapter(c, user.currentMatch != null)
+                            ViewPagerAdapter(c, isUserMatched)
                         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
                             tab.text =
                                 if (position == 0) c.getText(R.string.match_header)
@@ -89,7 +93,7 @@ class SchedulingActivity :
                             addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                                 override fun onTabSelected(tab: TabLayout.Tab?) {
                                     primaryActionButton.visibility =
-                                        if (tab?.text.toString() == c.getText(R.string.match_header)) {
+                                        if (tab?.text.toString() == c.getText(R.string.match_header) && isUserMatched) {
                                             View.VISIBLE
                                         } else {
                                             View.GONE
