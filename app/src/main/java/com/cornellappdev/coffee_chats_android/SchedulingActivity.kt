@@ -19,12 +19,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bumptech.glide.Glide
-import com.cornellappdev.coffee_chats_android.fragments.*
+import com.cornellappdev.coffee_chats_android.fragments.NoMatchFragment
+import com.cornellappdev.coffee_chats_android.fragments.PeopleFragment
+import com.cornellappdev.coffee_chats_android.fragments.ProfileFragment
 import com.cornellappdev.coffee_chats_android.models.User
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.cornellappdev.coffee_chats_android.networking.setUpNetworking
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_scheduling.*
 import kotlinx.android.synthetic.main.nav_header_profile.view.*
@@ -76,28 +79,30 @@ class SchedulingActivity :
                         // resize tabs so they wrap tab text
                         tabLayout.apply {
                             for (i in 0 until NUM_FRAGMENTS) {
-                                val layout = (this.getChildAt(0) as LinearLayout).getChildAt(0) as LinearLayout
+                                val layout =
+                                    (this.getChildAt(0) as LinearLayout).getChildAt(0) as LinearLayout
                                 val layoutParams = layout.layoutParams as LinearLayout.LayoutParams
                                 layoutParams.weight = 0f
                                 layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT
                                 layout.layoutParams = layoutParams
                             }
-                        }
-                        if (user.currentMatch == null) {
-                            primaryActionButton.visibility = View.GONE
-                            ft.add(fragmentContainer.id, NoMatchFragment()).addToBackStack(noMatchTag)
-                            ft.commit()
-                            headerText.text = getString(R.string.no_match_header)
-                        } else {
-                            ft.add(
-                                fragmentContainer.id,
-                                ProfileFragment.newInstance(user.currentMatch!!.matchedUser)
-                            ).addToBackStack(matchTag)
-                            ft.commit()
-                            headerText.text = getString(R.string.match_header)
+                            addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                                override fun onTabSelected(tab: TabLayout.Tab?) {
+                                    primaryActionButton.visibility =
+                                        if (tab?.text.toString() == c.getText(R.string.match_header)) {
+                                            View.VISIBLE
+                                        } else {
+                                            View.GONE
+                                        }
+                                }
+
+                                override fun onTabUnselected(tab: TabLayout.Tab?) {}
+
+                                override fun onTabReselected(tab: TabLayout.Tab?) {}
+                            })
                         }
                     }
-                } catch (e : Exception) {
+                } catch (e: Exception) {
                     // login error, prompt user to sign in
                     signIn()
                 }
@@ -287,7 +292,8 @@ class SchedulingActivity :
             primaryActionButton.setPadding(100, 0, 100, 0)
         } else {
             backButton.background = ContextCompat.getDrawable(this, R.drawable.ic_back_carrot)
-            feedbackButton.background = ContextCompat.getDrawable(this, R.drawable.ic_feedback_button)
+            feedbackButton.background =
+                ContextCompat.getDrawable(this, R.drawable.ic_feedback_button)
             backButton.layoutParams = backButton.layoutParams.apply {
                 height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 18f, displayMetrics)
                     .toInt()
@@ -322,7 +328,7 @@ class SchedulingActivity :
         popup.show()
 
         popup.setOnMenuItemClickListener {
-            when(it.itemId){
+            when (it.itemId) {
                 R.id.nav_send_feedback -> {
                     val i = Intent(Intent.ACTION_VIEW)
                     i.data = Uri.parse(getString(R.string.feedback_url))
@@ -330,11 +336,17 @@ class SchedulingActivity :
                     true
                 }
                 R.id.nav_contact_us -> {
-                    sendEmail(getString(R.string.feedback_email), getString(R.string.feedback_contact))
+                    sendEmail(
+                        getString(R.string.feedback_email),
+                        getString(R.string.feedback_contact)
+                    )
                     true
                 }
                 R.id.nav_report_user -> {
-                    sendEmail(getString(R.string.feedback_email), getString(R.string.feedback_report))
+                    sendEmail(
+                        getString(R.string.feedback_email),
+                        getString(R.string.feedback_report)
+                    )
                     true
                 }
             }

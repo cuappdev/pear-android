@@ -10,7 +10,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background_green">
+        android:background="@color/background_green"
+        android:paddingBottom="110dp">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/user_image_card_view"
