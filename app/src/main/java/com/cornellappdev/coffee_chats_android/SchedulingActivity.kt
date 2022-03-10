@@ -323,7 +323,7 @@ class SchedulingActivity :
         feedbackButton.visibility = View.VISIBLE
     }
 
-    fun showPopup(v: View) {
+    private fun showPopup(v: View) {
         // style wrapper
         val wrapper = ContextThemeWrapper(this, R.style.popUpTheme_PopupMenu)
         val popup = PopupMenu(wrapper, v)

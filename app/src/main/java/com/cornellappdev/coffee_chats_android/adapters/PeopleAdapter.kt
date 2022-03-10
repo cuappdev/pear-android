@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cornellappdev.coffee_chats_android.ProfileActivity
 import com.cornellappdev.coffee_chats_android.R
+import com.cornellappdev.coffee_chats_android.hideKeyboard
 import com.cornellappdev.coffee_chats_android.models.PearUser
 import kotlinx.android.synthetic.main.people_cell.view.*
 import kotlinx.android.synthetic.main.people_pill_view.view.*
@@ -77,6 +78,7 @@ class PeopleAdapter(private val people: List<PearUser>) :
             itemView.setOnClickListener {
                 val intent = Intent(c, ProfileActivity::class.java)
                 intent.putExtra(ProfileActivity.USER_ID, user.id)
+                hideKeyboard(c, it)
                 c.startActivity(intent)
             }
         }

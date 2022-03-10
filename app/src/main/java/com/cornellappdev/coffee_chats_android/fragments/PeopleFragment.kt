@@ -32,13 +32,16 @@ class PeopleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                updateUsers(query)
-                hideKeyboard(requireContext(), search)
                 search.clearFocus()
-                return true
+                search.setQuery(query, false)
+                hideKeyboard(requireContext(), search)
+                return false
             }
 
-            override fun onQueryTextChange(query: String?): Boolean = false
+            override fun onQueryTextChange(query: String?): Boolean {
+                updateUsers(query)
+                return true
+            }
 
         })
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
