@@ -50,6 +50,7 @@ class PeopleFragment : Fragment() {
         CoroutineScope(Dispatchers.Main).launch {
             val users = getAllUsers(query ?: "")
             recyclerView.adapter = PeopleAdapter(users)
+            loadingIcon.visibility = View.GONE
         }
     }
 }
