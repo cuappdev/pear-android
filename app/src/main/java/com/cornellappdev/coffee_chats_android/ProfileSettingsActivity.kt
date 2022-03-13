@@ -107,20 +107,6 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     val settingsNavigationListener = fun(menuItem: MenuItem): Boolean {
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
         when (menuItem.itemId) {
-            R.id.nav_availabilities -> {
-                content = Content.EDIT_TIME
-                setUpCurrentPage()
-                ft.replace(fragmentContainer.id, SchedulingTimeFragment(), content.name)
-                    .addToBackStack("ft")
-                    .commit()
-            }
-            R.id.nav_location -> {
-                content = Content.EDIT_LOCATION
-                setUpCurrentPage()
-                ft.replace(fragmentContainer.id, SchedulingPlaceFragment(), content.name)
-                    .addToBackStack("ft")
-                    .commit()
-            }
             R.id.nav_social_media -> {
                 content = Content.SOCIAL_MEDIA
                 setUpCurrentPage()
