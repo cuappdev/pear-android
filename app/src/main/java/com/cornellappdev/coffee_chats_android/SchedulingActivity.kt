@@ -9,6 +9,7 @@ import android.util.TypedValue
 import android.view.ContextThemeWrapper
 import android.view.MenuInflater
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.PopupMenu
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -16,16 +17,18 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bumptech.glide.Glide
 import com.cornellappdev.coffee_chats_android.fragments.NoMatchFragment
+import com.cornellappdev.coffee_chats_android.fragments.PeopleFragment
 import com.cornellappdev.coffee_chats_android.fragments.ProfileFragment
-import com.cornellappdev.coffee_chats_android.fragments.SchedulingPlaceFragment
-import com.cornellappdev.coffee_chats_android.fragments.SchedulingTimeFragment
 import com.cornellappdev.coffee_chats_android.models.User
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.cornellappdev.coffee_chats_android.networking.setUpNetworking
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_scheduling.*
 import kotlinx.android.synthetic.main.nav_header_profile.view.*
 import kotlinx.coroutines.CoroutineScope
@@ -58,39 +61,69 @@ class SchedulingActivity :
                 setUpNetworking(preferencesHelper.accessToken!!)
                 try {
                     user = getUser()
-                } catch (e : Exception) {
+                    // move to onboarding if user hasn't finished
+                    if (!user.hasOnboarded) {
+                        val intent = Intent(applicationContext, OnboardingActivity::class.java)
+                        intent.putExtra(ACCESS_TOKEN_TAG, preferencesHelper.accessToken!!)
+                        startActivity(intent)
+                    } else {
+                        setUpDrawerLayout()
+                        val c = this@SchedulingActivity
+                        val isUserMatched = user.currentMatch != null
+                        if (!isUserMatched) {
+                            primaryActionButton.visibility = View.GONE
+                        }
+                        viewPager.adapter =
+                            ViewPagerAdapter(c, isUserMatched)
+                        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+                            tab.text =
+                                if (position == 0) c.getText(R.string.match_header)
+                                else c.getText(R.string.people_header)
+                        }.attach()
+                        // resize tabs so they wrap tab text
+                        tabLayout.apply {
+                            for (i in 0 until NUM_FRAGMENTS) {
+                                val layout =
+                                    (this.getChildAt(0) as LinearLayout).getChildAt(0) as LinearLayout
+                                val layoutParams = layout.layoutParams as LinearLayout.LayoutParams
+                                layoutParams.weight = 0f
+                                layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT
+                                layout.layoutParams = layoutParams
+                            }
+                            addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                                override fun onTabSelected(tab: TabLayout.Tab?) {
+                                    primaryActionButton.visibility =
+                                        if (tab?.text.toString() == c.getText(R.string.match_header) && isUserMatched) {
+                                            View.VISIBLE
+                                        } else {
+                                            View.GONE
+                                        }
+                                }
+
+                                override fun onTabUnselected(tab: TabLayout.Tab?) {}
+
+                                override fun onTabReselected(tab: TabLayout.Tab?) {}
+                            })
+                        }
+                    }
+                } catch (e: Exception) {
                     // login error, prompt user to sign in
                     signIn()
-                }
-                // move to onboarding if user hasn't finished
-                if (!user.hasOnboarded) {
-                    val intent = Intent(applicationContext, OnboardingActivity::class.java)
-                    intent.putExtra(ACCESS_TOKEN_TAG, preferencesHelper.accessToken!!)
-                    startActivity(intent)
-                } else {
-                    setUpDrawerLayout()
-                    if (user.currentMatch == null) {
-                        primaryActionButton.visibility = View.GONE
-                        ft.add(fragmentContainer.id, NoMatchFragment()).addToBackStack(noMatchTag)
-                        ft.commit()
-                        headerText.text = getString(R.string.no_match_header)
-                    } else {
-                        ft.add(
-                            fragmentContainer.id,
-                            ProfileFragment.newInstance(user.currentMatch!!.matchedUser)
-                        ).addToBackStack(matchTag)
-                        ft.commit()
-                        headerText.text = getString(R.string.match_header)
-                    }
                 }
             }
         } else {
             // prompt user to log in
             signIn()
         }
-
+        // hide fragment container and header- replaced by TabLayout + ViewPager
+        fragmentContainer.visibility = View.GONE
+        headerText.visibility = View.GONE
+        tabLayout.visibility = View.VISIBLE
         primaryActionButton.setOnClickListener {
             onSendMessageClick()
+        }
+        feedbackButton.setOnClickListener {
+            showPopup(it)
         }
 
         // set up navigation view
@@ -263,7 +296,8 @@ class SchedulingActivity :
             primaryActionButton.setPadding(100, 0, 100, 0)
         } else {
             backButton.background = ContextCompat.getDrawable(this, R.drawable.ic_back_carrot)
-            feedbackButton.background = ContextCompat.getDrawable(this, R.drawable.ic_feedback_button)
+            feedbackButton.background =
+                ContextCompat.getDrawable(this, R.drawable.ic_feedback_button)
             backButton.layoutParams = backButton.layoutParams.apply {
                 height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 18f, displayMetrics)
                     .toInt()
@@ -289,7 +323,7 @@ class SchedulingActivity :
         feedbackButton.visibility = View.VISIBLE
     }
 
-    fun showPopup(v: View) {
+    private fun showPopup(v: View) {
         // style wrapper
         val wrapper = ContextThemeWrapper(this, R.style.popUpTheme_PopupMenu)
         val popup = PopupMenu(wrapper, v)
@@ -298,7 +332,7 @@ class SchedulingActivity :
         popup.show()
 
         popup.setOnMenuItemClickListener {
-            when(it.itemId){
+            when (it.itemId) {
                 R.id.nav_send_feedback -> {
                     val i = Intent(Intent.ACTION_VIEW)
                     i.data = Uri.parse(getString(R.string.feedback_url))
@@ -306,11 +340,17 @@ class SchedulingActivity :
                     true
                 }
                 R.id.nav_contact_us -> {
-                    sendEmail(getString(R.string.feedback_email), getString(R.string.feedback_contact))
+                    sendEmail(
+                        getString(R.string.feedback_email),
+                        getString(R.string.feedback_contact)
+                    )
                     true
                 }
                 R.id.nav_report_user -> {
-                    sendEmail(getString(R.string.feedback_email), getString(R.string.feedback_report))
+                    sendEmail(
+                        getString(R.string.feedback_email),
+                        getString(R.string.feedback_report)
+                    )
                     true
                 }
             }
@@ -331,7 +371,26 @@ class SchedulingActivity :
         startActivity(Intent.createChooser(mIntent, "Choose Email Application..."))
     }
 
+    // adapter for tabs
+    private inner class ViewPagerAdapter(activity: SchedulingActivity, val isUserMatched: Boolean) :
+        FragmentStateAdapter(activity) {
+        override fun getItemCount(): Int {
+            return NUM_FRAGMENTS
+        }
+
+        override fun createFragment(position: Int): Fragment {
+            return when (position) {
+                0 -> {
+                    if (isUserMatched) ProfileFragment.newInstance(user.currentMatch!!.matchedUser)
+                    else NoMatchFragment()
+                }
+                else -> PeopleFragment()
+            }
+        }
+    }
+
     companion object {
+        private const val NUM_FRAGMENTS = 2
         private const val SETTINGS_CODE = 10032
     }
 }

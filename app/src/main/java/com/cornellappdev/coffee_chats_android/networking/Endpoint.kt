@@ -16,12 +16,12 @@ class Endpoint(
     private val method: EndpointMethod,
     private val useDefaultHost: Boolean = true
 ) {
-    private val host = "http://${BuildConfig.BACKEND_URI}/api"
+    private val host = "https://${BuildConfig.BACKEND_URI}/api"
 
     companion object
 
     fun okHttpRequest(): Request {
-        val endpoint = if (useDefaultHost) host + path else path
+        val endpoint = if (useDefaultHost) host + path else "https://$path"
         val headers = headers.toHeaders()
 
         return when (method) {

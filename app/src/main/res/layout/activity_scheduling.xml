@@ -19,6 +19,7 @@
             android:id="@+id/headerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="44dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -30,24 +31,41 @@
                 android:background="@drawable/ic_back_carrot"
                 android:clickable="true"
                 android:focusable="true"
-                app:layout_constraintBottom_toBottomOf="@id/headerText"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="@id/headerText" />
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginHorizontal="74dp"
+                android:background="@drawable/rounded_shape_white"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tabIndicatorColor="@color/transparent"
+                app:tabMode="fixed"
+                app:tabSelectedTextColor="@color/forest_green"
+                app:tabTextAppearance="@style/tabLayoutTheme"
+                app:tabTextColor="@color/secondary_green_grey" />
 
             <TextView
                 android:id="@+id/headerText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="70dp"
-                android:layout_marginTop="60dp"
                 android:layout_marginRight="70dp"
                 android:fontFamily="@font/circular_medium"
                 android:gravity="center"
                 android:text="@string/no_match_header"
                 android:textColor="@color/black"
                 android:textSize="24sp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
@@ -61,27 +79,35 @@
                 android:textColor="@color/save_button_text_color"
                 android:textSize="20sp"
                 android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@id/headerText"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/headerText" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/feedbackButton"
                 android:layout_width="26.67dp"
                 android:layout_height="26.67dp"
-                android:background="@drawable/ic_feedback_button"
                 android:layout_marginEnd="24dp"
-                android:paddingBottom="40dp"
+                android:background="@drawable/ic_feedback_button"
                 android:clickable="true"
                 android:focusable="true"
-                app:layout_constraintBottom_toBottomOf="@id/headerText"
+                android:paddingBottom="40dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/tabLayout"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/headerText"
-                android:onClick="showPopup"
-                android:visibility="gone"/>
+                app:layout_constraintTop_toTopOf="@id/tabLayout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginVertical="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/headerLayout" />
 
         <FrameLayout
             android:id="@+id/fragmentContainer"
@@ -98,8 +124,9 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="50dp"
             android:background="@drawable/profile_button_background"
+            android:drawableStart="@drawable/ic_paper_plane_right"
             android:elevation="3dp"
             android:enabled="true"
             android:fontFamily="@font/circular_medium"
