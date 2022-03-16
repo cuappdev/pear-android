@@ -26,8 +26,6 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
 
     /** Fragments nested within settings */
     private val settingsSubPages = listOf(
-        Content.EDIT_TIME,
-        Content.EDIT_LOCATION,
         Content.SOCIAL_MEDIA,
         Content.ABOUT
     )
@@ -35,9 +33,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     /** Fragments where users can edit and save information */
     private val editPages = listOf(
         Content.EDIT_INFO,
-        Content.EDIT_TIME,
         Content.EDIT_GROUPS,
-        Content.EDIT_LOCATION,
         Content.SOCIAL_MEDIA,
         Content.EDIT_INTERESTS
     )
@@ -47,8 +43,6 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
         EDIT_INTERESTS,
         EDIT_GROUPS,
         SETTINGS,
-        EDIT_TIME,
-        EDIT_LOCATION,
         SOCIAL_MEDIA,
         ABOUT
     }
@@ -62,14 +56,11 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
             Content.EDIT_INTERESTS -> EditInterestsGroupsFragment.newInstance(true)
             Content.EDIT_GROUPS -> EditInterestsGroupsFragment.newInstance(false)
             Content.SETTINGS -> SettingsFragment()
-            Content.EDIT_TIME -> SchedulingTimeFragment()
-            Content.EDIT_LOCATION -> SchedulingPlaceFragment()
             Content.SOCIAL_MEDIA -> SocialMediaFragment()
             Content.ABOUT -> AboutFragment()
         }
         ft.add(fragmentContainer.id, fragment, content.name).addToBackStack("ft").commit()
 
-        primaryActionButton.visibility = View.GONE
         increaseHitArea(backButton)
         backButton.setOnClickListener { onBackPressed() }
         save_button.setOnClickListener { onSave(it) }
@@ -141,7 +132,6 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
             Content.EDIT_INTERESTS -> getString(R.string.edit_interests)
             Content.EDIT_GROUPS -> getString(R.string.edit_groups)
             Content.SETTINGS -> getString(R.string.settings)
-            Content.EDIT_TIME, Content.EDIT_LOCATION -> getString(R.string.edit_availability)
             Content.SOCIAL_MEDIA -> getString(R.string.social_media)
             Content.ABOUT -> getString(R.string.about_pear)
         }
