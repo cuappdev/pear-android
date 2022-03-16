@@ -16,3 +16,9 @@ captures
 keys.properties
 google-services.json
 app/src/main/res/values/secrets.xml
+// keys 
+*.pepk
+// keystores
+*.jks
+// app bundles
+*.aab
