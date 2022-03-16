@@ -14,7 +14,6 @@ import android.widget.PopupMenu
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bumptech.glide.Glide
@@ -36,7 +35,6 @@ import kotlinx.coroutines.launch
 
 class SchedulingActivity : AppCompatActivity() {
     private lateinit var user: User
-    private var page = 0        // 0: no match; 1: time scheduling; 2: place scheduling
     private val preferencesHelper: PreferencesHelper by lazy {
         PreferencesHelper(this)
     }
@@ -184,8 +182,6 @@ class SchedulingActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if (drawerLayout.isOpen) {
             drawerLayout.close()
-        } else if (page > 0) {
-            onBackPage()
         } else {
             finish()
         }
@@ -214,47 +210,21 @@ class SchedulingActivity : AppCompatActivity() {
         }
     }
 
-    private fun onBackPage() {
-        page--
-        supportFragmentManager.popBackStack()
-        setUpCurrentPage()
-    }
-
     private fun setUpCurrentPage() {
         val displayMetrics = Resources.getSystem().displayMetrics
-        if (page == 0) {
-            backButton.background = ContextCompat.getDrawable(this, R.drawable.ic_sign_in_logo)
-            backButton.layoutParams = backButton.layoutParams.apply {
-                height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30f, displayMetrics)
-                    .toInt()
-                width = height
-            }
-            backButton.setOnClickListener {
-                if (drawerLayout.isOpen) {
-                    drawerLayout.close()
-                } else {
-                    drawerLayout.open()
-                }
-            }
-        } else {
-            backButton.background = ContextCompat.getDrawable(this, R.drawable.ic_back_carrot)
-            feedbackButton.background =
-                ContextCompat.getDrawable(this, R.drawable.ic_feedback_button)
-            backButton.layoutParams = backButton.layoutParams.apply {
-                height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 18f, displayMetrics)
-                    .toInt()
-                width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10f, displayMetrics)
-                    .toInt()
-            }
-            increaseHitArea(backButton)
-            increaseHitArea(feedbackButton)
-            backButton.setOnClickListener {
-                onBackPage()
-            }
-            if (page == 1) {
-                headerText.text = getString(R.string.scheduling_time_header)
+        // clear back caret icon
+        backButton.background = null
+        backButton.layoutParams = backButton.layoutParams.apply {
+            height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30f, displayMetrics)
+                .toInt()
+            width = height
+        }
+        increaseHitArea(backButton)
+        backButton.setOnClickListener {
+            if (drawerLayout.isOpen) {
+                drawerLayout.close()
             } else {
-                headerText.text = getString(R.string.scheduling_place_header)
+                drawerLayout.open()
             }
         }
         feedbackButton.visibility = View.VISIBLE
