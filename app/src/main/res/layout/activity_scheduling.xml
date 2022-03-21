@@ -114,31 +114,10 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginVertical="5dp"
-            app:layout_constraintBottom_toTopOf="@id/primaryActionButton"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/headerLayout" />
-
-        <Button
-            android:id="@+id/primaryActionButton"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_marginBottom="50dp"
-            android:background="@drawable/profile_button_background"
-            android:drawableStart="@drawable/ic_paper_plane_right"
-            android:elevation="3dp"
-            android:enabled="true"
-            android:fontFamily="@font/circular_medium"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:text="@string/no_match_availability"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView
