@@ -10,7 +10,8 @@ import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.adapters.MessageAdapter
 import com.cornellappdev.coffee_chats_android.networking.getCurrentMatch
 import com.cornellappdev.coffee_chats_android.networking.getSelfMatches
-import kotlinx.android.synthetic.main.fragment_chat.*
+import kotlinx.android.synthetic.main.fragment_chat.recyclerView
+import kotlinx.android.synthetic.main.fragment_messages.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,11 +41,15 @@ class MessagesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         CoroutineScope(Dispatchers.Main).launch {
             val currentPearId = getCurrentMatch()?.matchedUser?.id
-            adapter = MessageAdapter(getSelfMatches(userId!!), currentPearId) {
-                container.addChatFragment(userId!!, it.id, it.firstName, it.profilePicUrl!!)
+            if (currentPearId != null) {
+                adapter = MessageAdapter(getSelfMatches(userId!!), currentPearId) {
+                    container.addChatFragment(userId!!, it.id, it.firstName, it.profilePicUrl!!)
+                }
+                recyclerView.adapter = adapter
+                recyclerView.layoutManager = LinearLayoutManager(requireContext())
+            } else {
+                emptyMessagesView.visibility = View.VISIBLE
             }
-            recyclerView.adapter = adapter
-            recyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
     }
 
