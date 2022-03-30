@@ -273,15 +273,13 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
         val hometown = hometownEditText.text.toString()
 
         CoroutineScope(Dispatchers.IO).launch {
-            val photoUrl = bitmap?.let {
-                return@let updateProfilePic(it)?.data
-            }
+            bitmap?.let { updateProfilePic(it) }
             val demographics = Demographics(
                 pronouns,
                 graduationYear,
                 if (majorIndex != null) listOf(majorIndex) else emptyList(),
                 hometown,
-                photoUrl
+                null
             )
             val updateDemographicsResponse = updateDemographics(demographics)
             if (updateDemographicsResponse == null || !updateDemographicsResponse.success) {
