@@ -190,7 +190,7 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
     private fun pickImage() {
         CropImage.activity()
             .setGuidelines(CropImageView.Guidelines.ON)
-            .setAspectRatio(1, 1) //You can skip this for free form aspect ratio)
+            .setAspectRatio(1, 1)
             .start(requireContext(), this)
     }
 
