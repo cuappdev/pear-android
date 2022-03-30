@@ -3,7 +3,6 @@ package com.cornellappdev.coffee_chats_android.networking
 import android.graphics.Bitmap
 import android.util.Base64
 import android.util.Log
-import com.cornellappdev.coffee_chats_android.BuildConfig
 import com.cornellappdev.coffee_chats_android.models.*
 import com.google.gson.Gson
 import com.squareup.moshi.Moshi
@@ -81,11 +80,10 @@ fun Endpoint.Companion.updateProfilePic(bitmap: Bitmap): Endpoint {
     val profilePicStr = "data:image/png;base64,${bitmapToBase64String(bitmap)}"
     val requestBody = toRequestBody(ProfilePicBase64(profilePicStr), ProfilePicBase64::class.java)
     return Endpoint(
-        path = "${BuildConfig.PHOTO_SERVER_URI}/upload/",
+        path = "/me/",
         headers = authHeader(),
         body = requestBody,
-        method = EndpointMethod.POST,
-        useDefaultHost = false
+        method = EndpointMethod.POST
     )
 }
 

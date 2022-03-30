@@ -1,18 +1,23 @@
 package com.cornellappdev.coffee_chats_android.fragments
 
-import android.app.Activity
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.cornellappdev.coffee_chats_android.OnFilledOutListener
 import com.cornellappdev.coffee_chats_android.OnFilledOutObservable
@@ -24,12 +29,20 @@ import com.cornellappdev.coffee_chats_android.networking.getAllMajors
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.cornellappdev.coffee_chats_android.networking.updateDemographics
 import com.cornellappdev.coffee_chats_android.networking.updateProfilePic
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
+import id.zelory.compressor.Compressor
+import id.zelory.compressor.constraint.format
+import id.zelory.compressor.constraint.resolution
+import id.zelory.compressor.constraint.size
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.ByteArrayInputStream
+import java.io.File
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 class EditProfileFragment : Fragment(), OnFilledOutObservable {
     // variables to keep track if editTexts are filled out
@@ -123,21 +136,8 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
                 }
             )
         }
-        upload_image.setOnClickListener {
-            Intent(Intent.ACTION_PICK).apply {
-                type = "image/*"
-                putExtra("crop", "true")
-                putExtra("scale", "true")
-                putExtra("outputX", 250)
-                putExtra("outputY", 250)
-                putExtra("aspectX", 1)
-                putExtra("aspectY", 1)
-                putExtra("return-data", true)
-                if (resolveActivity(requireContext().packageManager) != null) {
-                    startActivityForResult(this, REQUEST_IMAGE_GET)
-                }
-            }
-        }
+
+        upload_image.setOnClickListener { uploadImage() }
 
         // monitor changes in major editText and enable button if both major and hometown != empty
         majorACTV.addTextChangedListener(object : TextWatcher {
@@ -164,15 +164,87 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
         })
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_GET) {
-            bitmap = (data?.getParcelableExtra("data") as Bitmap?) ?: data?.data?.let {
-                return@let MediaStore.Images.Media.getBitmap(
-                    requireContext().contentResolver,
-                    it
-                )
+    /** Checks for permissions and allows user to pick image if permissions granted */
+    private fun uploadImage() {
+        val permissions = arrayOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+        if (permissionsGranted(permissions)) {
+            pickImage()
+        } else {
+            requestPermissions(permissions, PICK_IMAGE_CODE)
+        }
+    }
+
+    /** True if all permissions are granted */
+    private fun permissionsGranted(permissions: Array<String>): Boolean {
+        val c = requireContext()
+        // checks each permission and returns true if all permissions granted results are true
+        return permissions
+            .map { p -> (checkSelfPermission(c, p) == PackageManager.PERMISSION_GRANTED) }
+            .all { b -> b }
+    }
+
+    /** Allows user to pick an image, and optionally crop it */
+    private fun pickImage() {
+        CropImage.activity()
+            .setGuidelines(CropImageView.Guidelines.ON)
+            .setAspectRatio(1, 1) //You can skip this for free form aspect ratio)
+            .start(requireContext(), this)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == PICK_IMAGE_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                pickImage()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.image_permission_denied),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-            Glide.with(this).load(bitmap).centerInside().circleCrop().into(user_image)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            val result = CropImage.getActivityResult(data)
+            if (resultCode == AppCompatActivity.RESULT_OK) {
+                val image = BitmapFactory.decodeFile(result.uri.path)
+                Glide
+                    .with(this)
+                    .load(image)
+                    .centerInside()
+                    .circleCrop()
+                    .into(user_image)
+                val picture = File(result.uri.path!!)
+                // compress image
+                lifecycleScope.launch {
+                    val compressedImageFile =
+                        Compressor.compress(requireContext(), picture) {
+                            resolution(250, 250)
+                            format(Bitmap.CompressFormat.PNG)
+                            size(2_097_152) // 2 MB
+                        }
+                    val byteArray = compressedImageFile.readBytes()
+                    bitmap = BitmapFactory.decodeStream(ByteArrayInputStream(byteArray))
+                }
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                val error = result.error
+                Log.d("CROP_IMAGE_ERROR", error.toString())
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.image_upload_failed),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 
@@ -220,6 +292,6 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
     }
 
     companion object {
-        private const val REQUEST_IMAGE_GET = 42
+        private const val PICK_IMAGE_CODE = 42
     }
 }
