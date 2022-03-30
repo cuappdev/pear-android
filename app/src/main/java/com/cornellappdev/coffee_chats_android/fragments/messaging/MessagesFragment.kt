@@ -40,15 +40,16 @@ class MessagesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         CoroutineScope(Dispatchers.Main).launch {
-            val currentPearId = getCurrentMatch()?.matchedUser?.id
-            if (currentPearId != null) {
-                adapter = MessageAdapter(getSelfMatches(userId!!), currentPearId) {
+            val pears = getSelfMatches(userId!!)
+            if (pears.isEmpty()) {
+                emptyMessagesView.visibility = View.VISIBLE
+            } else {
+                val currentPearId = getCurrentMatch()?.matchedUser?.id
+                adapter = MessageAdapter(pears, currentPearId) {
                     container.addChatFragment(userId!!, it.id, it.firstName, it.profilePicUrl!!)
                 }
                 recyclerView.adapter = adapter
                 recyclerView.layoutManager = LinearLayoutManager(requireContext())
-            } else {
-                emptyMessagesView.visibility = View.VISIBLE
             }
         }
     }
