@@ -29,7 +29,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.ArrayList
 
 class EditProfileFragment : Fragment(), OnFilledOutObservable {
     // variables to keep track if editTexts are filled out
@@ -106,22 +105,10 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
             )
             majorACTV.setAdapter(majorAdapter)
 
-            // Initializing the pronoun spinner
-            val pronoun = arrayOf("He/Him/His", "She/Her/Hers", "They/Them/Theirs")
-            val pronounAdapter: ArrayAdapter<String> = ArrayAdapter(
-                requireContext(),
-                R.layout.profile_spinner_item,
-                pronoun
-            )
-            pronounSpinner.adapter = pronounAdapter
-            pronounSpinner.setSelection(
-                when (user.pronouns) {
-                    pronoun[0] -> 0
-                    pronoun[1] -> 1
-                    pronoun[2] -> 2
-                    else -> 0
-                }
-            )
+            // Initializing the pronoun EditText
+            if (!user.pronouns.isNullOrBlank()) {
+                pronounEditText.setText(user.pronouns)
+            }
         }
         upload_image.setOnClickListener {
             Intent(Intent.ACTION_PICK).apply {
@@ -192,7 +179,7 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
     }
 
     override fun saveInformation() {
-        val pronouns = pronounSpinner.selectedItem as String
+        val pronouns = pronounEditText.text.toString()
         val graduationYear =
             if (classSpinner.selectedItem as String == gradStudent) gradStudent
             else (classSpinner.selectedItemPosition + year).toString()

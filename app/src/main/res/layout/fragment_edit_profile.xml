@@ -89,15 +89,22 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/majorACTV" />
 
-        <Spinner
-            android:id="@+id/pronounSpinner"
+        <EditText
+            android:id="@+id/pronounEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
             android:layout_marginTop="20dp"
             android:layout_marginRight="40dp"
             android:background="@drawable/rounded_edittext"
-            android:popupBackground="@color/white"
+            android:fontFamily="@font/circular_book"
+            android:hint="@string/pronouns"
+            android:imeOptions="actionDone"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/faded_text"
+            android:textSize="20sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/hometownEditText" />
 
