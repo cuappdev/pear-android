@@ -75,8 +75,11 @@ class ChatFragment : Fragment(), MessageObserver {
     }
 
     private fun sendMessage() {
-        sendMessage(sendMessageEditText.text.toString(), userId!!, pearId!!, this)
-        sendMessageEditText.text.clear()
+        val message = sendMessageEditText.text.toString()
+        if (message.isNotBlank()) {
+            sendMessage(message, userId!!, pearId!!, this)
+            sendMessageEditText.text.clear()
+        }
     }
 
     companion object {

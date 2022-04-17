@@ -101,6 +101,9 @@
     <string name="facebook_profile">Facebook profile link</string>
 
     <!--MESSAGING-->
+    <string name="no_match_to_message">
+        No pears to message right now.\nIn the meantime, browse the people\npage to see who else is on the app!
+    </string>
     <string name="send_message">\tSend a Message</string>
     <string name="send_message_hint">Say hi</string>
     <string name="messages_header">Messages</string>
