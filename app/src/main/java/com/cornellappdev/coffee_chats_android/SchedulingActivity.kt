@@ -177,6 +177,7 @@ class SchedulingActivity : AppCompatActivity() {
     private fun signIn() {
         val intent = Intent(this, SignInActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     override fun onBackPressed() {
