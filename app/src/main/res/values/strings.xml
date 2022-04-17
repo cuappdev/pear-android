@@ -102,6 +102,9 @@
     <string name="facebook_profile">Facebook profile link</string>
 
     <!--MESSAGING-->
+    <string name="no_match_to_message">
+        No pears to message right now.\nIn the meantime, browse the people\npage to see who else is on the app!
+    </string>
     <string name="send_message">\tSend a Message</string>
     <string name="send_message_hint">Say hi</string>
     <string name="messages_header">Messages</string>
@@ -262,6 +265,9 @@
     <string name="edit_availability">Edit Availability</string>
     <string name="edit_interests">Edit Interests</string>
     <string name="edit_groups">Edit Groups</string>
+
+    <string name="image_permission_denied">Permission denied. Please grant permissions to upload profile image.</string>
+    <string name="image_upload_failed">Failed to upload image.</string>
 
     <!--ABOUT-->
     <string name="pear_creation_reason">Pear was created to help Cornell students meet new people and form meaningful connections.</string>
