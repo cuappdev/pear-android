@@ -6,10 +6,7 @@ import android.graphics.PorterDuffColorFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Filterable
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
@@ -20,7 +17,8 @@ class UserFieldAdapter(
     private val mContext: Context,
     private val fieldList: List<UserField>,
     private val itemColor: ItemColor,
-    private val hideIcon: Boolean = true
+    private val hideIcon: Boolean = true,
+    private val resizeCell: Boolean = false
 ) :
     ArrayAdapter<UserField?>(mContext, 0, fieldList), Filterable {
 
@@ -45,6 +43,15 @@ class UserFieldAdapter(
         } else {
             listItem = convertView
             viewHolder = listItem.tag as ViewHolder
+        }
+
+        // changes cell height to wrap content with some padding - currently only used for prompts
+        if (resizeCell) {
+            listItem.layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            val padding = context.resources.getDimensionPixelSize(R.dimen.prompts_cell_padding)
+            listItem.setPadding(padding, padding, padding, padding)
         }
 
         val currentClubInterest = fieldList[position]
