@@ -36,4 +36,9 @@
         <item name="fontWeight">900</item>
         <item name="textAllCaps">false</item>
     </style>
+
+    <style name="drawerMenuTheme">
+        <item name="android:textSize">20sp</item>
+        <item name="fontFamily">@font/circular_book</item>
+    </style>
 </resources>
