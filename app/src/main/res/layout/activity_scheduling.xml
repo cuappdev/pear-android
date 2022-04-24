@@ -42,6 +42,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginHorizontal="74dp"
                 android:background="@drawable/rounded_shape_white"
+                android:paddingHorizontal="@dimen/tab_padding_horizontal"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
