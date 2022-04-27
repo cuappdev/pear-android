@@ -12,7 +12,6 @@ import android.view.MenuInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -135,7 +134,6 @@ class SchedulingActivity :
                 // Log and toast
                 val msg = "THIS IS THE TOKEN: $token"
                 Log.d(TAG, msg)
-                Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
             })
 
         } else {
@@ -180,7 +178,6 @@ class SchedulingActivity :
             true
         }
         setUpCurrentPage()
-
     }
 
     override fun onNewIntent(intent: Intent?) {

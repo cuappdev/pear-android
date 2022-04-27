@@ -201,11 +201,10 @@ fun Endpoint.Companion.updateFcmToken(fcmToken: String): Endpoint {
 
 // MESSAGE NOTIFICATION
 
-fun Endpoint.Companion.updateMessage(message: String, recipientId : Int): Endpoint {
+fun Endpoint.Companion.sendMessageNotification(message: String, recipientId : Int): Endpoint {
     val requestBody = toRequestBody(Message(message = message),
         Message::class.java)
     return Endpoint(
-
         path = "/users/$recipientId/message/",
         headers = authHeader(),
         body = requestBody,

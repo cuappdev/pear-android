@@ -29,7 +29,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         remoteMessage.notification?.let {
             Log.d(TAG, "Message Notification Body: ${it.body}")
         }
-
     }
 
     /**
@@ -51,7 +50,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
      * @param token The new token.
      */
     private fun sendRegistrationToServer(token: String) {
-        // TODO: Implement this method to send token to your app server.
         Log.d(TAG, "sendRegistrationTokenToServer($token)")
         CoroutineScope(Dispatchers.Main).launch {
             updateFcmToken(token)
@@ -64,9 +62,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
      * @param messageBody FCM message body received.
      */
     @SuppressLint("ResourceAsColor")
-    //private fun sendNotification(messageBody: String) {
     private fun sendNotification(message: RemoteMessage) {
-        Log.d("SEND N", "sendNotification called")
+        Log.d("TAG", "sendNotification called")
         val intent = Intent(this, ChatFragment::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,

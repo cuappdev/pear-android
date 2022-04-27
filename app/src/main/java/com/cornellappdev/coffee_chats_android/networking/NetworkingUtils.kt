@@ -127,8 +127,8 @@ suspend fun updateFcmToken(fcmToken: String): ApiResponse<FcmToken>? =
 
 // MESSAGE NOTIFICATION
 
-suspend fun updateMessage(message: String, recipientId : Int): ApiResponse<OnboardingStatus>? =
-    postDataHelper(Endpoint.updateMessage(message, recipientId), Message::class.java)
+suspend fun sendMessageNotification(message: String, recipientId : Int): ApiResponse<OnboardingStatus>? =
+    postDataHelper(Endpoint.sendMessageNotification(message, recipientId), Message::class.java)
 
 // MATCHES
 
