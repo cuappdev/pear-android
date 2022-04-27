@@ -187,6 +187,32 @@ fun Endpoint.Companion.updateOnboardingStatus(hasOnboarded: Boolean): Endpoint {
     )
 }
 
+// FCM TOKEN
+
+fun Endpoint.Companion.updateFcmToken(fcmToken: String): Endpoint {
+    val requestBody = toRequestBody(FcmToken(fcmToken), FcmToken::class.java)
+    return Endpoint(
+        path = "/me/",
+        headers = authHeader(),
+        body = requestBody,
+        method = EndpointMethod.POST
+    )
+}
+
+// MESSAGE NOTIFICATION
+
+fun Endpoint.Companion.updateMessage(message: String, recipientId : Int): Endpoint {
+    val requestBody = toRequestBody(Message(message = message),
+        Message::class.java)
+    return Endpoint(
+
+        path = "/users/$recipientId/message/",
+        headers = authHeader(),
+        body = requestBody,
+        method = EndpointMethod.POST
+    )
+}
+
 // MATCHES
 
 fun Endpoint.Companion.getCurrentMatch(): Endpoint =

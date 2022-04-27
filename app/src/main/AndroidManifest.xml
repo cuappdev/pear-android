@@ -19,10 +19,13 @@
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@mipmap/ic_launcher_round" />
+            android:resource="@drawable/surprised_pear" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorAccent" />
+            android:resource="@color/background_green" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />

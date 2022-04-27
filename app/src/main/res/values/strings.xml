@@ -112,6 +112,9 @@
     <string name="default_week_stamp">1 Week ago</string>
     <string name="week_stamp">%1$d Weeks ago</string>
     <string name="message_send_error">Message failed to send</string>
+    <string name="notification_title">You Received a Message</string>
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+
 
     <!--PROFILE-->
     <string name="reach_me">Reach me at %1$s</string>

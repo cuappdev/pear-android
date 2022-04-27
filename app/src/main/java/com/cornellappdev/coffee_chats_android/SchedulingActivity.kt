@@ -5,12 +5,14 @@ import android.content.Intent
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.ContextThemeWrapper
 import android.view.MenuInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -25,10 +27,13 @@ import com.cornellappdev.coffee_chats_android.fragments.ProfileFragment
 import com.cornellappdev.coffee_chats_android.models.User
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.cornellappdev.coffee_chats_android.networking.setUpNetworking
+import com.cornellappdev.coffee_chats_android.networking.updateFcmToken
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_scheduling.*
 import kotlinx.android.synthetic.main.nav_header_profile.view.*
 import kotlinx.coroutines.CoroutineScope
@@ -111,6 +116,28 @@ class SchedulingActivity :
                     signIn()
                 }
             }
+
+            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+
+                val TAG = "FCM_TOKEN"
+                if (!task.isSuccessful) {
+                    Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                    return@OnCompleteListener
+                }
+
+                // Get new FCM registration token
+                val token = task.result
+
+                CoroutineScope(Dispatchers.Main).launch {
+                    updateFcmToken(token)
+                }
+
+                // Log and toast
+                val msg = "THIS IS THE TOKEN: $token"
+                Log.d(TAG, msg)
+                Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+            })
+
         } else {
             // prompt user to log in
             signIn()
@@ -153,6 +180,7 @@ class SchedulingActivity :
             true
         }
         setUpCurrentPage()
+
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -388,6 +416,7 @@ class SchedulingActivity :
             }
         }
     }
+
 
     companion object {
         private const val NUM_FRAGMENTS = 2
