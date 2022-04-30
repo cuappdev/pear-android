@@ -94,7 +94,7 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
                     requireContext(),
                     prompts.filterNot { it.isSelected() },
                     UserFieldAdapter.ItemColor.WHITE,
-                    true
+                    resizeCell = true
                 )
                 interests_or_groups.setOnItemClickListener { _, view, _, _ ->
                     val selectedView =
