@@ -6,6 +6,7 @@
 1. Clone this repository
 2. Go to pinned messages in `#pear-android` and download `keys.properties` and `google-services.json`. Place `keys.properties` in `pear-android`, and `google-services.json` in `pear-android/app`
 3. Open the project in Android Studio
+4. Get your computer's SHA-1 by running the `signingReport` task [through Gradle](https://stackoverflow.com/questions/67600259/how-to-get-sha1-and-sha256-in-android-studio-4-2-1). Add that SHA-1 to the Pear Firebase project so you can sign in through Google during development
 
 ## Libraries and External Services
 
