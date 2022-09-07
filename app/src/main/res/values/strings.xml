@@ -279,4 +279,12 @@
     <string name="send_feedback">Send feedback</string>
     <string name="visit_website">Visit our website</string>
     <string name="more_apps">More apps</string>
+
+    <!--PAUSE PEAR-->
+    <string name="pause_pear_for">Pause Pear for…</string>
+    <plurals name="number_of_weeks">
+        <item quantity="one">%d week</item>
+        <item quantity="other">%d weeks</item>
+    </plurals>
+    <string name="indefinitely">Indefinitely</string>
 </resources>

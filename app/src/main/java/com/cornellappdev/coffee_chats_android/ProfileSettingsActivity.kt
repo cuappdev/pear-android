@@ -1,20 +1,26 @@
 package com.cornellappdev.coffee_chats_android
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.PopupWindow
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.cornellappdev.coffee_chats_android.fragments.*
+import com.cornellappdev.coffee_chats_android.utils.PopupManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_scheduling.*
+import kotlinx.android.synthetic.main.pause_pear_popup.*
 
 class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     private val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
@@ -121,6 +127,35 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
                 val data = Intent()
                 setResult(Activity.RESULT_OK, data)
                 finish()
+            }
+            R.id.nav_pause_pear -> {
+                val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                // dims the background when popup shows
+                val backgroundView = ConstraintLayout(this)
+                backgroundView.setBackgroundColor(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.background_dimmer
+                    )
+                )
+                val background = PopupWindow(
+                    backgroundView,
+                    ConstraintLayout.LayoutParams.MATCH_PARENT,
+                    ConstraintLayout.LayoutParams.MATCH_PARENT,
+                    false,
+                )
+                background.showAtLocation(headerText, Gravity.CENTER, 0, 0)
+                // pause pear popup
+                val popupView = inflater.inflate(R.layout.pause_pear_popup, drawerLayout, false)
+                val popup = PopupWindow(
+                    popupView,
+                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                    true
+                )
+                popup.showAtLocation(headerText, Gravity.CENTER, 0, 0)
+                popup.setOnDismissListener { background.dismiss() }
+                val popupManager = PopupManager(this, popup, PopupManager.PopupState.PAUSE_DURATION)
             }
         }
         return true
