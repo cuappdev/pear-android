@@ -10,7 +10,6 @@ import android.widget.PopupWindow
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.cornellappdev.coffee_chats_android.fragments.*
@@ -20,7 +19,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_scheduling.*
-import kotlinx.android.synthetic.main.pause_pear_popup.*
 
 class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     private val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
@@ -155,7 +153,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
                 )
                 popup.showAtLocation(headerText, Gravity.CENTER, 0, 0)
                 popup.setOnDismissListener { background.dismiss() }
-                val popupManager = PopupManager(this, popup, PopupManager.PopupState.PAUSE_DURATION)
+                val popupManager = PopupManager(this, popup, PopupManager.PopupState.PAUSE)
             }
         }
         return true

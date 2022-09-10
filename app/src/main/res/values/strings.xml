@@ -282,9 +282,18 @@
 
     <!--PAUSE PEAR-->
     <string name="pause_pear_for">Pause Pear for…</string>
-    <plurals name="number_of_weeks">
-        <item quantity="one">%d week</item>
-        <item quantity="other">%d weeks</item>
-    </plurals>
-    <string name="indefinitely">Indefinitely</string>
+    <string-array name="pause_pear_durations">
+        <item>1 week</item>
+        <item>2 weeks</item>
+        <item>3 weeks</item>
+        <item>Indefinitely</item>
+    </string-array>
+    <string-array name="pause_pear_reasons">
+        <item>Focusing on work</item>
+        <item>Won\'t be on campus</item>
+        <item>Bad experience</item>
+        <item>Other</item>
+    </string-array>
+    <string name="cancel">Cancel</string>
+    <string name="no_thanks">No Thanks</string>
 </resources>

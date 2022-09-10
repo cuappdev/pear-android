@@ -32,4 +32,7 @@
     <dimen name="message_padding_vertical">10dp</dimen>
     <dimen name="message_profile_pic_size">40dp</dimen>
     <dimen name="pear_name_text_size">16sp</dimen>
+
+    <!-- Pause Pear -->
+    <dimen name="dismiss_button_margin_top">8dp</dimen>
 </resources>

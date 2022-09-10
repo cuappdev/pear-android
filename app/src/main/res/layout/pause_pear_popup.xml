@@ -21,8 +21,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <RadioGroup
-        android:id="@+id/popup_radio_group"
-        android:layout_width="wrap_content"
+        android:id="@+id/radio_group"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_border_margin"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,29 +32,65 @@
         <RadioButton
             android:id="@+id/radio_button_1"
             style="@style/radioButtonStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="@string/indefinitely" />
+            tools:text="@string/pause_pear" />
 
         <RadioButton
             android:id="@+id/radio_button_2"
             style="@style/radioButtonStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="@string/indefinitely" />
+            tools:text="@string/pause_pear" />
 
         <RadioButton
             android:id="@+id/radio_button_3"
             style="@style/radioButtonStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="@string/indefinitely" />
+            tools:text="@string/pause_pear" />
 
         <RadioButton
             android:id="@+id/radio_button_4"
             style="@style/radioButtonStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="@string/indefinitely" />
+            tools:text="@string/pause_pear" />
     </RadioGroup>
+
+    <Button
+        android:id="@+id/action_button"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="180dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="@dimen/default_border_margin"
+        android:background="@drawable/profile_button_background"
+        android:elevation="3dp"
+        android:enabled="true"
+        android:fontFamily="@font/circular_medium"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:text="@string/pause_pear"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/radio_group" />
+
+    <Button
+        android:id="@+id/dismiss_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dismiss_button_margin_top"
+        android:background="@null"
+        android:fontFamily="@font/circular_book"
+        android:minHeight="0dp"
+        android:paddingVertical="@dimen/chat_bubble_padding"
+        android:textAllCaps="false"
+        android:textColor="@color/save_button_text_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/action_button"
+        tools:text="@string/cancel" />
 </androidx.constraintlayout.widget.ConstraintLayout>
