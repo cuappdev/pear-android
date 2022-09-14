@@ -53,13 +53,17 @@ class PopupManager(
                 setUpRadioPopup(133, R.array.pause_pear_durations)
             }
             PopupState.PROMPT_FEEDBACK -> {
-
+                v.pear_icon.visibility = View.VISIBLE
+                v.pause_pear_prompt_feedback.visibility = View.VISIBLE
+                v.radio_group.visibility = View.GONE
             }
             PopupState.FEEDBACK -> {
-                setUpRadioPopup(160, R.array.pause_pear_reasons)
+                setUpRadioPopup(180, R.array.pause_pear_reasons)
             }
             PopupState.UNPAUSE -> {
-
+                v.pear_icon.visibility = View.GONE
+                v.pause_pear_prompt_feedback.visibility = View.GONE
+                v.radio_group.visibility = View.GONE
             }
         }
 
@@ -67,6 +71,8 @@ class PopupManager(
         v.action_button.text = getStringForState(R.array.pause_pear_actions)
         v.dismiss_button.text = getStringForState(R.array.pause_pear_dismiss_actions)
 
+        v.action_button.isEnabled =
+            (state in arrayOf(PopupState.UNPAUSE, PopupState.PROMPT_FEEDBACK))
         v.action_button.setOnClickListener {
             when (state) {
                 PopupState.PAUSE -> {
@@ -95,6 +101,9 @@ class PopupManager(
      * @param buttonsStringArrayId Resource id of string array containing radio button labels
      */
     private fun setUpRadioPopup(radioGroupWidth: Int, buttonsStringArrayId: Int) {
+        v.pear_icon.visibility = View.GONE
+        v.pause_pear_prompt_feedback.visibility = View.GONE
+
         v.popup_title.visibility = View.VISIBLE
         v.radio_group.visibility = View.VISIBLE
         v.radio_group.layoutParams.width = dpToPixels(radioGroupWidth)
@@ -104,7 +113,6 @@ class PopupManager(
             radioButtons[i].text = buttonLabels[i]
         }
         v.radio_group.setOnCheckedChangeListener { _, _ -> v.action_button.isEnabled = true }
-        v.action_button.isEnabled = false
     }
 
     /** Sets all radio buttons to unchecked */

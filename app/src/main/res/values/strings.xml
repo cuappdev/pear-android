@@ -293,6 +293,7 @@
         <item>3 weeks</item>
         <item>Indefinitely</item>
     </string-array>
+    <string name="pause_pear_prompt_feedback_subtext">Let us know why you are leaving with some feedback.</string>
     <string-array name="pause_pear_reasons">
         <item>Focusing on work</item>
         <item>Won\'t be on campus</item>

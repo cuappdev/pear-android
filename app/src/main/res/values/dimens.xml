@@ -35,4 +35,7 @@
 
     <!-- Pause Pear -->
     <dimen name="dismiss_button_margin_top">8dp</dimen>
+    <dimen name="pause_pear_medium_margin">8dp</dimen>
+    <dimen name="pear_icon_size">100dp</dimen>
+    <dimen name="pause_pear_title_width">210dp</dimen>
 </resources>

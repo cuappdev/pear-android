@@ -51,6 +51,10 @@
         <item name="android:textSize">16sp</item>
         <item name="android:layout_marginTop">3dp</item>
         <item name="android:layout_marginBottom">3dp</item>
+        <item name="android:paddingTop">7dp</item>
+        <item name="android:paddingBottom">7dp</item>
+        <item name="android:paddingStart">3dp</item>
+        <item name="android:paddingEnd">3dp</item>
         <item name="android:minWidth">0dp</item>
     </style>
 </resources>

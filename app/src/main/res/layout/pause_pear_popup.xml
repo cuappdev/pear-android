@@ -8,17 +8,43 @@
     android:background="@drawable/rounded_shape_background_green"
     android:padding="@dimen/default_border_margin">
 
+    <ImageView
+        android:id="@+id/pear_icon"
+        android:layout_width="@dimen/pear_icon_size"
+        android:layout_height="@dimen/pear_icon_size"
+        android:layout_marginBottom="@dimen/pause_pear_medium_margin"
+        android:src="@drawable/ic_round_pear_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/popup_title"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/pause_pear_title_width"
         android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/pause_pear_medium_margin"
         android:fontFamily="@font/circular_book"
         android:text="@string/pause_pear"
+        android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/pear_icon" />
+
+    <TextView
+        android:id="@+id/pause_pear_prompt_feedback"
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/pause_pear_medium_margin"
+        android:fontFamily="@font/circular_book"
+        android:text="@string/pause_pear_prompt_feedback_subtext"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/popup_title" />
 
     <RadioGroup
         android:id="@+id/radio_group"
@@ -27,7 +53,7 @@
         android:layout_marginTop="@dimen/default_border_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/popup_title">
+        app:layout_constraintTop_toBottomOf="@id/pause_pear_prompt_feedback">
 
         <RadioButton
             android:id="@+id/radio_button_1"
@@ -61,8 +87,8 @@
     <Button
         android:id="@+id/action_button"
         style="?android:attr/borderlessButtonStyle"
-        android:layout_width="180dp"
-        android:layout_height="50dp"
+        android:layout_width="190dp"
+        android:layout_height="45dp"
         android:layout_marginTop="@dimen/default_border_margin"
         android:background="@drawable/profile_button_background"
         android:elevation="3dp"
