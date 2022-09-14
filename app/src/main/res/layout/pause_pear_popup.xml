@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/circular_book"
-        android:text="@string/pause_pear_for"
+        android:text="@string/pause_pear"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -92,5 +92,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/action_button"
-        tools:text="@string/cancel" />
+        tools:text="@string/next" />
 </androidx.constraintlayout.widget.ConstraintLayout>

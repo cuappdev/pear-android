@@ -281,7 +281,12 @@
     <string name="more_apps">More apps</string>
 
     <!--PAUSE PEAR-->
-    <string name="pause_pear_for">Pause Pear for…</string>
+    <string-array name="pause_pear_titles">
+        <item>Pause Pear for…</item>
+        <item>See you soon!</item>
+        <item>Why are you pausing?</item>
+        <item>Your Pear is already paused</item>
+    </string-array>
     <string-array name="pause_pear_durations">
         <item>1 week</item>
         <item>2 weeks</item>
@@ -294,6 +299,16 @@
         <item>Bad experience</item>
         <item>Other</item>
     </string-array>
-    <string name="cancel">Cancel</string>
-    <string name="no_thanks">No Thanks</string>
+    <string-array name="pause_pear_actions">
+        <item>Save</item>
+        <item>Sure</item>
+        <item>Finish</item>
+        <item>Unpause</item>
+    </string-array>
+    <string-array name="pause_pear_dismiss_actions">
+        <item>Cancel</item>
+        <item>No Thanks</item>
+        <item>Cancel</item>
+        <item>Not Yet</item>
+    </string-array>
 </resources>

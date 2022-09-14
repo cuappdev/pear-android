@@ -12,9 +12,9 @@ import kotlinx.android.synthetic.main.pause_pear_popup.view.*
 class PopupManager(
     private val c: Context,
     private val popup: PopupWindow,
-    state: PopupState
+    private var state: PopupState
 ) {
-    private var v: View = popup.contentView
+    private val v: View = popup.contentView
     private var radioButtons: Array<RadioButton> =
         arrayOf(v.radio_button_1, v.radio_button_2, v.radio_button_3, v.radio_button_4)
 
@@ -22,9 +22,14 @@ class PopupManager(
         v.dismiss_button.setOnClickListener {
             popup.dismiss()
         }
-        updatePopupView(state)
+        updatePopupView()
     }
 
+    /**
+     * Different UI states for popup
+     *
+     * When modifying order of enums, please also modify `getStringForState`
+     */
     enum class PopupState {
         // user picks how long to pause
         PAUSE,
@@ -40,9 +45,9 @@ class PopupManager(
     }
 
     /**
-     * Sets up popup UI based on the given state
+     * Sets up popup UI based on the current state
      */
-    private fun updatePopupView(state: PopupState) {
+    private fun updatePopupView() {
         when (state) {
             PopupState.PAUSE -> {
                 setUpRadioPopup(133, R.array.pause_pear_durations)
@@ -57,14 +62,21 @@ class PopupManager(
 
             }
         }
+
+        v.popup_title.text = getStringForState(R.array.pause_pear_titles)
+        v.action_button.text = getStringForState(R.array.pause_pear_actions)
+        v.dismiss_button.text = getStringForState(R.array.pause_pear_dismiss_actions)
+
         v.action_button.setOnClickListener {
             when (state) {
                 PopupState.PAUSE -> {
                     // TODO make pause backend call
-                    updatePopupView(PopupState.PROMPT_FEEDBACK)
+                    state = PopupState.PROMPT_FEEDBACK
+                    updatePopupView()
                 }
                 PopupState.PROMPT_FEEDBACK -> {
-                    updatePopupView(PopupState.FEEDBACK)
+                    state = PopupState.FEEDBACK
+                    updatePopupView()
                 }
                 PopupState.FEEDBACK -> {
                     popup.dismiss()
@@ -86,14 +98,13 @@ class PopupManager(
         v.popup_title.visibility = View.VISIBLE
         v.radio_group.visibility = View.VISIBLE
         v.radio_group.layoutParams.width = dpToPixels(radioGroupWidth)
-        v.action_button.isEnabled = false
         clearRadioButtons()
         val buttonLabels = c.resources.getStringArray(buttonsStringArrayId)
         for (i in radioButtons.indices) {
             radioButtons[i].text = buttonLabels[i]
         }
-        v.dismiss_button.text = c.resources.getString(R.string.cancel)
         v.radio_group.setOnCheckedChangeListener { _, _ -> v.action_button.isEnabled = true }
+        v.action_button.isEnabled = false
     }
 
     /** Sets all radio buttons to unchecked */
@@ -109,4 +120,14 @@ class PopupManager(
             TypedValue.COMPLEX_UNIT_DIP,
             dp.toFloat(), c.resources.displayMetrics
         ).toInt()
+
+    /**
+     * Returns string corresponding to the current state
+     *
+     * Requires: `i`th entry of the array corresponding to `stringArrayId` is the string corresponding to the `i`th `PopupState`
+     */
+    private fun getStringForState(stringArrayId: Int): String {
+        val stringArr = c.resources.getStringArray(stringArrayId)
+        return stringArr[state.ordinal]
+    }
 }
