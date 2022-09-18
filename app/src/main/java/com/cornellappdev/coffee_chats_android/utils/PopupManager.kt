@@ -107,19 +107,12 @@ class PopupManager(
         v.popup_title.visibility = View.VISIBLE
         v.radio_group.visibility = View.VISIBLE
         v.radio_group.layoutParams.width = dpToPixels(radioGroupWidth)
-        clearRadioButtons()
+        v.radio_group.clearCheck()
         val buttonLabels = c.resources.getStringArray(buttonsStringArrayId)
         for (i in radioButtons.indices) {
             radioButtons[i].text = buttonLabels[i]
         }
         v.radio_group.setOnCheckedChangeListener { _, _ -> v.action_button.isEnabled = true }
-    }
-
-    /** Sets all radio buttons to unchecked */
-    private fun clearRadioButtons() {
-        for (button in radioButtons) {
-            button.isChecked = false
-        }
     }
 
     /** Converts dimension from dp to pixels */

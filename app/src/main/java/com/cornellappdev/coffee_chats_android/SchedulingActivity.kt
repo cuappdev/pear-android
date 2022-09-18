@@ -291,7 +291,7 @@ class SchedulingActivity : AppCompatActivity() {
                 0 -> {
                     if (isUserMatched)
                         ProfileFragment.newInstance(user.currentMatch!!.matchedUser, user.id)
-                    else NoMatchFragment()
+                    else NoMatchFragment.newInstance(false)
                 }
                 else -> PeopleFragment()
             }

@@ -312,4 +312,7 @@
         <item>Cancel</item>
         <item>Not Yet</item>
     </string-array>
+    <string name="no_match_pear_paused_header">Your Pear is currently paused.</string>
+    <string name="stop_pausing">Stop Pausing</string>
+    <string name="pear_paused_indefinitely_subheader">Jump back when you\'re ready!</string>
 </resources>
