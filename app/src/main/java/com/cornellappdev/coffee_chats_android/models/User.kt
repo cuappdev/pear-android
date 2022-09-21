@@ -40,5 +40,9 @@ data class User(
     @Json(name = "pending_feedback")
     val pendingFeedback: Boolean,
     @Json(name = "current_match")
-    val currentMatch: SingleMatch?
+    val currentMatch: SingleMatch?,
+    @Json(name = "is_paused")
+    val isPaused: Boolean,
+    @Json(name = "pause_expiration")
+    val pauseExpiration: String?
 )
