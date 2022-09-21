@@ -9,6 +9,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import com.cornellappdev.coffee_chats_android.R
 import kotlinx.android.synthetic.main.fragment_no_match.*
+import java.lang.reflect.Type
 
 
 class NoMatchFragment : Fragment() {
@@ -42,17 +43,19 @@ class NoMatchFragment : Fragment() {
             if (isPaused) R.string.no_match_pear_paused_header else R.string.no_match_header
         headerText.text = resources.getString(headerStrId)
 
-        val subheaderStrId =
-            if (isPaused) R.string.pear_paused_indefinitely_subheader else R.string.no_match_subheader
-        no_match_subheader.text = resources.getString(subheaderStrId)
-        no_match_subheader.typeface = Typeface.create(no_match_subheader.typeface, Typeface.NORMAL)
-
+        no_match_subheader.text = when {
+            isPaused && pauseExpiration.isEmpty() -> resources.getString(R.string.pear_paused_indefinitely_subheader)
+            isPaused && pauseExpiration.isNotEmpty() -> resources.getString(R.string.pear_paused_subheader, pauseExpiration)
+            else -> resources.getString(R.string.no_match_subheader)
+        }
+        val typeface = if (isPaused) Typeface.NORMAL else Typeface.BOLD
+        no_match_subheader.typeface = Typeface.create(no_match_subheader.typeface, typeface)
         primaryActionButton.visibility = if (isPaused) View.VISIBLE else View.INVISIBLE
     }
 
     companion object {
         @JvmStatic
-        fun newInstance(isPaused: Boolean, pauseExpiration: String = "") =
+        fun newInstance(isPaused: Boolean, pauseExpiration: String) =
             NoMatchFragment().apply {
                 arguments = Bundle().apply {
                     putBoolean(IS_PAUSED, isPaused)

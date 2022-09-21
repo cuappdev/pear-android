@@ -23,6 +23,8 @@ import kotlinx.android.synthetic.main.activity_scheduling.*
 class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     private val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
     private lateinit var content: Content
+    private var isPaused: Boolean = false
+    private var popup: PopupWindow? = null
 
     /** Pages directly reachable from drawer */
     private val basePages =
@@ -55,6 +57,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scheduling)
         content = intent.getSerializableExtra(CONTENT) as Content
+        isPaused = intent.getBooleanExtra(IS_PAUSED, isPaused)
         val fragment: Fragment = when (content) {
             Content.EDIT_INFO -> EditProfileFragment()
             Content.EDIT_INTERESTS -> EditInterestsGroupsFragment.newInstance(true)
@@ -72,7 +75,9 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     }
 
     override fun onBackPressed() {
-        if (content in basePages) {
+        if (popup?.isShowing == true) {
+            popup!!.dismiss()
+        } else if (content in basePages) {
             finish()
         } else if (content in settingsSubPages) {
             supportFragmentManager.popBackStack()
@@ -145,15 +150,15 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
                 background.showAtLocation(headerText, Gravity.CENTER, 0, 0)
                 // pause pear popup
                 val popupView = inflater.inflate(R.layout.pause_pear_popup, drawerLayout, false)
-                val popup = PopupWindow(
+                popup = PopupWindow(
                     popupView,
                     ConstraintLayout.LayoutParams.WRAP_CONTENT,
                     ConstraintLayout.LayoutParams.WRAP_CONTENT,
                     true
                 )
-                popup.showAtLocation(headerText, Gravity.CENTER, 0, 0)
-                popup.setOnDismissListener { background.dismiss() }
-                val popupManager = PopupManager(this, popup, PopupManager.PopupState.PAUSE)
+                popup!!.showAtLocation(headerText, Gravity.CENTER, 0, 0)
+                popup!!.setOnDismissListener { background.dismiss() }
+                PopupManager(this, popup!!, if (isPaused) PopupManager.PopupState.UNPAUSE else PopupManager.PopupState.PAUSE)
             }
         }
         return true
@@ -181,5 +186,6 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
 
     companion object {
         const val CONTENT = "content"
+        const val IS_PAUSED = "isPaused"
     }
 }

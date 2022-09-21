@@ -110,6 +110,7 @@ class SchedulingActivity : AppCompatActivity() {
                 else -> null
             }
             contentTag?.let { intent.putExtra(ProfileSettingsActivity.CONTENT, contentTag) }
+            intent.putExtra(ProfileSettingsActivity.IS_PAUSED, user.isPaused)
             when (menuItem.itemId) {
                 R.id.nav_settings -> startActivityForResult(intent, SETTINGS_CODE)
                 R.id.nav_interests, R.id.nav_groups -> startActivity(intent)
@@ -289,9 +290,9 @@ class SchedulingActivity : AppCompatActivity() {
         override fun createFragment(position: Int): Fragment {
             return when (position) {
                 0 -> {
-                    if (isUserMatched)
+                    if (isUserMatched && !user.isPaused)
                         ProfileFragment.newInstance(user.currentMatch!!.matchedUser, user.id)
-                    else NoMatchFragment.newInstance(false)
+                    else NoMatchFragment.newInstance(user.isPaused, user.pauseExpiration ?: "")
                 }
                 else -> PeopleFragment()
             }

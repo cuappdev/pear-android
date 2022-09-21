@@ -315,4 +315,5 @@
     <string name="no_match_pear_paused_header">Your Pear is currently paused.</string>
     <string name="stop_pausing">Stop Pausing</string>
     <string name="pear_paused_indefinitely_subheader">Jump back when you\'re ready!</string>
+    <string name="pear_paused_subheader">You will be automatically peared %1$s</string>
 </resources>
