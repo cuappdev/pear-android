@@ -61,6 +61,22 @@ interface OnFilledOutObservable {
 }
 
 /**
+ * Implemented by activities that need to be notified when the user's pause status is changed
+ */
+interface OnPauseChangedListener {
+    /** Actions to be taken when the pause status is changed to `isPaused` */
+    fun onPauseChanged(isPaused: Boolean)
+}
+
+/**
+ * Implemented by fragments in which users can change their pause status
+ */
+interface OnPauseChangedObservable {
+    /** Passes the observable the listener needs to notify when user's pause status changes */
+    fun setOnPauseChangedListener(callback: OnPauseChangedListener)
+}
+
+/**
  * Makes backend request to update interests or groups with given `items`. An error message is
  * displayed via a Toast if an error occurs.
  */

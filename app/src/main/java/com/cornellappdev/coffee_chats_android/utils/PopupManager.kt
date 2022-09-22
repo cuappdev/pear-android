@@ -1,18 +1,27 @@
 package com.cornellappdev.coffee_chats_android.utils
 
 import android.content.Context
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.PopupWindow
 import android.widget.RadioButton
+import com.cornellappdev.coffee_chats_android.OnPauseChangedListener
 import com.cornellappdev.coffee_chats_android.R
+import com.cornellappdev.coffee_chats_android.networking.updatePauseStatus
 import kotlinx.android.synthetic.main.pause_pear_popup.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-
+/**
+ * Encapsulates UI and state for the Pause Pear popup
+ */
 class PopupManager(
     private val c: Context,
     private val popup: PopupWindow,
-    private var state: PopupState
+    private var state: PopupState,
+    private val pauseChangedListener: OnPauseChangedListener
 ) {
     private val v: View = popup.contentView
     private var radioButtons: Array<RadioButton> =
@@ -76,9 +85,16 @@ class PopupManager(
         v.action_button.setOnClickListener {
             when (state) {
                 PopupState.PAUSE -> {
-                    // TODO make pause backend call
                     state = PopupState.PROMPT_FEEDBACK
                     updatePopupView()
+                    var checkedId = -1
+                    for (i in radioButtons.indices) {
+                        if (radioButtons[i].isChecked) {
+                            checkedId = i
+                            break
+                        }
+                    }
+                    savePauseStatus(true, if (checkedId < 3) checkedId + 1 else null)
                 }
                 PopupState.PROMPT_FEEDBACK -> {
                     state = PopupState.FEEDBACK
@@ -88,8 +104,8 @@ class PopupManager(
                     popup.dismiss()
                 }
                 PopupState.UNPAUSE -> {
-                    // TODO make unpause backend call
                     popup.dismiss()
+                    savePauseStatus(false)
                 }
             }
         }
@@ -112,7 +128,9 @@ class PopupManager(
         for (i in radioButtons.indices) {
             radioButtons[i].text = buttonLabels[i]
         }
-        v.radio_group.setOnCheckedChangeListener { _, _ -> v.action_button.isEnabled = true }
+        v.radio_group.setOnCheckedChangeListener { _, _ ->
+            v.action_button.isEnabled = true
+        }
     }
 
     /** Converts dimension from dp to pixels */
@@ -130,5 +148,12 @@ class PopupManager(
     private fun getStringForState(stringArrayId: Int): String {
         val stringArr = c.resources.getStringArray(stringArrayId)
         return stringArr[state.ordinal]
+    }
+
+    private fun savePauseStatus(isPaused: Boolean, pauseWeeks: Int? = null) {
+        CoroutineScope(Dispatchers.Main).launch {
+            updatePauseStatus(isPaused, pauseWeeks)
+            pauseChangedListener.onPauseChanged(isPaused)
+        }
     }
 }

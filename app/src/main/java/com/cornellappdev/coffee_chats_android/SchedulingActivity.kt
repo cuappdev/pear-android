@@ -33,7 +33,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class SchedulingActivity : AppCompatActivity() {
+class SchedulingActivity : AppCompatActivity(), OnPauseChangedListener {
     private lateinit var user: User
     private val preferencesHelper: PreferencesHelper by lazy {
         PreferencesHelper(this)
@@ -60,9 +60,7 @@ class SchedulingActivity : AppCompatActivity() {
                     } else {
                         setUpDrawerLayout()
                         val c = this@SchedulingActivity
-                        val isUserMatched = user.currentMatch != null
-                        viewPager.adapter =
-                            ViewPagerAdapter(c, isUserMatched)
+                        updateViewPagerAdapter()
                         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
                             tab.text =
                                 if (position == 0) c.getText(R.string.match_header)
@@ -195,10 +193,15 @@ class SchedulingActivity : AppCompatActivity() {
             drawerLayout.close()
         }
         if (::user.isInitialized) {
+            val prevPauseStatus = user.isPaused
             CoroutineScope(Dispatchers.Main).launch {
                 user = getUser()
                 setUpDrawerLayout()
                 setUpCurrentPage()
+                // update fragment in case of changes in pause status
+                if (prevPauseStatus != user.isPaused) {
+                    updateViewPagerAdapter()
+                }
             }
         }
     }
@@ -209,6 +212,12 @@ class SchedulingActivity : AppCompatActivity() {
         if (requestCode == SETTINGS_CODE && resultCode == Activity.RESULT_OK) {
             preferencesHelper.clearLogin()
             signIn()
+        }
+    }
+
+    override fun onAttachFragment(fragment: Fragment) {
+        if (fragment is OnPauseChangedObservable) {
+            fragment.setOnPauseChangedListener(this)
         }
     }
 
@@ -281,20 +290,37 @@ class SchedulingActivity : AppCompatActivity() {
     }
 
     // adapter for tabs
-    private inner class ViewPagerAdapter(activity: SchedulingActivity, val isUserMatched: Boolean) :
+    private inner class ViewPagerAdapter(activity: SchedulingActivity) :
         FragmentStateAdapter(activity) {
         override fun getItemCount(): Int {
             return NUM_FRAGMENTS
         }
 
         override fun createFragment(position: Int): Fragment {
+            val isUserMatched = user.currentMatch != null
             return when (position) {
                 0 -> {
                     if (isUserMatched && !user.isPaused)
                         ProfileFragment.newInstance(user.currentMatch!!.matchedUser, user.id)
-                    else NoMatchFragment.newInstance(user.isPaused, user.pauseExpiration ?: "")
+                    else
+                        NoMatchFragment.newInstance(user.isPaused, user.pauseExpiration ?: "")
                 }
                 else -> PeopleFragment()
+            }
+        }
+    }
+
+    /** Reattaches ViewPagerAdapter - needs to be called when user data is updated */
+    private fun updateViewPagerAdapter() {
+        viewPager.adapter = ViewPagerAdapter(this)
+    }
+
+    override fun onPauseChanged(isPaused: Boolean) {
+        val prevPauseStatus = user.isPaused
+        if (prevPauseStatus != isPaused) {
+            CoroutineScope(Dispatchers.Main).launch {
+                user = getUser()
+                updateViewPagerAdapter()
             }
         }
     }

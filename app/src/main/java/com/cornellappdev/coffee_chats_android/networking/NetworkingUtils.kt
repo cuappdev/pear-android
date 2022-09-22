@@ -133,5 +133,5 @@ suspend fun getSelfMatches(userId: Int): List<PearUser> =
 
 // PAUSE PEAR
 
-suspend fun updatePauseStatus(isPaused: Boolean, pauseWeeks: Int?): ApiResponse<PauseStatus>? =
+suspend fun updatePauseStatus(isPaused: Boolean, pauseWeeks: Int? = null): ApiResponse<PauseStatus>? =
     postDataHelper(Endpoint.updatePauseStatus(isPaused, pauseWeeks), PauseStatus::class.java)

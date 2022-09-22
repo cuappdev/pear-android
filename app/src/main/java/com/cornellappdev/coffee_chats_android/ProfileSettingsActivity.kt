@@ -20,7 +20,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_scheduling.*
 
-class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
+class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener, OnPauseChangedListener {
     private val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
     private lateinit var content: Content
     private var isPaused: Boolean = false
@@ -158,7 +158,12 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
                 )
                 popup!!.showAtLocation(headerText, Gravity.CENTER, 0, 0)
                 popup!!.setOnDismissListener { background.dismiss() }
-                PopupManager(this, popup!!, if (isPaused) PopupManager.PopupState.UNPAUSE else PopupManager.PopupState.PAUSE)
+                PopupManager(
+                    this,
+                    popup!!,
+                    if (isPaused) PopupManager.PopupState.UNPAUSE else PopupManager.PopupState.PAUSE,
+                    this
+                )
             }
         }
         return true
@@ -182,6 +187,10 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
 
     override fun onSelectionEmpty() {
         save_button.isEnabled = false
+    }
+
+    override fun onPauseChanged(isPaused: Boolean) {
+        this.isPaused = isPaused
     }
 
     companion object {
