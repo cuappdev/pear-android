@@ -150,6 +150,9 @@ class PopupManager(
         return stringArr[state.ordinal]
     }
 
+    /**
+     * Notifies backend and listeners of change in pause status
+     */
     private fun savePauseStatus(isPaused: Boolean, pauseWeeks: Int? = null) {
         CoroutineScope(Dispatchers.Main).launch {
             updatePauseStatus(isPaused, pauseWeeks)

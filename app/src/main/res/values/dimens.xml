@@ -14,6 +14,7 @@
 
     <!-- NoMatchFragment -->
     <dimen name="no_match_margin_vertical">20dp</dimen>
+    <dimen name="no_match_subheader_margin_top">3dp</dimen>
 
     <!-- MESSAGING -->
     <dimen name="profile_pic_margin">15dp</dimen>
