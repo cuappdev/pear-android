@@ -19,7 +19,10 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-
+/**
+ * Displayed in `SchedulingActivity` when the user does not have a match (new user)
+ * or they have paused Pear
+ */
 class NoMatchFragment : Fragment(), OnPauseChangedObservable {
 
     private var isPaused = false
@@ -62,7 +65,6 @@ class NoMatchFragment : Fragment(), OnPauseChangedObservable {
         no_match_subheader.typeface =
             Typeface.create(no_match_subheader.typeface, uiConfig.subheaderTypeface)
         primaryActionButton.visibility = uiConfig.actionButtonVisibility
-
         no_match_subheader.text = when {
             isPaused && pauseExpiration.isEmpty() -> resources.getString(R.string.pear_paused_indefinitely_subheader)
             isPaused && pauseExpiration.isNotEmpty() -> {
@@ -75,7 +77,7 @@ class NoMatchFragment : Fragment(), OnPauseChangedObservable {
             }
             else -> resources.getString(R.string.no_match_subheader)
         }
-
+        // user unpauses
         primaryActionButton.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 updatePauseStatus(false)

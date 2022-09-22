@@ -53,7 +53,7 @@ interface OnFilledOutListener {
  * Implemented by fragments in which users enter information in fields
  */
 interface OnFilledOutObservable {
-    /** Passes the observable the listener needs to notify when status of fields changes */
+    /** Passes the observable the listener that it needs to notify when status of fields changes */
     fun setOnFilledOutListener(callback: OnFilledOutListener)
 
     /** Saves user-entered information in the current fragment on the backend */
@@ -72,7 +72,7 @@ interface OnPauseChangedListener {
  * Implemented by fragments in which users can change their pause status
  */
 interface OnPauseChangedObservable {
-    /** Passes the observable the listener needs to notify when user's pause status changes */
+    /** Passes the observable the listener that it needs to notify when user's pause status is changed */
     fun setOnPauseChangedListener(callback: OnPauseChangedListener)
 }
 

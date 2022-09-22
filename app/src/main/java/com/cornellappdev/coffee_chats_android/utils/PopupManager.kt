@@ -15,7 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
- * Encapsulates UI and state for the Pause Pear popup
+ * Encapsulates Pause Pear popup displayed in `ProfileSettingsActivity`
  */
 class PopupManager(
     private val c: Context,
