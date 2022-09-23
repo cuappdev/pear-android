@@ -1,24 +1,30 @@
 package com.cornellappdev.coffee_chats_android
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.PopupWindow
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.cornellappdev.coffee_chats_android.fragments.*
+import com.cornellappdev.coffee_chats_android.utils.PopupManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_scheduling.*
 
-class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
+class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener, OnPauseChangedListener {
     private val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
     private lateinit var content: Content
+    private var isPaused: Boolean = false
+    private var popup: PopupWindow? = null
 
     /** Pages directly reachable from drawer */
     private val basePages =
@@ -51,6 +57,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scheduling)
         content = intent.getSerializableExtra(CONTENT) as Content
+        isPaused = intent.getBooleanExtra(IS_PAUSED, isPaused)
         val fragment: Fragment = when (content) {
             Content.EDIT_INFO -> EditProfileFragment()
             Content.EDIT_INTERESTS -> EditInterestsGroupsFragment.newInstance(true)
@@ -68,7 +75,9 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     }
 
     override fun onBackPressed() {
-        if (content in basePages) {
+        if (popup?.isShowing == true) {
+            popup!!.dismiss()
+        } else if (content in basePages) {
             finish()
         } else if (content in settingsSubPages) {
             supportFragmentManager.popBackStack()
@@ -122,6 +131,40 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
                 setResult(Activity.RESULT_OK, data)
                 finish()
             }
+            R.id.nav_pause_pear -> {
+                val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                // dims the background when popup shows
+                val backgroundView = ConstraintLayout(this)
+                backgroundView.setBackgroundColor(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.background_dimmer
+                    )
+                )
+                val background = PopupWindow(
+                    backgroundView,
+                    ConstraintLayout.LayoutParams.MATCH_PARENT,
+                    ConstraintLayout.LayoutParams.MATCH_PARENT,
+                    false,
+                )
+                background.showAtLocation(headerText, Gravity.CENTER, 0, 0)
+                // pause pear popup
+                val popupView = inflater.inflate(R.layout.pause_pear_popup, drawerLayout, false)
+                popup = PopupWindow(
+                    popupView,
+                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                    true
+                )
+                popup!!.showAtLocation(headerText, Gravity.CENTER, 0, 0)
+                popup!!.setOnDismissListener { background.dismiss() }
+                PopupManager(
+                    this,
+                    popup!!,
+                    if (isPaused) PopupManager.PopupState.UNPAUSE else PopupManager.PopupState.PAUSE,
+                    this
+                )
+            }
         }
         return true
     }
@@ -146,7 +189,12 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
         save_button.isEnabled = false
     }
 
+    override fun onPauseChanged(isPaused: Boolean) {
+        this.isPaused = isPaused
+    }
+
     companion object {
         const val CONTENT = "content"
+        const val IS_PAUSED = "isPaused"
     }
 }

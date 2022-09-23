@@ -253,6 +253,7 @@
     <string name="connect_social_media">Connect Social Media</string>
     <string name="about_pear">About Pear</string>
     <string name="log_out">Log Out</string>
+    <string name="pause_pear">Pause Pear</string>
 
     <string name="deselect">tap to deselect</string>
     <string name="more_items">More %1$s</string>
@@ -278,4 +279,41 @@
     <string name="send_feedback">Send feedback</string>
     <string name="visit_website">Visit our website</string>
     <string name="more_apps">More apps</string>
+
+    <!--PAUSE PEAR-->
+    <string-array name="pause_pear_titles">
+        <item>Pause Pear for…</item>
+        <item>See you soon!</item>
+        <item>Why are you pausing?</item>
+        <item>Your Pear is already paused</item>
+    </string-array>
+    <string-array name="pause_pear_durations">
+        <item>1 week</item>
+        <item>2 weeks</item>
+        <item>3 weeks</item>
+        <item>Indefinitely</item>
+    </string-array>
+    <string name="pause_pear_prompt_feedback_subtext">Let us know why you are leaving with some feedback.</string>
+    <string-array name="pause_pear_reasons">
+        <item>Focusing on work</item>
+        <item>Won\'t be on campus</item>
+        <item>Bad experience</item>
+        <item>Other</item>
+    </string-array>
+    <string-array name="pause_pear_actions">
+        <item>Save</item>
+        <item>Sure</item>
+        <item>Finish</item>
+        <item>Unpause</item>
+    </string-array>
+    <string-array name="pause_pear_dismiss_actions">
+        <item>Cancel</item>
+        <item>No Thanks</item>
+        <item>Cancel</item>
+        <item>Not Yet</item>
+    </string-array>
+    <string name="no_match_pear_paused_header">Your Pear is currently paused.</string>
+    <string name="stop_pausing">Stop Pausing</string>
+    <string name="pear_paused_indefinitely_subheader">Jump back when you\'re ready!</string>
+    <string name="pear_paused_subheader">You will be automatically peared %1$s</string>
 </resources>

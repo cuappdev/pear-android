@@ -13,6 +13,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/profile_margin_vertical"
             android:background="@color/background_green"
             android:paddingBottom="@dimen/profile_padding_bottom">
 
@@ -67,7 +68,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_border_margin"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/profile_margin_vertical"
                 android:fontFamily="@font/circular_book"
                 android:gravity="start"
                 android:text="@string/profile_basic_info_header"

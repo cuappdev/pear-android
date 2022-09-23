@@ -6,6 +6,7 @@
     android:background="@color/background_green">
 
     <TextView
+        android:id="@+id/headerText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="70dp"
@@ -24,28 +25,46 @@
         android:id="@+id/no_match_image"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="@dimen/no_match_image_margin_top"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_surprised_pear"
-        app:layout_constraintBottom_toTopOf="@id/no_match_subheader"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/headerText" />
+
+    <Button
+        android:id="@+id/primaryActionButton"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="@dimen/no_match_margin_vertical"
+        android:background="@drawable/profile_button_background"
+        android:elevation="3dp"
+        android:enabled="true"
+        android:fontFamily="@font/circular_medium"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:text="@string/stop_pausing"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/no_match_image" />
 
     <TextView
         android:id="@+id/no_match_subheader"
         android:layout_width="293dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/no_match_margin_vertical"
+        android:layout_marginTop="@dimen/no_match_subheader_margin_top"
         android:fontFamily="@font/circular_book"
         android:gravity="center"
         android:text="@string/no_match_subheader"
         android:textColor="@color/text_dark_green"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/primaryActionButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
