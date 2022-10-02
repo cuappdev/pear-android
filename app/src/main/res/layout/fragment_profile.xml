@@ -1,192 +1,221 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_green">
+    android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background_green"
-        android:paddingBottom="@dimen/profile_padding_bottom">
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/user_image_card_view"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            app:cardCornerRadius="60dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/userImage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                tools:src="@mipmap/ic_launcher_round" />
-        </androidx.cardview.widget.CardView>
-
-
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/circular_book"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/user_image_card_view"
-            tools:text="@string/dummy_name" />
-
-        <TextView
-            android:id="@+id/reach_me"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/circular_book"
-            android:gravity="center"
-            android:textColor="@color/faded_text"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/name"
-            tools:text="Reach me at abc123" />
-
-        <TextView
-            android:id="@+id/basics_header"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_border_margin"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/circular_book"
-            android:gravity="start"
-            android:text="@string/profile_basic_info_header"
-            android:textColor="@color/faded_text"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/reach_me" />
-
-        <TextView
-            android:id="@+id/basic_info"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/default_border_margin"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/rounded_shape_green"
-            android:fontFamily="@font/circular_book"
-            android:gravity="start"
-            android:padding="10dp"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/basics_header"
-            tools:text="I study Major in the class of Year, and my home is in State! My pronouns are pro/pro/pro" />
-
-        <TextView
-            android:id="@+id/interests_header"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_border_margin"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/circular_book"
-            android:gravity="start"
-            android:text="@string/profile_interests_header"
-            android:textColor="@color/faded_text"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/basic_info" />
+        android:background="@color/background_green">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/interests_pill_list"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/default_border_margin"
-            android:layout_marginTop="5dp"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/interests_header">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/profile_margin_vertical"
+            android:background="@color/background_green"
+            android:paddingBottom="@dimen/profile_padding_bottom">
 
-            <androidx.constraintlayout.helper.widget.Flow
-                android:id="@+id/interests_pill_flow"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:constraint_referenced_ids=""
-                app:flow_horizontalBias="0"
-                app:flow_horizontalGap="10dp"
-                app:flow_horizontalStyle="packed"
-                app:flow_verticalBias="0"
-                app:flow_wrapMode="chain"
-                app:layout_constraintBottom_toBottomOf="parent"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/user_image_card_view"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                app:cardCornerRadius="60dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/groups_header"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_border_margin"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/circular_book"
-            android:gravity="start"
-            android:text="@string/profile_groups_header"
-            android:textColor="@color/faded_text"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/interests_pill_list" />
+                <ImageView
+                    android:id="@+id/userImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    tools:src="@mipmap/ic_launcher_round" />
+            </androidx.cardview.widget.CardView>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/groups_pill_list"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/default_border_margin"
-            android:layout_marginTop="5dp"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/groups_header">
 
-            <androidx.constraintlayout.helper.widget.Flow
-                android:id="@+id/groups_pill_flow"
+            <TextView
+                android:id="@+id/name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids=""
-                app:flow_horizontalBias="0"
-                app:flow_horizontalGap="10dp"
-                app:flow_horizontalStyle="packed"
-                app:flow_verticalBias="0"
-                app:flow_wrapMode="chain"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/circular_book"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintTop_toBottomOf="@id/user_image_card_view"
+                tools:text="@string/dummy_name" />
 
-        <LinearLayout
-            android:id="@+id/prompt_responses_list"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/default_border_margin"
-            android:layout_marginTop="5dp"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/groups_pill_list" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+            <TextView
+                android:id="@+id/reach_me"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/circular_book"
+                android:gravity="center"
+                android:textColor="@color/faded_text"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/name"
+                tools:text="Reach me at abc123" />
+
+            <TextView
+                android:id="@+id/basics_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_border_margin"
+                android:layout_marginTop="@dimen/profile_margin_vertical"
+                android:fontFamily="@font/circular_book"
+                android:gravity="start"
+                android:text="@string/profile_basic_info_header"
+                android:textColor="@color/faded_text"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/reach_me" />
+
+            <TextView
+                android:id="@+id/basic_info"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_border_margin"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/rounded_shape_green"
+                android:fontFamily="@font/circular_book"
+                android:gravity="start"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/basics_header"
+                tools:text="I study Major in the class of Year, and my home is in State! My pronouns are pro/pro/pro" />
+
+            <TextView
+                android:id="@+id/interests_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_border_margin"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/circular_book"
+                android:gravity="start"
+                android:text="@string/profile_interests_header"
+                android:textColor="@color/faded_text"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/basic_info" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/interests_pill_list"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_border_margin"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/interests_header">
+
+                <androidx.constraintlayout.helper.widget.Flow
+                    android:id="@+id/interests_pill_flow"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids=""
+                    app:flow_horizontalBias="0"
+                    app:flow_horizontalGap="10dp"
+                    app:flow_horizontalStyle="packed"
+                    app:flow_verticalBias="0"
+                    app:flow_wrapMode="chain"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/groups_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_border_margin"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/circular_book"
+                android:gravity="start"
+                android:text="@string/profile_groups_header"
+                android:textColor="@color/faded_text"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/interests_pill_list" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/groups_pill_list"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_border_margin"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/groups_header">
+
+                <androidx.constraintlayout.helper.widget.Flow
+                    android:id="@+id/groups_pill_flow"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids=""
+                    app:flow_horizontalBias="0"
+                    app:flow_horizontalGap="10dp"
+                    app:flow_horizontalStyle="packed"
+                    app:flow_verticalBias="0"
+                    app:flow_wrapMode="chain"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/prompt_responses_list"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_border_margin"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/groups_pill_list" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <Button
+        android:id="@+id/primaryActionButton"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/profile_button_background"
+        android:drawableStart="@drawable/ic_paper_plane_right"
+        android:elevation="3dp"
+        android:enabled="true"
+        android:fontFamily="@font/circular_medium"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:text="@string/send_message"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

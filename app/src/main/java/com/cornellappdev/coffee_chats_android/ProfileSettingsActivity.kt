@@ -1,24 +1,30 @@
 package com.cornellappdev.coffee_chats_android
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.PopupWindow
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.cornellappdev.coffee_chats_android.fragments.*
+import com.cornellappdev.coffee_chats_android.utils.PopupManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_scheduling.*
 
-class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
+class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener, OnPauseChangedListener {
     private val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
     private lateinit var content: Content
+    private var isPaused: Boolean = false
+    private var popup: PopupWindow? = null
 
     /** Pages directly reachable from drawer */
     private val basePages =
@@ -26,8 +32,6 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
 
     /** Fragments nested within settings */
     private val settingsSubPages = listOf(
-        Content.EDIT_TIME,
-        Content.EDIT_LOCATION,
         Content.SOCIAL_MEDIA,
         Content.ABOUT
     )
@@ -35,9 +39,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     /** Fragments where users can edit and save information */
     private val editPages = listOf(
         Content.EDIT_INFO,
-        Content.EDIT_TIME,
         Content.EDIT_GROUPS,
-        Content.EDIT_LOCATION,
         Content.SOCIAL_MEDIA,
         Content.EDIT_INTERESTS
     )
@@ -47,8 +49,6 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
         EDIT_INTERESTS,
         EDIT_GROUPS,
         SETTINGS,
-        EDIT_TIME,
-        EDIT_LOCATION,
         SOCIAL_MEDIA,
         ABOUT
     }
@@ -57,19 +57,17 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scheduling)
         content = intent.getSerializableExtra(CONTENT) as Content
+        isPaused = intent.getBooleanExtra(IS_PAUSED, isPaused)
         val fragment: Fragment = when (content) {
             Content.EDIT_INFO -> EditProfileFragment()
             Content.EDIT_INTERESTS -> EditInterestsGroupsFragment.newInstance(true)
             Content.EDIT_GROUPS -> EditInterestsGroupsFragment.newInstance(false)
             Content.SETTINGS -> SettingsFragment()
-            Content.EDIT_TIME -> SchedulingTimeFragment()
-            Content.EDIT_LOCATION -> SchedulingPlaceFragment()
             Content.SOCIAL_MEDIA -> SocialMediaFragment()
             Content.ABOUT -> AboutFragment()
         }
         ft.add(fragmentContainer.id, fragment, content.name).addToBackStack("ft").commit()
 
-        primaryActionButton.visibility = View.GONE
         increaseHitArea(backButton)
         backButton.setOnClickListener { onBackPressed() }
         save_button.setOnClickListener { onSave(it) }
@@ -77,7 +75,9 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
     }
 
     override fun onBackPressed() {
-        if (content in basePages) {
+        if (popup?.isShowing == true) {
+            popup!!.dismiss()
+        } else if (content in basePages) {
             finish()
         } else if (content in settingsSubPages) {
             supportFragmentManager.popBackStack()
@@ -131,6 +131,40 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
                 setResult(Activity.RESULT_OK, data)
                 finish()
             }
+            R.id.nav_pause_pear -> {
+                val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                // dims the background when popup shows
+                val backgroundView = ConstraintLayout(this)
+                backgroundView.setBackgroundColor(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.background_dimmer
+                    )
+                )
+                val background = PopupWindow(
+                    backgroundView,
+                    ConstraintLayout.LayoutParams.MATCH_PARENT,
+                    ConstraintLayout.LayoutParams.MATCH_PARENT,
+                    false,
+                )
+                background.showAtLocation(headerText, Gravity.CENTER, 0, 0)
+                // pause pear popup
+                val popupView = inflater.inflate(R.layout.pause_pear_popup, drawerLayout, false)
+                popup = PopupWindow(
+                    popupView,
+                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                    true
+                )
+                popup!!.showAtLocation(headerText, Gravity.CENTER, 0, 0)
+                popup!!.setOnDismissListener { background.dismiss() }
+                PopupManager(
+                    this,
+                    popup!!,
+                    if (isPaused) PopupManager.PopupState.UNPAUSE else PopupManager.PopupState.PAUSE,
+                    this
+                )
+            }
         }
         return true
     }
@@ -141,7 +175,6 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
             Content.EDIT_INTERESTS -> getString(R.string.edit_interests)
             Content.EDIT_GROUPS -> getString(R.string.edit_groups)
             Content.SETTINGS -> getString(R.string.settings)
-            Content.EDIT_TIME, Content.EDIT_LOCATION -> getString(R.string.edit_availability)
             Content.SOCIAL_MEDIA -> getString(R.string.social_media)
             Content.ABOUT -> getString(R.string.about_pear)
         }
@@ -156,7 +189,12 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener {
         save_button.isEnabled = false
     }
 
+    override fun onPauseChanged(isPaused: Boolean) {
+        this.isPaused = isPaused
+    }
+
     companion object {
         const val CONTENT = "content"
+        const val IS_PAUSED = "isPaused"
     }
 }

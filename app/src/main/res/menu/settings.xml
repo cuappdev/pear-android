@@ -16,5 +16,9 @@
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout_icon"
             android:title="@string/log_out" />
+        <item
+            android:id="@+id/nav_pause_pear"
+            android:icon="@drawable/ic_pause_pear"
+            android:title="@string/pause_pear" />
     </group>
 </menu>

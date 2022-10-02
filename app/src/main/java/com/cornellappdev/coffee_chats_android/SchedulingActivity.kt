@@ -15,9 +15,7 @@ import android.widget.PopupMenu
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bumptech.glide.Glide
 import com.cornellappdev.coffee_chats_android.fragments.NoMatchFragment
@@ -30,7 +28,6 @@ import com.cornellappdev.coffee_chats_android.networking.updateFcmToken
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_scheduling.*
@@ -42,15 +39,11 @@ import kotlinx.coroutines.launch
 
 class SchedulingActivity :
         AppCompatActivity(),
-        OnFilledOutListener {
+        OnPauseChangedListener {
     private lateinit var user: User
-    private var page = 0        // 0: no match; 1: time scheduling; 2: place scheduling
-    private val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
     private val preferencesHelper: PreferencesHelper by lazy {
         PreferencesHelper(this)
     }
-    private val noMatchTag = "NO_MATCH"
-    private val matchTag = "MATCH"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,12 +66,7 @@ class SchedulingActivity :
                     } else {
                         setUpDrawerLayout()
                         val c = this@SchedulingActivity
-                        val isUserMatched = user.currentMatch != null
-                        if (!isUserMatched) {
-                            primaryActionButton.visibility = View.GONE
-                        }
-                        viewPager.adapter =
-                                ViewPagerAdapter(c, isUserMatched)
+                        updateViewPagerAdapter()
                         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
                             tab.text =
                                     if (position == 0) c.getText(R.string.match_header)
@@ -94,20 +82,6 @@ class SchedulingActivity :
                                 layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT
                                 layout.layoutParams = layoutParams
                             }
-                            addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-                                override fun onTabSelected(tab: TabLayout.Tab?) {
-                                    primaryActionButton.visibility =
-                                            if (tab?.text.toString() == c.getText(R.string.match_header) && isUserMatched) {
-                                                View.VISIBLE
-                                            } else {
-                                                View.GONE
-                                            }
-                                }
-
-                                override fun onTabUnselected(tab: TabLayout.Tab?) {}
-
-                                override fun onTabReselected(tab: TabLayout.Tab?) {}
-                            })
                         }
                     }
                 } catch (e: Exception) {
@@ -139,9 +113,6 @@ class SchedulingActivity :
         fragmentContainer.visibility = View.GONE
         headerText.visibility = View.GONE
         tabLayout.visibility = View.VISIBLE
-        primaryActionButton.setOnClickListener {
-            onSendMessageClick()
-        }
         feedbackButton.setOnClickListener {
             showPopup(it)
         }
@@ -159,6 +130,7 @@ class SchedulingActivity :
                 else -> null
             }
             contentTag?.let { intent.putExtra(ProfileSettingsActivity.CONTENT, contentTag) }
+            intent.putExtra(ProfileSettingsActivity.IS_PAUSED, user.isPaused)
             when (menuItem.itemId) {
                 R.id.nav_settings -> startActivityForResult(intent, SETTINGS_CODE)
                 R.id.nav_interests, R.id.nav_groups -> startActivity(intent)
@@ -226,27 +198,12 @@ class SchedulingActivity :
     private fun signIn() {
         val intent = Intent(this, SignInActivity::class.java)
         startActivity(intent)
-    }
-
-    override fun onAttachFragment(fragment: Fragment) {
-        if (fragment is OnFilledOutObservable) {
-            fragment.setOnFilledOutListener(this)
-        }
-    }
-
-    override fun onFilledOut() {
-        primaryActionButton.isEnabled = true
-    }
-
-    override fun onSelectionEmpty() {
-        primaryActionButton.isEnabled = false
+        finish()
     }
 
     override fun onBackPressed() {
         if (drawerLayout.isOpen) {
             drawerLayout.close()
-        } else if (page > 0) {
-            onBackPage()
         } else {
             finish()
         }
@@ -258,10 +215,15 @@ class SchedulingActivity :
             drawerLayout.close()
         }
         if (::user.isInitialized) {
+            val prevPauseStatus = user.isPaused
             CoroutineScope(Dispatchers.Main).launch {
                 user = getUser()
                 setUpDrawerLayout()
                 setUpCurrentPage()
+                // update fragment in case of changes in pause status
+                if (prevPauseStatus != user.isPaused) {
+                    updateViewPagerAdapter()
+                }
             }
         }
     }
@@ -275,71 +237,29 @@ class SchedulingActivity :
         }
     }
 
-    private fun onBackPage() {
-        page--
-        supportFragmentManager.popBackStack()
-        setUpCurrentPage()
-    }
-
-    private fun onSendMessageClick() {
-        user.currentMatch?.let {
-            val match = it.matchedUser
-            val messagingIntent = Intent(this, MessagingActivity::class.java).apply {
-                putExtra(MessagingActivity.STAGE, MessagingActivity.Stage.CHAT)
-                putExtra(MessagingActivity.USER_ID, user.id)
-                putExtra(MessagingActivity.PEAR_ID, match.id)
-                putExtra(MessagingActivity.PEAR_FIRST_NAME, match.firstName)
-                putExtra(MessagingActivity.PEAR_PROFILE_PIC_URL, match.profilePicUrl)
-            }
-            startActivity(messagingIntent)
+    override fun onAttachFragment(fragment: Fragment) {
+        if (fragment is OnPauseChangedObservable) {
+            fragment.setOnPauseChangedListener(this)
         }
     }
 
     private fun setUpCurrentPage() {
         val displayMetrics = Resources.getSystem().displayMetrics
-        if (page == 0) {
-            backButton.background = ContextCompat.getDrawable(this, R.drawable.ic_sign_in_logo)
-            backButton.layoutParams = backButton.layoutParams.apply {
-                height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30f, displayMetrics)
-                        .toInt()
-                width = height
-            }
-            backButton.setOnClickListener {
-                if (drawerLayout.isOpen) {
-                    drawerLayout.close()
-                } else {
-                    drawerLayout.open()
-                }
-            }
-            primaryActionButton.text = getString(R.string.no_match_availability)
-            primaryActionButton.isEnabled = true
-            primaryActionButton.setPadding(100, 0, 100, 0)
-        } else {
-            backButton.background = ContextCompat.getDrawable(this, R.drawable.ic_back_carrot)
-            feedbackButton.background =
-                    ContextCompat.getDrawable(this, R.drawable.ic_feedback_button)
-            backButton.layoutParams = backButton.layoutParams.apply {
-                height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 18f, displayMetrics)
-                        .toInt()
-                width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10f, displayMetrics)
-                        .toInt()
-            }
-            increaseHitArea(backButton)
-            increaseHitArea(feedbackButton)
-            backButton.setOnClickListener {
-                onBackPage()
-            }
-            primaryActionButton.isEnabled = false
-            primaryActionButton.setPadding(180, 0, 180, 0)
-            if (page == 1) {
-                headerText.text = getString(R.string.scheduling_time_header)
-                primaryActionButton.text = getString(R.string.scheduling_time_button)
+        // clear back caret icon
+        backButton.background = null
+        backButton.layoutParams = backButton.layoutParams.apply {
+            height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30f, displayMetrics)
+                .toInt()
+            width = height
+        }
+        increaseHitArea(backButton)
+        backButton.setOnClickListener {
+            if (drawerLayout.isOpen) {
+                drawerLayout.close()
             } else {
-                headerText.text = getString(R.string.scheduling_place_header)
-                primaryActionButton.text = getString(R.string.scheduling_place_button)
+                drawerLayout.open()
             }
         }
-        primaryActionButton.text = getString(R.string.send_message)
         feedbackButton.visibility = View.VISIBLE
     }
 
@@ -392,19 +312,37 @@ class SchedulingActivity :
     }
 
     // adapter for tabs
-    private inner class ViewPagerAdapter(activity: SchedulingActivity, val isUserMatched: Boolean) :
-            FragmentStateAdapter(activity) {
+    private inner class ViewPagerAdapter(activity: SchedulingActivity) :
+        FragmentStateAdapter(activity) {
         override fun getItemCount(): Int {
             return NUM_FRAGMENTS
         }
 
         override fun createFragment(position: Int): Fragment {
+            val isUserMatched = user.currentMatch != null
             return when (position) {
                 0 -> {
-                    if (isUserMatched) ProfileFragment.newInstance(user.currentMatch!!.matchedUser)
-                    else NoMatchFragment()
+                    if (isUserMatched && !user.isPaused)
+                        ProfileFragment.newInstance(user.currentMatch!!.matchedUser, user.id)
+                    else
+                        NoMatchFragment.newInstance(user.isPaused, user.pauseExpiration ?: "")
                 }
                 else -> PeopleFragment()
+            }
+        }
+    }
+
+    /** Reattaches ViewPagerAdapter - needs to be called when user data is updated */
+    private fun updateViewPagerAdapter() {
+        viewPager.adapter = ViewPagerAdapter(this)
+    }
+
+    override fun onPauseChanged(isPaused: Boolean) {
+        val prevPauseStatus = user.isPaused
+        if (prevPauseStatus != isPaused) {
+            CoroutineScope(Dispatchers.Main).launch {
+                user = getUser()
+                updateViewPagerAdapter()
             }
         }
     }

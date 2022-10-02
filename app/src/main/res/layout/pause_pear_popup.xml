@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pause_pear_popup"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_shape_background_green"
+    android:padding="@dimen/default_border_margin">
+
+    <ImageView
+        android:id="@+id/pear_icon"
+        android:layout_width="@dimen/pear_icon_size"
+        android:layout_height="@dimen/pear_icon_size"
+        android:layout_marginBottom="@dimen/pause_pear_medium_margin"
+        android:src="@drawable/ic_round_pear_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/popup_title"
+        android:layout_width="@dimen/pause_pear_title_width"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/pause_pear_medium_margin"
+        android:fontFamily="@font/circular_book"
+        android:text="@string/pause_pear"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pear_icon" />
+
+    <TextView
+        android:id="@+id/pause_pear_prompt_feedback"
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/pause_pear_medium_margin"
+        android:fontFamily="@font/circular_book"
+        android:text="@string/pause_pear_prompt_feedback_subtext"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/popup_title" />
+
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_border_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pause_pear_prompt_feedback">
+
+        <RadioButton
+            android:id="@+id/radio_button_1"
+            style="@style/radioButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="@string/pause_pear" />
+
+        <RadioButton
+            android:id="@+id/radio_button_2"
+            style="@style/radioButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="@string/pause_pear" />
+
+        <RadioButton
+            android:id="@+id/radio_button_3"
+            style="@style/radioButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="@string/pause_pear" />
+
+        <RadioButton
+            android:id="@+id/radio_button_4"
+            style="@style/radioButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="@string/pause_pear" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/action_button"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="190dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="@dimen/default_border_margin"
+        android:background="@drawable/profile_button_background"
+        android:elevation="3dp"
+        android:enabled="true"
+        android:fontFamily="@font/circular_medium"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:text="@string/pause_pear"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/radio_group" />
+
+    <Button
+        android:id="@+id/dismiss_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dismiss_button_margin_top"
+        android:background="@null"
+        android:fontFamily="@font/circular_book"
+        android:minHeight="0dp"
+        android:paddingVertical="@dimen/chat_bubble_padding"
+        android:textAllCaps="false"
+        android:textColor="@color/save_button_text_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/action_button"
+        tools:text="@string/next" />
+</androidx.constraintlayout.widget.ConstraintLayout>

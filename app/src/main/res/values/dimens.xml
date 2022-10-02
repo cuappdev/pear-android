@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- PromptsFragment -->
+    <dimen name="prompts_cell_padding">10dp</dimen>
+
     <!--SchedulingActivity-->
     <dimen name="default_border_margin">24dp</dimen>
     <dimen name="people_cell_padding">10dp</dimen>
     <dimen name="search_bar_height">40dp</dimen>
+    <dimen name="tab_padding_horizontal">7dp</dimen>
 
     <!-- ProfileFragment -->
     <dimen name="profile_padding_bottom">110dp</dimen>
+    <dimen name="profile_margin_vertical">20dp</dimen>
 
     <!-- NoMatchFragment -->
-    <dimen name="no_match_margin_vertical">20dp</dimen>
+    <dimen name="no_match_margin_vertical">40dp</dimen>
+    <dimen name="no_match_subheader_margin_top">12dp</dimen>
+    <dimen name="no_match_image_margin_top">60dp</dimen>
 
     <!-- MESSAGING -->
     <dimen name="profile_pic_margin">15dp</dimen>
@@ -28,4 +35,10 @@
     <dimen name="message_padding_vertical">10dp</dimen>
     <dimen name="message_profile_pic_size">40dp</dimen>
     <dimen name="pear_name_text_size">16sp</dimen>
+
+    <!-- Pause Pear -->
+    <dimen name="dismiss_button_margin_top">8dp</dimen>
+    <dimen name="pause_pear_medium_margin">8dp</dimen>
+    <dimen name="pear_icon_size">100dp</dimen>
+    <dimen name="pause_pear_title_width">210dp</dimen>
 </resources>

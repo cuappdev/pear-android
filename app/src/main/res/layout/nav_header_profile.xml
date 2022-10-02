@@ -51,6 +51,7 @@
         android:id="@+id/user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/circular_book"
         android:paddingTop="10dp"
         android:textColor="@color/black"
         android:textSize="24sp"
@@ -60,6 +61,7 @@
         android:id="@+id/user_major_year"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/circular_book"
         android:textColor="@color/faded_text"
         android:textSize="16sp"
         tools:text="Major Year" />
@@ -68,6 +70,7 @@
         android:id="@+id/user_hometown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/circular_book"
         android:textColor="@color/faded_text"
         android:textSize="16sp"
         tools:text="Hometown" />

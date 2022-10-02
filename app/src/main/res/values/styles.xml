@@ -36,4 +36,25 @@
         <item name="fontWeight">900</item>
         <item name="textAllCaps">false</item>
     </style>
+
+    <style name="drawerMenuTheme">
+        <item name="android:textSize">20sp</item>
+        <item name="fontFamily">@font/circular_book</item>
+    </style>
+
+    <style name="radioButtonStyle" parent="@android:style/Widget.CompoundButton">
+        <item name="android:background">@drawable/radio_button_background</item>
+        <item name="android:button">@null</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/circular_book</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:layout_marginBottom">3dp</item>
+        <item name="android:paddingTop">7dp</item>
+        <item name="android:paddingBottom">7dp</item>
+        <item name="android:paddingStart">3dp</item>
+        <item name="android:paddingEnd">3dp</item>
+        <item name="android:minWidth">0dp</item>
+    </style>
 </resources>
