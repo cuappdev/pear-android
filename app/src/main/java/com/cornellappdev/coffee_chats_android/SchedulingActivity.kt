@@ -124,8 +124,7 @@ class SchedulingActivity :
             drawerLayout.close()
             val intent = Intent(this, ProfileSettingsActivity::class.java)
             val contentTag = when (menuItem.itemId) {
-                R.id.nav_interests -> ProfileSettingsActivity.Content.EDIT_INTERESTS
-                R.id.nav_groups -> ProfileSettingsActivity.Content.EDIT_GROUPS
+                R.id.nav_profile -> throw NotImplementedError()
                 R.id.nav_settings -> ProfileSettingsActivity.Content.SETTINGS
                 else -> null
             }
@@ -133,7 +132,7 @@ class SchedulingActivity :
             intent.putExtra(ProfileSettingsActivity.IS_PAUSED, user.isPaused)
             when (menuItem.itemId) {
                 R.id.nav_settings -> startActivityForResult(intent, SETTINGS_CODE)
-                R.id.nav_interests, R.id.nav_groups -> startActivity(intent)
+                R.id.nav_profile -> throw NotImplementedError()
                 R.id.nav_messages -> {
                     val messagingIntent = Intent(this, MessagingActivity::class.java).apply {
                         putExtra(MessagingActivity.STAGE, MessagingActivity.Stage.MESSAGES)
