@@ -41,8 +41,8 @@ import kotlinx.coroutines.launch
 
 
 class SchedulingActivity :
-    AppCompatActivity(),
-    OnFilledOutListener {
+        AppCompatActivity(),
+        OnFilledOutListener {
     private lateinit var user: User
     private var page = 0        // 0: no match; 1: time scheduling; 2: place scheduling
     private val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
@@ -78,17 +78,17 @@ class SchedulingActivity :
                             primaryActionButton.visibility = View.GONE
                         }
                         viewPager.adapter =
-                            ViewPagerAdapter(c, isUserMatched)
+                                ViewPagerAdapter(c, isUserMatched)
                         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
                             tab.text =
-                                if (position == 0) c.getText(R.string.match_header)
-                                else c.getText(R.string.people_header)
+                                    if (position == 0) c.getText(R.string.match_header)
+                                    else c.getText(R.string.people_header)
                         }.attach()
                         // resize tabs so they wrap tab text
                         tabLayout.apply {
                             for (i in 0 until NUM_FRAGMENTS) {
                                 val layout =
-                                    (this.getChildAt(0) as LinearLayout).getChildAt(0) as LinearLayout
+                                        (this.getChildAt(0) as LinearLayout).getChildAt(0) as LinearLayout
                                 val layoutParams = layout.layoutParams as LinearLayout.LayoutParams
                                 layoutParams.weight = 0f
                                 layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT
@@ -97,11 +97,11 @@ class SchedulingActivity :
                             addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                                 override fun onTabSelected(tab: TabLayout.Tab?) {
                                     primaryActionButton.visibility =
-                                        if (tab?.text.toString() == c.getText(R.string.match_header) && isUserMatched) {
-                                            View.VISIBLE
-                                        } else {
-                                            View.GONE
-                                        }
+                                            if (tab?.text.toString() == c.getText(R.string.match_header) && isUserMatched) {
+                                                View.VISIBLE
+                                            } else {
+                                                View.GONE
+                                            }
                                 }
 
                                 override fun onTabUnselected(tab: TabLayout.Tab?) {}
@@ -189,15 +189,15 @@ class SchedulingActivity :
      */
     private fun setUpDrawerLayout() {
         Glide.with(applicationContext).load(user.profilePicUrl).centerInside().circleCrop()
-            .into(drawerLayout.user_image)
+                .into(drawerLayout.user_image)
         Glide.with(applicationContext).load(user.profilePicUrl).centerInside().circleCrop()
-            .into(backButton)
+                .into(backButton)
         drawerLayout.user_name.text =
-            getString(R.string.user_name, user.firstName, user.lastName)
+                getString(R.string.user_name, user.firstName, user.lastName)
         drawerLayout.user_major_year.text = getString(
-            R.string.user_major_year,
-            if (user.majors.isNotEmpty()) user.majors.first().name else "",
-            user.graduationYear
+                R.string.user_major_year,
+                if (user.majors.isNotEmpty()) user.majors.first().name else "",
+                user.graduationYear
         )
         drawerLayout.user_hometown.text = getString(R.string.user_hometown, user.hometown)
         val content = findViewById<ConstraintLayout>(R.id.activity_main)
@@ -208,10 +208,10 @@ class SchedulingActivity :
             }
         }
         drawerLayout.addDrawerListener(object : ActionBarDrawerToggle(
-            this,
-            drawerLayout,
-            R.string.drawer_open,
-            R.string.drawer_close
+                this,
+                drawerLayout,
+                R.string.drawer_open,
+                R.string.drawer_close
         ) {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
                 super.onDrawerSlide(drawerView, slideOffset)
@@ -301,7 +301,7 @@ class SchedulingActivity :
             backButton.background = ContextCompat.getDrawable(this, R.drawable.ic_sign_in_logo)
             backButton.layoutParams = backButton.layoutParams.apply {
                 height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30f, displayMetrics)
-                    .toInt()
+                        .toInt()
                 width = height
             }
             backButton.setOnClickListener {
@@ -317,12 +317,12 @@ class SchedulingActivity :
         } else {
             backButton.background = ContextCompat.getDrawable(this, R.drawable.ic_back_carrot)
             feedbackButton.background =
-                ContextCompat.getDrawable(this, R.drawable.ic_feedback_button)
+                    ContextCompat.getDrawable(this, R.drawable.ic_feedback_button)
             backButton.layoutParams = backButton.layoutParams.apply {
                 height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 18f, displayMetrics)
-                    .toInt()
+                        .toInt()
                 width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10f, displayMetrics)
-                    .toInt()
+                        .toInt()
             }
             increaseHitArea(backButton)
             increaseHitArea(feedbackButton)
@@ -361,15 +361,15 @@ class SchedulingActivity :
                 }
                 R.id.nav_contact_us -> {
                     sendEmail(
-                        getString(R.string.feedback_email),
-                        getString(R.string.feedback_contact)
+                            getString(R.string.feedback_email),
+                            getString(R.string.feedback_contact)
                     )
                     true
                 }
                 R.id.nav_report_user -> {
                     sendEmail(
-                        getString(R.string.feedback_email),
-                        getString(R.string.feedback_report)
+                            getString(R.string.feedback_email),
+                            getString(R.string.feedback_report)
                     )
                     true
                 }
@@ -393,7 +393,7 @@ class SchedulingActivity :
 
     // adapter for tabs
     private inner class ViewPagerAdapter(activity: SchedulingActivity, val isUserMatched: Boolean) :
-        FragmentStateAdapter(activity) {
+            FragmentStateAdapter(activity) {
         override fun getItemCount(): Int {
             return NUM_FRAGMENTS
         }
