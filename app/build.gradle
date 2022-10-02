@@ -44,7 +44,7 @@ dependencies {
     // Firebase auth- done with Google Sign-In, but dependency still needed
     implementation 'com.google.firebase:firebase-auth-ktx'
 
-    //Google Sign-In
+    // Google Sign-In
     implementation 'com.google.android.gms:play-services-auth:19.2.0'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
