@@ -2,11 +2,15 @@ package com.cornellappdev.coffee_chats_android.utils
 
 import android.util.Log
 import com.cornellappdev.coffee_chats_android.models.Message
+import com.cornellappdev.coffee_chats_android.networking.sendMessageNotification
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.getValue
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Util methods for working with messages via the Firebase Realtime Database
@@ -63,6 +67,10 @@ fun sendMessage(message: String, currUserId: Int, otherUserId: Int, observer: Me
     )
     database.updateChildren(childUpdates)
         .addOnCanceledListener { observer.onMessageSendFailed() }
+
+    CoroutineScope(Dispatchers.Main).launch {
+        sendMessageNotification(message, otherUserId)
+    }
 }
 
 interface MessageObserver {

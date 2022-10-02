@@ -120,6 +120,16 @@ suspend fun updateSocialMedia(socialMedia: SocialMedia): ApiResponse<SocialMedia
 suspend fun updateOnboardingStatus(hasOnboarded: Boolean): ApiResponse<OnboardingStatus>? =
     postDataHelper(Endpoint.updateOnboardingStatus(hasOnboarded), OnboardingStatus::class.java)
 
+// FCM TOKEN
+
+suspend fun updateFcmToken(fcmToken: String): ApiResponse<FcmToken>? =
+    postDataHelper(Endpoint.updateFcmToken(fcmToken), FcmToken::class.java)
+
+// MESSAGE NOTIFICATION
+
+suspend fun sendMessageNotification(message: String, recipientId : Int): ApiResponse<OnboardingStatus>? =
+    postDataHelper(Endpoint.sendMessageNotification(message, recipientId), Message::class.java)
+
 // MATCHES
 
 suspend fun getCurrentMatch(): SingleMatch? =

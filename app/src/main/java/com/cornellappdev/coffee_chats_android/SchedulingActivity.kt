@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.ContextThemeWrapper
 import android.view.MenuInflater
@@ -23,9 +24,12 @@ import com.cornellappdev.coffee_chats_android.fragments.ProfileFragment
 import com.cornellappdev.coffee_chats_android.models.User
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.cornellappdev.coffee_chats_android.networking.setUpNetworking
+import com.cornellappdev.coffee_chats_android.networking.updateFcmToken
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_scheduling.*
 import kotlinx.android.synthetic.main.nav_header_profile.view.*
 import kotlinx.coroutines.CoroutineScope
@@ -33,7 +37,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class SchedulingActivity : AppCompatActivity(), OnPauseChangedListener {
+class SchedulingActivity :
+        AppCompatActivity(),
+        OnPauseChangedListener {
     private lateinit var user: User
     private val preferencesHelper: PreferencesHelper by lazy {
         PreferencesHelper(this)
@@ -63,14 +69,14 @@ class SchedulingActivity : AppCompatActivity(), OnPauseChangedListener {
                         updateViewPagerAdapter()
                         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
                             tab.text =
-                                if (position == 0) c.getText(R.string.match_header)
-                                else c.getText(R.string.people_header)
+                                    if (position == 0) c.getText(R.string.match_header)
+                                    else c.getText(R.string.people_header)
                         }.attach()
                         // resize tabs so they wrap tab text
                         tabLayout.apply {
                             for (i in 0 until NUM_FRAGMENTS) {
                                 val layout =
-                                    (this.getChildAt(0) as LinearLayout).getChildAt(0) as LinearLayout
+                                        (this.getChildAt(0) as LinearLayout).getChildAt(0) as LinearLayout
                                 val layoutParams = layout.layoutParams as LinearLayout.LayoutParams
                                 layoutParams.weight = 0f
                                 layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT
@@ -83,6 +89,22 @@ class SchedulingActivity : AppCompatActivity(), OnPauseChangedListener {
                     signIn()
                 }
             }
+            // Send FCM registration token to backend
+            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                    return@OnCompleteListener
+                }
+
+                // Get new FCM registration token
+                val token = task.result
+                CoroutineScope(Dispatchers.Main).launch {
+                    updateFcmToken(token)
+                }
+
+                // Log and toast
+                Log.d(TAG, "FCM Token: $token")
+            })
         } else {
             // prompt user to log in
             signIn()
@@ -139,15 +161,15 @@ class SchedulingActivity : AppCompatActivity(), OnPauseChangedListener {
      */
     private fun setUpDrawerLayout() {
         Glide.with(applicationContext).load(user.profilePicUrl).centerInside().circleCrop()
-            .into(drawerLayout.user_image)
+                .into(drawerLayout.user_image)
         Glide.with(applicationContext).load(user.profilePicUrl).centerInside().circleCrop()
-            .into(backButton)
+                .into(backButton)
         drawerLayout.user_name.text =
-            getString(R.string.user_name, user.firstName, user.lastName)
+                getString(R.string.user_name, user.firstName, user.lastName)
         drawerLayout.user_major_year.text = getString(
-            R.string.user_major_year,
-            if (user.majors.isNotEmpty()) user.majors.first().name else "",
-            user.graduationYear
+                R.string.user_major_year,
+                if (user.majors.isNotEmpty()) user.majors.first().name else "",
+                user.graduationYear
         )
         drawerLayout.user_hometown.text = getString(R.string.user_hometown, user.hometown)
         val content = findViewById<ConstraintLayout>(R.id.activity_main)
@@ -158,10 +180,10 @@ class SchedulingActivity : AppCompatActivity(), OnPauseChangedListener {
             }
         }
         drawerLayout.addDrawerListener(object : ActionBarDrawerToggle(
-            this,
-            drawerLayout,
-            R.string.drawer_open,
-            R.string.drawer_close
+                this,
+                drawerLayout,
+                R.string.drawer_open,
+                R.string.drawer_close
         ) {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
                 super.onDrawerSlide(drawerView, slideOffset)
@@ -259,15 +281,15 @@ class SchedulingActivity : AppCompatActivity(), OnPauseChangedListener {
                 }
                 R.id.nav_contact_us -> {
                     sendEmail(
-                        getString(R.string.feedback_email),
-                        getString(R.string.feedback_contact)
+                            getString(R.string.feedback_email),
+                            getString(R.string.feedback_contact)
                     )
                     true
                 }
                 R.id.nav_report_user -> {
                     sendEmail(
-                        getString(R.string.feedback_email),
-                        getString(R.string.feedback_report)
+                            getString(R.string.feedback_email),
+                            getString(R.string.feedback_report)
                     )
                     true
                 }
@@ -326,6 +348,7 @@ class SchedulingActivity : AppCompatActivity(), OnPauseChangedListener {
     }
 
     companion object {
+        private const val TAG = "FCM_TOKEN"
         private const val NUM_FRAGMENTS = 2
         private const val SETTINGS_CODE = 10032
     }
