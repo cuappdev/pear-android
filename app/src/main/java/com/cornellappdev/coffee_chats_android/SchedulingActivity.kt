@@ -115,10 +115,8 @@ class SchedulingActivity :
                     signIn()
                 }
             }
-
+            // Send FCM registration token to backend
             FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-
-                val TAG = "FCM_TOKEN"
                 if (!task.isSuccessful) {
                     Log.w(TAG, "Fetching FCM registration token failed", task.exception)
                     return@OnCompleteListener
@@ -126,16 +124,13 @@ class SchedulingActivity :
 
                 // Get new FCM registration token
                 val token = task.result
-
                 CoroutineScope(Dispatchers.Main).launch {
                     updateFcmToken(token)
                 }
 
                 // Log and toast
-                val msg = "THIS IS THE TOKEN: $token"
-                Log.d(TAG, msg)
+                Log.d(TAG, "FCM Token: $token")
             })
-
         } else {
             // prompt user to log in
             signIn()
@@ -414,8 +409,8 @@ class SchedulingActivity :
         }
     }
 
-
     companion object {
+        private const val TAG = "FCM_TOKEN"
         private const val NUM_FRAGMENTS = 2
         private const val SETTINGS_CODE = 10032
     }

@@ -1,4 +1,5 @@
 package com.cornellappdev.coffee_chats_android.models
+
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -14,6 +15,7 @@ class UserSession(
     val lastName: String
 ) {
     companion object {
+        fun isCurrentAccessTokenInitialized() = ::currentAccessToken.isInitialized
         lateinit var currentAccessToken: String
     }
 }

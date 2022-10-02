@@ -9,6 +9,7 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.cornellappdev.coffee_chats_android.fragments.messaging.ChatFragment
+import com.cornellappdev.coffee_chats_android.models.UserSession
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.cornellappdev.coffee_chats_android.networking.updateFcmToken
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -50,9 +51,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
      * @param token The new token.
      */
     private fun sendRegistrationToServer(token: String) {
-        Log.d(TAG, "sendRegistrationTokenToServer($token)")
         CoroutineScope(Dispatchers.Main).launch {
-            updateFcmToken(token)
+            if (UserSession.isCurrentAccessTokenInitialized()) {
+                Log.d(TAG, "sendRegistrationTokenToServer($token)")
+                updateFcmToken(token)
+            }
         }
     }
 
@@ -63,7 +66,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
      */
     @SuppressLint("ResourceAsColor")
     private fun sendNotification(message: RemoteMessage) {
-        Log.d("TAG", "sendNotification called")
+        Log.d(TAG, "sendNotification called")
         val intent = Intent(this, ChatFragment::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
@@ -96,9 +99,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     companion object {
-
         private const val TAG = "MyFirebaseMsgService"
     }
-
-
 }

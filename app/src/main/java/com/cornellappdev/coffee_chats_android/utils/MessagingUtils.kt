@@ -3,7 +3,6 @@ package com.cornellappdev.coffee_chats_android.utils
 import android.util.Log
 import com.cornellappdev.coffee_chats_android.models.Message
 import com.cornellappdev.coffee_chats_android.networking.sendMessageNotification
-import com.cornellappdev.coffee_chats_android.networking.updateFcmToken
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
