@@ -54,6 +54,10 @@
         <item>road, trips, backpacking</item>
     </string-array>
 
+    <!--EDIT PROFILE-->
+    <string name="preview">Preview</string>
+    <string name="edit">Edit</string>
+
     <!--PROMPTS-->
     <string name="prompts_header">Let\'s get to know you better!</string>
     <string name="select_prompt">Select a prompt</string>
