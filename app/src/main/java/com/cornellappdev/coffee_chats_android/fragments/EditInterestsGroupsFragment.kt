@@ -1,17 +1,13 @@
 package com.cornellappdev.coffee_chats_android.fragments
 
-import android.content.res.Resources
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ListView
 import androidx.fragment.app.Fragment
-import com.cornellappdev.coffee_chats_android.OnFilledOutListener
-import com.cornellappdev.coffee_chats_android.OnFilledOutObservable
-import com.cornellappdev.coffee_chats_android.R
+import com.cornellappdev.coffee_chats_android.*
 import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter
 import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter.ItemColor
 import com.cornellappdev.coffee_chats_android.models.UserField
@@ -19,7 +15,6 @@ import com.cornellappdev.coffee_chats_android.models.UserField.Category
 import com.cornellappdev.coffee_chats_android.networking.getAllGroups
 import com.cornellappdev.coffee_chats_android.networking.getAllInterests
 import com.cornellappdev.coffee_chats_android.networking.getUser
-import com.cornellappdev.coffee_chats_android.updateUserField
 import kotlinx.android.synthetic.main.fragment_edit_interests.*
 import kotlinx.android.synthetic.main.fragment_edit_interests.view.*
 import kotlinx.android.synthetic.main.interest_group_list_with_header.view.*
@@ -67,7 +62,12 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
                 val userInterests = user.interests
                 val allInterests = getAllInterests()
                 for (interest in allInterests) {
-                    val item = UserField(interest.name, interest.subtitle, interest.imageUrl, id = interest.id)
+                    val item = UserField(
+                        interest.name,
+                        interest.subtitle,
+                        interest.imageUrl,
+                        id = interest.id
+                    )
                     if (interest in userInterests) {
                         selectedItems.add(item)
                     } else {
@@ -136,10 +136,7 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
      */
     private fun updateListViewHeight(listView: ListView, listSize: Int) {
         listView.layoutParams = (listView.layoutParams as LinearLayout.LayoutParams).apply {
-            val displayMetrics = Resources.getSystem().displayMetrics
-            val cellHeight =
-                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80f, displayMetrics).toInt()
-
+            val cellHeight = dpToPixels(requireContext(), 80)
             height = cellHeight * listSize
             listView.requestLayout()
             scrollView.requestLayout()

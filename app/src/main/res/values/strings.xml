@@ -15,6 +15,7 @@
     <string name="talking_pointers_header">What do you most want to talk about?</string>
     <string name="add_later_button">I\'ll add later</string>
     <string name="upload_image">Upload New Picture</string>
+    <string name="name">Name</string>
     <string name="major">Major</string>
     <string name="hometown">Hometown</string>
     <string name="pronouns">Pronouns</string>
@@ -125,7 +126,6 @@
 
 
     <!--PROFILE-->
-    <string name="reach_me">Reach me at %1$s</string>
     <string name="basic_profile_info">I study &lt;b>%1$s&lt;/b> in the class of &lt;b>%2$s&lt;/b>, and my home is in &lt;b>%3$s&lt;/b>! My pronouns are &lt;b>%4$s&lt;/b>.</string>
     <string name="dummy_name">First Last</string>
 

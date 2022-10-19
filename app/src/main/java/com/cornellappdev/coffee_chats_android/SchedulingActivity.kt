@@ -2,11 +2,9 @@ package com.cornellappdev.coffee_chats_android
 
 import android.app.Activity
 import android.content.Intent
-import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.util.TypedValue
 import android.view.ContextThemeWrapper
 import android.view.MenuInflater
 import android.view.View
@@ -250,12 +248,10 @@ class SchedulingActivity :
     }
 
     private fun setUpCurrentPage() {
-        val displayMetrics = Resources.getSystem().displayMetrics
         // clear back caret icon
         backButton.background = null
         backButton.layoutParams = backButton.layoutParams.apply {
-            height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30f, displayMetrics)
-                .toInt()
+            height = dpToPixels(this@SchedulingActivity, 30)
             width = height
         }
         increaseHitArea(backButton)
