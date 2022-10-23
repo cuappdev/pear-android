@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -22,6 +23,7 @@ import com.bumptech.glide.Glide
 import com.cornellappdev.coffee_chats_android.OnFilledOutListener
 import com.cornellappdev.coffee_chats_android.OnFilledOutObservable
 import com.cornellappdev.coffee_chats_android.R
+import com.cornellappdev.coffee_chats_android.dpToPixels
 import com.cornellappdev.coffee_chats_android.models.Demographics
 import com.cornellappdev.coffee_chats_android.models.Major
 import com.cornellappdev.coffee_chats_android.models.User
@@ -55,6 +57,15 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
 
     private lateinit var allMajorsList: List<Major>
 
+    private var isOnboarding = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            isOnboarding = it.getBoolean(IS_ONBOARDING)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -85,6 +96,21 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
             if (!user.profilePicUrl.isNullOrBlank()) {
                 Glide.with(requireContext()).load(user.profilePicUrl).centerInside().circleCrop()
                     .into(user_image)
+            }
+
+            if (isOnboarding) {
+                val layoutParams = classSpinner.layoutParams as ConstraintLayout.LayoutParams
+                layoutParams.setMargins(
+                    layoutParams.leftMargin,
+                    dpToPixels(requireContext(), 50),
+                    layoutParams.rightMargin,
+                    0
+                )
+                nameEditText.visibility = View.GONE
+                classSpinner.layoutParams = layoutParams
+            } else {
+                val name = getString(R.string.user_name, user.firstName, user.lastName)
+                nameEditText.setText(name)
             }
 
             if (!user.hometown.isNullOrBlank()) {
@@ -278,5 +304,14 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
 
     companion object {
         private const val PICK_IMAGE_CODE = 42
+        private const val IS_ONBOARDING = "IS_ONBOARDING"
+
+        @JvmStatic
+        fun newInstance(isOnboarding: Boolean = false) =
+            EditProfileFragment().apply {
+                arguments = Bundle().apply {
+                    putBoolean(IS_ONBOARDING, isOnboarding)
+                }
+            }
     }
 }

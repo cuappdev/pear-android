@@ -70,7 +70,7 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
             }
             user = getUser()
             val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-            ft.replace(fragmentContainer.id, EditProfileFragment(), content.name)
+            ft.replace(fragmentContainer.id, EditProfileFragment.newInstance(true), content.name)
                 .addToBackStack("ft")
                 .commit()
             setUpCurrentPage()

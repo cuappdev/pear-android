@@ -59,7 +59,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener, OnPaus
         content = intent.getSerializableExtra(CONTENT) as Content
         isPaused = intent.getBooleanExtra(IS_PAUSED, isPaused)
         val fragment: Fragment = when (content) {
-            Content.EDIT_INFO -> EditProfileFragment()
+            Content.EDIT_INFO -> EditProfileFragment.newInstance(false)
             Content.EDIT_INTERESTS -> EditInterestsGroupsFragment.newInstance(true)
             Content.EDIT_GROUPS -> EditInterestsGroupsFragment.newInstance(false)
             Content.SETTINGS -> SettingsFragment()
