@@ -56,8 +56,8 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
         override fun createFragment(position: Int): Fragment {
             return when (position) {
                 0 -> EditProfileFragment()
-                1 -> EditProfileFragment()
-                2 -> EditProfileFragment()
+                1 -> EditInterestsGroupsFragment.newInstance(true)
+                2 -> EditInterestsGroupsFragment.newInstance(false)
                 3 -> EditProfileFragment()
                 else -> throw IllegalStateException()
             }

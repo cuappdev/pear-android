@@ -18,7 +18,9 @@ class UserFieldAdapter(
     private val fieldList: List<UserField>,
     private val itemColor: ItemColor,
     private val hideIcon: Boolean = true,
-    private val resizeCell: Boolean = false
+    private val resizeCell: Boolean = false,
+    private val showDeleteIcon: Boolean = false,
+    private val onDeleteClickListener: (Int) -> Unit = {}
 ) :
     ArrayAdapter<UserField?>(mContext, 0, fieldList), Filterable {
 
@@ -71,6 +73,11 @@ class UserFieldAdapter(
             viewHolder.icon.visibility = View.GONE
         }
 
+        if (showDeleteIcon) {
+            viewHolder.deleteIcon?.visibility = View.VISIBLE
+            viewHolder.deleteIcon?.setOnClickListener { onDeleteClickListener(position) }
+        }
+
         val selected = ContextCompat.getColor(context, R.color.onboardingListSelected)
         val unselected = ContextCompat.getColor(context, R.color.onboarding_fields)
         val drawableBox = viewHolder.layout!!.background
@@ -89,5 +96,6 @@ class UserFieldAdapter(
         val clubOrInterestSubtext = view?.findViewById(R.id.group_or_interest_subtext) as TextView
         val layout = view?.findViewById<ConstraintLayout>(R.id.group_or_interest_box)
         val icon = view?.findViewById<ImageView>(R.id.rounded_rectangle)
+        val deleteIcon = view?.findViewById<ImageView>(R.id.delete_icon)
     }
 }

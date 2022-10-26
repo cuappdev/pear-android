@@ -53,8 +53,8 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         selected_items.list_title.text =
             getString(if (isInterest) R.string.menu_interests else R.string.menu_groups)
-        more_items.list_title.text = getString(R.string.more_items, itemString)
-        more_items.list_subtitle.text = getString(R.string.tap_to_add)
+        add_item_button.text =
+            getString(if (isInterest) R.string.add_interests else R.string.add_groups)
 
         CoroutineScope(Dispatchers.Main).launch {
             val user = getUser()
@@ -88,20 +88,18 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
             }
 
             selectedItemsAdapter =
-                UserFieldAdapter(requireContext(), selectedItems, ItemColor.GREEN, false)
+                UserFieldAdapter(
+                    requireContext(),
+                    selectedItems,
+                    ItemColor.WHITE,
+                    hideIcon = false,
+                    showDeleteIcon = true,
+                    onDeleteClickListener = { pos: Int -> moveItem(pos, selectedItems, moreItems) }
+                )
             selected_items.item_list.adapter = selectedItemsAdapter
-            moreItemsAdapter =
-                UserFieldAdapter(requireContext(), moreItems, ItemColor.WHITE, false)
-            more_items.item_list.adapter = moreItemsAdapter
             view_other_items.setOnClickListener {
                 showExcessSelectedItems = !showExcessSelectedItems
                 updatePage()
-            }
-            selected_items.item_list.setOnItemClickListener { _, _, position, _ ->
-                moveItem(position, selectedItems, moreItems)
-            }
-            more_items.item_list.setOnItemClickListener { _, _, position, _ ->
-                moveItem(position, moreItems, selectedItems)
             }
             toggleSaveButton()
             updatePage()
@@ -127,7 +125,6 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
         val numItemsShown =
             if (showExcessSelectedItems) selectedItems.size else min(selectedItems.size, 3)
         updateListViewHeight(selected_items.item_list, numItemsShown)
-        updateListViewHeight(more_items.item_list, moreItems.size)
     }
 
     /**
@@ -157,7 +154,6 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
         val index = max(dest.indexOfLast { i -> i.getText() < item.getText() } + 1, 0)
         dest.add(index, item)
         selectedItemsAdapter.notifyDataSetChanged()
-        moreItemsAdapter.notifyDataSetChanged()
         toggleSaveButton()
         updatePage()
     }

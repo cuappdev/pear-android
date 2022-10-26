@@ -270,6 +270,8 @@
     <string name="view_fewer">view fewer %1$s</string>
     <string name="select_one_interest">Select at least one interest so that we can better help you find a Pear!</string>
     <string name="select_one_group">Select a group so that we can better help you find a Pear!</string>
+    <string name="add_interests">Add interests</string>
+    <string name="add_groups">Add groups</string>
 
     <string name="edit_availability">Edit Availability</string>
     <string name="edit_interests">Edit Interests</string>
