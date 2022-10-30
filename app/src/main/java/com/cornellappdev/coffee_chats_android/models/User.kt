@@ -45,4 +45,33 @@ data class User(
     val isPaused: Boolean,
     @Json(name = "pause_expiration")
     val pauseExpiration: String?
-)
+) {
+    companion object {
+        val DUMMY_USER = User(
+            id = -1,
+            netId = "dummy",
+            firstName = "Dummy",
+            lastName = "User",
+            hometown = "Vale",
+            profilePicUrl = null,
+            facebookUrl = null,
+            instagramUsername = null,
+            majors = ArrayList(),
+            graduationYear = "2023",
+            pronouns = null,
+            prompts = ArrayList(),
+            purposes = ArrayList(),
+            goals = ArrayList(),
+            talkingPoints = null,
+            availability = null,
+            locations = ArrayList(),
+            interests = ArrayList(),
+            groups = ArrayList(),
+            hasOnboarded = true,
+            pendingFeedback = false,
+            currentMatch = null,
+            isPaused = false,
+            pauseExpiration = null,
+        )
+    }
+}

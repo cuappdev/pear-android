@@ -64,7 +64,7 @@
                 android:textAlignment="viewStart"
                 android:textAllCaps="false"
                 android:textColor="@color/secondary_green_grey"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 tools:text="@string/add_interests" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

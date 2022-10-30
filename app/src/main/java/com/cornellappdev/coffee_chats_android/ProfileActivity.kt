@@ -7,10 +7,23 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.cornellappdev.coffee_chats_android.fragments.*
+import com.cornellappdev.coffee_chats_android.networking.getUser
+import com.cornellappdev.coffee_chats_android.respositories.UserRepository
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_profile_settings.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
+
+    enum class State {
+        PREVIEW,
+        EDIT
+    }
+
+    var state = State.PREVIEW
+    private var userId: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,26 +36,63 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
             save_button.visibility = View.VISIBLE
             save_button.text = getString(R.string.edit)
             save_button.setOnClickListener {
-                tabLayout.visibility = View.VISIBLE
-                viewPager.adapter = ViewPagerAdapter(this)
-                TabLayoutMediator(tabLayout, viewPager) { _, _ -> }.attach()
-                fragmentContainer.visibility = View.GONE
+                when (state) {
+                    State.PREVIEW -> {
+                        state = State.EDIT
+                        setUpPage()
+                    }
+                    State.EDIT -> {
+                        TODO()
+                    }
+                }
             }
         }
 
-        fragmentContainer.visibility = View.VISIBLE
-        supportFragmentManager.commit {
-            setReorderingAllowed(true)
-            replace(
-                R.id.fragmentContainer,
-                ProfileFragment.newInstance(intent.extras!!.getInt(USER_ID))
-            )
-        }
+        userId = intent.extras!!.getInt(USER_ID)
+        setUpPage()
     }
 
     override fun onAttachFragment(fragment: Fragment) {
         if (fragment is OnFilledOutObservable) {
             fragment.setOnFilledOutListener(this)
+        }
+    }
+
+    override fun onBackPressed() {
+        if (state == State.EDIT) {
+            state = State.PREVIEW
+            setUpPage()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    /** Sets up page UI based on current state */
+    private fun setUpPage() {
+        when (state) {
+            State.PREVIEW -> {
+                tabLayout.visibility = View.GONE
+                fragmentContainer.visibility = View.VISIBLE
+                supportFragmentManager.commit {
+                    setReorderingAllowed(true)
+                    replace(
+                        R.id.fragmentContainer,
+                        ProfileFragment.newInstance(userId)
+                    )
+                }
+            }
+            State.EDIT -> {
+                CoroutineScope(Dispatchers.Main).launch {
+                    val user = getUser()
+                    UserRepository.initializeUser(user)
+                }
+                state = State.EDIT
+                save_button.text = getString(R.string.save)
+                tabLayout.visibility = View.VISIBLE
+                viewPager.adapter = ViewPagerAdapter(this)
+                TabLayoutMediator(tabLayout, viewPager) { _, _ -> }.attach()
+                fragmentContainer.visibility = View.GONE
+            }
         }
     }
 
