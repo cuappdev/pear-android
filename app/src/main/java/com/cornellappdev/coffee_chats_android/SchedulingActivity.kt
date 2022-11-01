@@ -177,12 +177,6 @@ class SchedulingActivity :
         )
         drawerLayout.user_hometown.text = getString(R.string.user_hometown, user.hometown)
         val content = findViewById<ConstraintLayout>(R.id.activity_main)
-        drawerLayout.edit_info.setOnClickListener {
-            Intent(this, ProfileSettingsActivity::class.java).apply {
-                putExtra(ProfileSettingsActivity.CONTENT, ProfileSettingsActivity.Content.EDIT_INFO)
-                startActivity(this)
-            }
-        }
         drawerLayout.addDrawerListener(object : ActionBarDrawerToggle(
                 this,
                 drawerLayout,

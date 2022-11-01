@@ -34,7 +34,6 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
         headerText.text = intent.extras?.getString(HEADER_TEXT) ?: ""
         intent.extras?.getBoolean(ENABLE_EDIT).let {
             save_button.visibility = View.VISIBLE
-            save_button.text = getString(R.string.edit)
             save_button.setOnClickListener {
                 when (state) {
                     State.PREVIEW -> {
@@ -71,6 +70,7 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
     private fun setUpPage() {
         when (state) {
             State.PREVIEW -> {
+                save_button.text = getString(R.string.edit)
                 tabLayout.visibility = View.GONE
                 fragmentContainer.visibility = View.VISIBLE
                 supportFragmentManager.commit {
@@ -82,6 +82,7 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
                 }
             }
             State.EDIT -> {
+                save_button.text = getString(R.string.save)
                 CoroutineScope(Dispatchers.Main).launch {
                     val user = getUser()
                     UserRepository.initializeUser(user)
