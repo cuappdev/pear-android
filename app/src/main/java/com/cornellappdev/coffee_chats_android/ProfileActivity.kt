@@ -106,10 +106,10 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> EditProfileFragment()
+                0 -> EditProfileFragment.newInstance(isOnboarding = false)
                 1 -> EditInterestsGroupsFragment.newInstance(true)
                 2 -> EditInterestsGroupsFragment.newInstance(false)
-                3 -> EditProfileFragment()
+                3 -> EditProfileFragment() // TODO replace with PromptsFragment
                 else -> throw IllegalStateException()
             }
         }
