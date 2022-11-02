@@ -9,14 +9,18 @@
     <dimen name="search_bar_height">40dp</dimen>
     <dimen name="tab_padding_horizontal">7dp</dimen>
 
+    <!-- ProfileActivity -->
+    <dimen name="dot_tab_padding">8dp</dimen>
+
     <!-- ProfileFragment -->
     <dimen name="profile_padding_bottom">110dp</dimen>
     <dimen name="profile_margin_vertical">20dp</dimen>
 
     <!-- NoMatchFragment -->
     <dimen name="no_match_margin_vertical">40dp</dimen>
-    <dimen name="no_match_subheader_margin_top">12dp</dimen>
+    <dimen name="no_match_button_margin_bottom">12dp</dimen>
     <dimen name="no_match_image_margin_top">60dp</dimen>
+    <dimen name="no_match_subheader_margin_bottom">24dp</dimen>
 
     <!-- MESSAGING -->
     <dimen name="profile_pic_margin">15dp</dimen>

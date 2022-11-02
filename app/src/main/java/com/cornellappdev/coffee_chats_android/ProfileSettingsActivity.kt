@@ -18,7 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.activity_scheduling.*
+import kotlinx.android.synthetic.main.activity_profile_settings.*
 
 class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener, OnPauseChangedListener {
     private val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
@@ -55,11 +55,11 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener, OnPaus
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_scheduling)
+        setContentView(R.layout.activity_profile_settings)
         content = intent.getSerializableExtra(CONTENT) as Content
         isPaused = intent.getBooleanExtra(IS_PAUSED, isPaused)
         val fragment: Fragment = when (content) {
-            Content.EDIT_INFO -> EditProfileFragment()
+            Content.EDIT_INFO -> EditProfileFragment.newInstance(isOnboarding = false)
             Content.EDIT_INTERESTS -> EditInterestsGroupsFragment.newInstance(true)
             Content.EDIT_GROUPS -> EditInterestsGroupsFragment.newInstance(false)
             Content.SETTINGS -> SettingsFragment()
@@ -149,7 +149,7 @@ class ProfileSettingsActivity : AppCompatActivity(), OnFilledOutListener, OnPaus
                 )
                 background.showAtLocation(headerText, Gravity.CENTER, 0, 0)
                 // pause pear popup
-                val popupView = inflater.inflate(R.layout.pause_pear_popup, drawerLayout, false)
+                val popupView = inflater.inflate(R.layout.pause_pear_popup, activity_main, false)
                 popup = PopupWindow(
                     popupView,
                     ConstraintLayout.LayoutParams.WRAP_CONTENT,

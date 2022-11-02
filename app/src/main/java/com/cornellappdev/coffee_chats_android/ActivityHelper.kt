@@ -2,6 +2,7 @@ package com.cornellappdev.coffee_chats_android
 
 import android.content.Context
 import android.graphics.Rect
+import android.util.TypedValue
 import android.view.TouchDelegate
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -103,3 +104,10 @@ fun hideKeyboard(context: Context, view: View) {
     val imm = context.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(view.applicationWindowToken, 0)
 }
+
+/** Converts dimension from dp to pixels */
+fun dpToPixels(c: Context, dp: Int): Int =
+    TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        dp.toFloat(), c.resources.displayMetrics
+    ).toInt()

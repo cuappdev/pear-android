@@ -2,11 +2,9 @@ package com.cornellappdev.coffee_chats_android
 
 import android.app.Activity
 import android.content.Intent
-import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.util.TypedValue
 import android.view.ContextThemeWrapper
 import android.view.MenuInflater
 import android.view.View
@@ -124,8 +122,6 @@ class SchedulingActivity :
             drawerLayout.close()
             val intent = Intent(this, ProfileSettingsActivity::class.java)
             val contentTag = when (menuItem.itemId) {
-                R.id.nav_interests -> ProfileSettingsActivity.Content.EDIT_INTERESTS
-                R.id.nav_groups -> ProfileSettingsActivity.Content.EDIT_GROUPS
                 R.id.nav_settings -> ProfileSettingsActivity.Content.SETTINGS
                 else -> null
             }
@@ -133,7 +129,15 @@ class SchedulingActivity :
             intent.putExtra(ProfileSettingsActivity.IS_PAUSED, user.isPaused)
             when (menuItem.itemId) {
                 R.id.nav_settings -> startActivityForResult(intent, SETTINGS_CODE)
-                R.id.nav_interests, R.id.nav_groups -> startActivity(intent)
+                R.id.nav_profile -> {
+                    val profileIntent = Intent(this, ProfileActivity::class.java)
+                    profileIntent.apply {
+                        putExtra(ProfileActivity.USER_ID, user.id)
+                        putExtra(ProfileActivity.HEADER_TEXT, getString(R.string.preview))
+                        putExtra(ProfileActivity.ENABLE_EDIT, true)
+                    }
+                    startActivity(profileIntent)
+                }
                 R.id.nav_messages -> {
                     val messagingIntent = Intent(this, MessagingActivity::class.java).apply {
                         putExtra(MessagingActivity.STAGE, MessagingActivity.Stage.MESSAGES)
@@ -173,12 +177,6 @@ class SchedulingActivity :
         )
         drawerLayout.user_hometown.text = getString(R.string.user_hometown, user.hometown)
         val content = findViewById<ConstraintLayout>(R.id.activity_main)
-        drawerLayout.edit_info.setOnClickListener {
-            Intent(this, ProfileSettingsActivity::class.java).apply {
-                putExtra(ProfileSettingsActivity.CONTENT, ProfileSettingsActivity.Content.EDIT_INFO)
-                startActivity(this)
-            }
-        }
         drawerLayout.addDrawerListener(object : ActionBarDrawerToggle(
                 this,
                 drawerLayout,
@@ -244,12 +242,10 @@ class SchedulingActivity :
     }
 
     private fun setUpCurrentPage() {
-        val displayMetrics = Resources.getSystem().displayMetrics
         // clear back caret icon
         backButton.background = null
         backButton.layoutParams = backButton.layoutParams.apply {
-            height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30f, displayMetrics)
-                .toInt()
+            height = dpToPixels(this@SchedulingActivity, 30)
             width = height
         }
         increaseHitArea(backButton)

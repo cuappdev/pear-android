@@ -74,7 +74,6 @@ class ProfileFragment : Fragment() {
         Glide.with(c).load(user.profilePicUrl).centerInside().circleCrop()
             .into(userImage)
         name.text = c.getString(R.string.user_name, user.firstName, user.lastName)
-        reach_me.text = c.getString(R.string.reach_me, user.netId)
         val basicInfo = c.getString(
             R.string.basic_profile_info,
             user.majors.first().name, user.graduationYear, user.hometown, user.pronouns

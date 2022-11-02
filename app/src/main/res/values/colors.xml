@@ -6,6 +6,7 @@
     <color name="signInGrey">#EEEEEE</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="light_secondary_green_grey">#8099A899</color>
     <color name="secondary_green_grey">#99A899</color>
     <color name="searchHint">#979797</color>
     <color name="faded_text">#5B7E58</color>

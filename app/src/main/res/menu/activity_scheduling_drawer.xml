@@ -6,14 +6,9 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_interests"
+            android:id="@+id/nav_profile"
             android:icon="@drawable/ic_interests_icon"
-            android:title="@string/menu_interests"
-            app:actionLayout="@layout/nav_drawer_item" />
-        <item
-            android:id="@+id/nav_groups"
-            android:icon="@drawable/ic_groups_icon"
-            android:title="@string/menu_groups"
+            android:title="@string/menu_profile"
             app:actionLayout="@layout/nav_drawer_item" />
         <item
             android:id="@+id/nav_messages"

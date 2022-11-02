@@ -39,17 +39,36 @@
             app:layout_constraintStart_toStartOf="@id/user_image"
             app:layout_constraintTop_toTopOf="@id/user_image" />
 
-        <Spinner
-            android:id="@+id/classSpinner"
+        <EditText
+            android:id="@+id/nameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
             android:layout_marginTop="50dp"
             android:layout_marginRight="40dp"
             android:background="@drawable/rounded_edittext"
-            android:popupBackground="@color/white"
+            android:fontFamily="@font/circular_book"
+            android:hint="@string/name"
+            android:imeOptions="actionDone"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/faded_text"
+            android:textSize="20sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/user_image" />
+
+        <Spinner
+            android:id="@+id/classSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="40dp"
+            android:background="@drawable/rounded_edittext"
+            android:popupBackground="@color/white"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/nameEditText" />
 
         <AutoCompleteTextView
             android:id="@+id/majorACTV"

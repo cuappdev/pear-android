@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -52,11 +53,19 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
-            <include
-                android:id="@+id/more_items"
-                layout="@layout/interest_group_list_with_header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/add_item_button"
+                android:layout_width="300dp"
+                android:layout_height="68dp"
+                android:background="@drawable/rounded_edittext"
+                android:drawableStart="@drawable/ic_plus"
+                android:drawablePadding="20dp"
+                android:padding="20dp"
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
+                android:textColor="@color/secondary_green_grey"
+                android:textSize="20sp"
+                tools:text="@string/add_interests" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </RelativeLayout>

@@ -1,13 +1,12 @@
 package com.cornellappdev.coffee_chats_android.utils
 
 import android.content.Context
-import android.util.Log
-import android.util.TypedValue
 import android.view.View
 import android.widget.PopupWindow
 import android.widget.RadioButton
 import com.cornellappdev.coffee_chats_android.OnPauseChangedListener
 import com.cornellappdev.coffee_chats_android.R
+import com.cornellappdev.coffee_chats_android.dpToPixels
 import com.cornellappdev.coffee_chats_android.networking.updatePauseStatus
 import kotlinx.android.synthetic.main.pause_pear_popup.view.*
 import kotlinx.coroutines.CoroutineScope
@@ -122,7 +121,7 @@ class PopupManager(
 
         v.popup_title.visibility = View.VISIBLE
         v.radio_group.visibility = View.VISIBLE
-        v.radio_group.layoutParams.width = dpToPixels(radioGroupWidth)
+        v.radio_group.layoutParams.width = dpToPixels(c, radioGroupWidth)
         v.radio_group.clearCheck()
         val buttonLabels = c.resources.getStringArray(buttonsStringArrayId)
         for (i in radioButtons.indices) {
@@ -132,13 +131,6 @@ class PopupManager(
             v.action_button.isEnabled = true
         }
     }
-
-    /** Converts dimension from dp to pixels */
-    private fun dpToPixels(dp: Int): Int =
-        TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            dp.toFloat(), c.resources.displayMetrics
-        ).toInt()
 
     /**
      * Returns string corresponding to the current state
