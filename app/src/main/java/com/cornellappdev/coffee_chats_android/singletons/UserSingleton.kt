@@ -1,4 +1,4 @@
-package com.cornellappdev.coffee_chats_android.repositories
+package com.cornellappdev.coffee_chats_android.singletons
 
 import com.cornellappdev.coffee_chats_android.models.Group
 import com.cornellappdev.coffee_chats_android.models.Interest
@@ -8,7 +8,7 @@ import java.lang.Integer.max
 /**
  * Singleton class for storing user info when editing profile
  */
-object UserRepository {
+object UserSingleton {
     var user = User.DUMMY_USER
         private set
 

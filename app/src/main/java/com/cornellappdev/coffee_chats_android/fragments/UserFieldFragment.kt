@@ -24,7 +24,7 @@ import com.cornellappdev.coffee_chats_android.networking.getAllGroups
 import com.cornellappdev.coffee_chats_android.networking.getAllInterests
 import com.cornellappdev.coffee_chats_android.networking.getAllPurposes
 import com.cornellappdev.coffee_chats_android.networking.getUser
-import com.cornellappdev.coffee_chats_android.repositories.UserRepository
+import com.cornellappdev.coffee_chats_android.singletons.UserSingleton
 import com.cornellappdev.coffee_chats_android.updateUserField
 import kotlinx.android.synthetic.main.fragment_interests_groups.*
 import kotlinx.coroutines.CoroutineScope
@@ -104,7 +104,7 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
             // signup_next is disabled until user has chosen at least one field
             callback!!.onSelectionEmpty()
 
-            val user = if (useRepository) UserRepository.user else getUser()
+            val user = if (useRepository) UserSingleton.user else getUser()
             // fetch fields already selected by user
             // TODO- refactor to only store IDs?
             userFields = ArrayList(
@@ -235,13 +235,13 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
                 val interests =
                     items.map { Interest(it.id, it.getText(), it.getSubtext(), it.drawableUrl) }
                 for (interest in interests) {
-                    UserRepository.addInterest(interest)
+                    UserSingleton.addInterest(interest)
                 }
             }
             if (category == Category.GROUP) {
                 val groups = items.map { Group(it.id, it.getText(), it.drawableUrl) }
                 for (group in groups) {
-                    UserRepository.addGroup(group)
+                    UserSingleton.addGroup(group)
                 }
             }
         } else {
