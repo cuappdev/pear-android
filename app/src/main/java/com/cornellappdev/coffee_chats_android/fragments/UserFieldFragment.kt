@@ -24,7 +24,7 @@ import com.cornellappdev.coffee_chats_android.networking.getAllGroups
 import com.cornellappdev.coffee_chats_android.networking.getAllInterests
 import com.cornellappdev.coffee_chats_android.networking.getAllPurposes
 import com.cornellappdev.coffee_chats_android.networking.getUser
-import com.cornellappdev.coffee_chats_android.respositories.UserRepository
+import com.cornellappdev.coffee_chats_android.repositories.UserRepository
 import com.cornellappdev.coffee_chats_android.updateUserField
 import kotlinx.android.synthetic.main.fragment_interests_groups.*
 import kotlinx.coroutines.CoroutineScope

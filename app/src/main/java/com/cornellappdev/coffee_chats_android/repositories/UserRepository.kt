@@ -1,4 +1,4 @@
-package com.cornellappdev.coffee_chats_android.respositories
+package com.cornellappdev.coffee_chats_android.repositories
 
 import com.cornellappdev.coffee_chats_android.models.Group
 import com.cornellappdev.coffee_chats_android.models.Interest

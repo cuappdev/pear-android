@@ -8,7 +8,7 @@ import androidx.fragment.app.commit
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.cornellappdev.coffee_chats_android.fragments.*
 import com.cornellappdev.coffee_chats_android.networking.getUser
-import com.cornellappdev.coffee_chats_android.respositories.UserRepository
+import com.cornellappdev.coffee_chats_android.repositories.UserRepository
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_profile_settings.*
 import kotlinx.coroutines.CoroutineScope

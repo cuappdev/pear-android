@@ -13,7 +13,7 @@ import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter
 import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter.ItemColor
 import com.cornellappdev.coffee_chats_android.models.UserField
 import com.cornellappdev.coffee_chats_android.models.UserField.Category
-import com.cornellappdev.coffee_chats_android.respositories.UserRepository
+import com.cornellappdev.coffee_chats_android.repositories.UserRepository
 import kotlinx.android.synthetic.main.fragment_edit_interests.*
 import kotlinx.android.synthetic.main.fragment_edit_interests.view.*
 import kotlinx.android.synthetic.main.interest_group_list_with_header.view.*
