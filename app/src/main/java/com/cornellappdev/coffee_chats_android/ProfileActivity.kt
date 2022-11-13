@@ -42,6 +42,7 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
                     }
                     State.EDIT -> {
                         UserSingleton.saveUserInfo()
+                        onBackPressed()
                     }
                 }
             }
@@ -74,16 +75,16 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
                 save_button.text = getString(R.string.edit)
                 tabLayout.visibility = View.GONE
                 fragmentContainer.visibility = View.VISIBLE
-                CoroutineScope(Dispatchers.Main).launch {
-                    val user = getUser()
-                    UserSingleton.initializeUser(user)
-                }
                 supportFragmentManager.commit {
                     setReorderingAllowed(true)
                     replace(
                         R.id.fragmentContainer,
                         ProfileFragment.newInstance(userId)
                     )
+                }
+                CoroutineScope(Dispatchers.Main).launch {
+                    val user = getUser()
+                    UserSingleton.initializeUser(user)
                 }
             }
             State.EDIT -> {

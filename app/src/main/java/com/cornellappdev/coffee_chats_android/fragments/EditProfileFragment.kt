@@ -349,11 +349,13 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
         CoroutineScope(Dispatchers.IO).launch {
             bitmap?.let { updateProfilePic(it) }
             val demographics = Demographics(
+                user.firstName,
+                user.lastName,
                 pronouns,
                 graduationYear,
                 if (majorIndex != null) listOf(majorIndex) else emptyList(),
                 hometown,
-                null
+                null // profilePictureUrl
             )
             val updateDemographicsResponse = updateDemographics(demographics)
             if (updateDemographicsResponse == null || !updateDemographicsResponse.success) {

@@ -2,10 +2,13 @@ package com.cornellappdev.coffee_chats_android.singletons
 
 import android.graphics.Bitmap
 import android.util.Log
-import com.cornellappdev.coffee_chats_android.models.Group
-import com.cornellappdev.coffee_chats_android.models.Interest
-import com.cornellappdev.coffee_chats_android.models.Major
-import com.cornellappdev.coffee_chats_android.models.User
+import com.cornellappdev.coffee_chats_android.models.*
+import com.cornellappdev.coffee_chats_android.networking.updateDemographics
+import com.cornellappdev.coffee_chats_android.networking.updateGroups
+import com.cornellappdev.coffee_chats_android.networking.updateInterests
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.Integer.max
 
 /**
@@ -90,9 +93,23 @@ object UserSingleton {
         user = user.copy(groups = groups)
     }
 
-    /** Saves user information to backend */
+    /** Saves all updated user information to backend */
     fun saveUserInfo() {
-        Log.d(TAG, user.toString())
-        Log.d(TAG, "Bitmap of new profile pic is null: ${profilePic == null}")
+        CoroutineScope(Dispatchers.Main).launch {
+            Log.d(TAG, user.toString())
+            profilePic?.let { com.cornellappdev.coffee_chats_android.networking.updateProfilePic(it) }
+            val demographics = Demographics(
+                user.firstName,
+                user.lastName,
+                user.pronouns ?: "",
+                user.graduationYear ?: "",
+                user.majors.map { it.id },
+                user.hometown ?: "",
+                null // profilePictureUrl
+            )
+            updateDemographics(demographics)
+            updateInterests(user.interests.map { it.id })
+            updateGroups(user.groups.map { it.id })
+        }
     }
 }
