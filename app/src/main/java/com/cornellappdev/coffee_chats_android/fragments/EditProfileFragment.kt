@@ -162,7 +162,7 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
         nameEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 if (useSingleton) {
-                    UserSingleton.updateName(s.toString())
+                    UserSingleton.updateName(s.toString().trim())
                 }
             }
 
@@ -188,7 +188,7 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
         majorACTV.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 if (useSingleton && this@EditProfileFragment::allMajorsList.isInitialized) {
-                    val majorText = s.toString()
+                    val majorText = s.toString().trim()
                     val major = allMajorsList.firstOrNull {
                         it.name.equals(majorText, ignoreCase = true)
                     }
@@ -208,7 +208,7 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
         hometownEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 if (useSingleton) {
-                    UserSingleton.updateHometown(s.toString())
+                    UserSingleton.updateHometown(s.toString().trim())
                 }
             }
 
@@ -223,7 +223,7 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
         pronounEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 if (useSingleton) {
-                    UserSingleton.updatePronouns(s.toString())
+                    UserSingleton.updatePronouns(s.toString().trim())
                 }
             }
 
