@@ -1,7 +1,10 @@
 package com.cornellappdev.coffee_chats_android.singletons
 
+import android.graphics.Bitmap
+import android.util.Log
 import com.cornellappdev.coffee_chats_android.models.Group
 import com.cornellappdev.coffee_chats_android.models.Interest
+import com.cornellappdev.coffee_chats_android.models.Major
 import com.cornellappdev.coffee_chats_android.models.User
 import java.lang.Integer.max
 
@@ -9,11 +12,50 @@ import java.lang.Integer.max
  * Singleton class for storing user info when editing profile
  */
 object UserSingleton {
+    const val TAG = "UserSingleton"
+
     var user = User.DUMMY_USER
+        private set
+
+    /** new profile picture set by user, if any */
+    var profilePic: Bitmap? = null
         private set
 
     fun initializeUser(userInfo: User) {
         user = userInfo
+    }
+
+    fun updateProfilePic(bitmap: Bitmap) {
+        profilePic = bitmap
+    }
+
+    fun updateName(name: String) {
+        val nameArr = name.split(" ").filter { it.isNotBlank() }
+        val n = nameArr.size
+        user = when (n) {
+            0 -> user.copy(firstName = "", lastName = "")
+            1 -> user.copy(firstName = nameArr.first(), lastName = "")
+            else -> {
+                val lastName = nameArr.takeLast(nameArr.size - 1).joinToString(" ")
+                user.copy(firstName = nameArr.first(), lastName = lastName)
+            }
+        }
+    }
+
+    fun updateGraduationYear(graduationYear: String) {
+        user = user.copy(graduationYear = graduationYear)
+    }
+
+    fun updateMajor(major: Major) {
+        user = user.copy(majors = listOf(major))
+    }
+
+    fun updateHometown(hometown: String) {
+        user = user.copy(hometown = hometown)
+    }
+
+    fun updatePronouns(pronouns: String) {
+        user = user.copy(pronouns = pronouns)
     }
 
     fun removeInterest(interestId: Int) {
@@ -50,6 +92,7 @@ object UserSingleton {
 
     /** Saves user information to backend */
     fun saveUserInfo() {
-        TODO()
+        Log.d(TAG, user.toString())
+        Log.d(TAG, "Bitmap of new profile pic is null: ${profilePic == null}")
     }
 }

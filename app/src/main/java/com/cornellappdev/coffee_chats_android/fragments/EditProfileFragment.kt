@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -31,6 +32,7 @@ import com.cornellappdev.coffee_chats_android.networking.getAllMajors
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.cornellappdev.coffee_chats_android.networking.updateDemographics
 import com.cornellappdev.coffee_chats_android.networking.updateProfilePic
+import com.cornellappdev.coffee_chats_android.singletons.UserSingleton
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import id.zelory.compressor.Compressor
@@ -58,11 +60,13 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
     private lateinit var allMajorsList: List<Major>
 
     private var isOnboarding = false
+    private var useSingleton = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             isOnboarding = it.getBoolean(IS_ONBOARDING)
+            useSingleton = it.getBoolean(USE_SINGLETON)
         }
     }
 
@@ -91,7 +95,7 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
         classSpinner.adapter = classArrayAdapter
 
         CoroutineScope(Dispatchers.Main).launch {
-            user = getUser()
+            user = if (useSingleton) UserSingleton.user else getUser()
             // pre-fills existing user profile information
             if (!user.profilePicUrl.isNullOrBlank()) {
                 Glide.with(requireContext()).load(user.profilePicUrl).centerInside().circleCrop()
@@ -150,11 +154,47 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
             }
         }
 
+        // set on click listeners
+        // save changes to singleton if using UserSingleton
+
         upload_image.setOnClickListener { uploadImage() }
+
+        nameEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+                if (useSingleton) {
+                    UserSingleton.updateName(s.toString())
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+        })
+
+        if (useSingleton) {
+            classSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(a: AdapterView<*>?, v: View?, i: Int, l: Long) {
+                    val selectedItem = classSpinner.getItemAtPosition(i) as String
+                    val graduationYear = if (selectedItem == gradStudent) gradStudent
+                    else (i + year).toString()
+                    UserSingleton.updateGraduationYear(graduationYear)
+                }
+
+                override fun onNothingSelected(a: AdapterView<*>?) {}
+            }
+        }
 
         // monitor changes in major editText and enable button if both major and hometown != empty
         majorACTV.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
+            override fun afterTextChanged(s: Editable) {
+                if (useSingleton && this@EditProfileFragment::allMajorsList.isInitialized) {
+                    val majorText = s.toString()
+                    val major = allMajorsList.firstOrNull {
+                        it.name.equals(majorText, ignoreCase = true)
+                    }
+                    major?.let { UserSingleton.updateMajor(it) }
+                }
+            }
 
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
@@ -166,7 +206,11 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
 
         // monitor changes in major editText and enable button if both major and hometown != empty
         hometownEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
+            override fun afterTextChanged(s: Editable) {
+                if (useSingleton) {
+                    UserSingleton.updateHometown(s.toString())
+                }
+            }
 
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
@@ -174,6 +218,18 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
                 hometownFilled = s.toString().trim().isNotEmpty()
                 toggleNextButton()
             }
+        })
+
+        pronounEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+                if (useSingleton) {
+                    UserSingleton.updatePronouns(s.toString())
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         })
     }
 
@@ -248,6 +304,9 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
                         }
                     val byteArray = compressedImageFile.readBytes()
                     bitmap = BitmapFactory.decodeStream(ByteArrayInputStream(byteArray))
+                    if (useSingleton) {
+                        UserSingleton.updateProfilePic(bitmap!!)
+                    }
                 }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 val error = result.error
@@ -282,7 +341,9 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
             if (classSpinner.selectedItem as String == gradStudent) gradStudent
             else (classSpinner.selectedItemPosition + year).toString()
         val major = majorACTV.text.toString()
-        val majorIndex = allMajorsList.firstOrNull { it.name == major }?.id
+        val majorIndex = allMajorsList.firstOrNull {
+            it.name.equals(major, ignoreCase = true)
+        }?.id
         val hometown = hometownEditText.text.toString()
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -305,12 +366,14 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
     companion object {
         private const val PICK_IMAGE_CODE = 42
         private const val IS_ONBOARDING = "IS_ONBOARDING"
+        private const val USE_SINGLETON = "USE_SINGLETON"
 
         @JvmStatic
-        fun newInstance(isOnboarding: Boolean = false) =
+        fun newInstance(isOnboarding: Boolean = false, useSingleton: Boolean = false) =
             EditProfileFragment().apply {
                 arguments = Bundle().apply {
                     putBoolean(IS_ONBOARDING, isOnboarding)
+                    putBoolean(USE_SINGLETON, useSingleton)
                 }
             }
     }

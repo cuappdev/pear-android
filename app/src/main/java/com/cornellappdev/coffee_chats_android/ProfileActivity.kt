@@ -41,7 +41,7 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
                         setUpPage()
                     }
                     State.EDIT -> {
-                        TODO()
+                        UserSingleton.saveUserInfo()
                     }
                 }
             }
@@ -64,6 +64,7 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
         } else {
             super.onBackPressed()
         }
+        hideKeyboard(this, backButton)
     }
 
     /** Sets up page UI based on current state */
@@ -73,6 +74,10 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
                 save_button.text = getString(R.string.edit)
                 tabLayout.visibility = View.GONE
                 fragmentContainer.visibility = View.VISIBLE
+                CoroutineScope(Dispatchers.Main).launch {
+                    val user = getUser()
+                    UserSingleton.initializeUser(user)
+                }
                 supportFragmentManager.commit {
                     setReorderingAllowed(true)
                     replace(
@@ -82,12 +87,6 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
                 }
             }
             State.EDIT -> {
-                save_button.text = getString(R.string.save)
-                CoroutineScope(Dispatchers.Main).launch {
-                    val user = getUser()
-                    UserSingleton.initializeUser(user)
-                }
-                state = State.EDIT
                 save_button.text = getString(R.string.save)
                 tabLayout.visibility = View.VISIBLE
                 viewPager.adapter = ViewPagerAdapter(this)
@@ -106,7 +105,7 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> EditProfileFragment.newInstance(isOnboarding = false)
+                0 -> EditProfileFragment.newInstance(isOnboarding = false, useSingleton = true)
                 1 -> EditInterestsGroupsFragment.newInstance(isInterest = true)
                 2 -> EditInterestsGroupsFragment.newInstance(isInterest = false)
                 3 -> EditProfileFragment() // TODO replace with PromptsFragment
