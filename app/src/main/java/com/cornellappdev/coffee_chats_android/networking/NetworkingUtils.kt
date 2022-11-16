@@ -68,6 +68,9 @@ suspend fun getUser(): User = getDataHelper(Endpoint.getSelfProfile(), User::cla
 suspend fun getUser(userId: Int): PearUser =
     getDataHelper(Endpoint.getUserProfile(userId), PearUser::class.java)
 
+suspend fun getUserProfile(): UserProfile =
+    getDataHelper(Endpoint.getSelfProfile(), UserProfile::class.java)
+
 suspend fun updateDemographics(demographics: Demographics): ApiResponse<Demographics>? =
     postDataHelper(Endpoint.updateDemographics(demographics), Demographics::class.java)
 
@@ -120,6 +123,11 @@ suspend fun updateSocialMedia(socialMedia: SocialMedia): ApiResponse<SocialMedia
 suspend fun updateOnboardingStatus(hasOnboarded: Boolean): ApiResponse<OnboardingStatus>? =
     postDataHelper(Endpoint.updateOnboardingStatus(hasOnboarded), OnboardingStatus::class.java)
 
+// USER PROFILE
+
+suspend fun updateUserProfile(userProfile: UserProfile): ApiResponse<UserProfile>? =
+    postDataHelper(Endpoint.updateUserProfile(userProfile), UserProfile::class.java)
+
 // FCM TOKEN
 
 suspend fun updateFcmToken(fcmToken: String): ApiResponse<FcmToken>? =
@@ -127,7 +135,10 @@ suspend fun updateFcmToken(fcmToken: String): ApiResponse<FcmToken>? =
 
 // MESSAGE NOTIFICATION
 
-suspend fun sendMessageNotification(message: String, recipientId : Int): ApiResponse<OnboardingStatus>? =
+suspend fun sendMessageNotification(
+    message: String,
+    recipientId: Int
+): ApiResponse<OnboardingStatus>? =
     postDataHelper(Endpoint.sendMessageNotification(message, recipientId), Message::class.java)
 
 // MATCHES
@@ -143,5 +154,8 @@ suspend fun getSelfMatches(userId: Int): List<PearUser> =
 
 // PAUSE PEAR
 
-suspend fun updatePauseStatus(isPaused: Boolean, pauseWeeks: Int? = null): ApiResponse<PauseStatus>? =
+suspend fun updatePauseStatus(
+    isPaused: Boolean,
+    pauseWeeks: Int? = null
+): ApiResponse<PauseStatus>? =
     postDataHelper(Endpoint.updatePauseStatus(isPaused, pauseWeeks), PauseStatus::class.java)

@@ -185,6 +185,18 @@ fun Endpoint.Companion.updateOnboardingStatus(hasOnboarded: Boolean): Endpoint {
     )
 }
 
+// EDITING USER PROFILE
+
+fun Endpoint.Companion.updateUserProfile(userProfile: UserProfile): Endpoint {
+    val requestBody = toRequestBody(userProfile, UserProfile::class.java)
+    return Endpoint(
+        path = "/me/",
+        headers = authHeader(),
+        body = requestBody,
+        method = EndpointMethod.POST
+    )
+}
+
 // FCM TOKEN
 
 fun Endpoint.Companion.updateFcmToken(fcmToken: String): Endpoint {
