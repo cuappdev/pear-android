@@ -1,5 +1,6 @@
 package com.cornellappdev.coffee_chats_android.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,14 +12,17 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.cornellappdev.coffee_chats_android.OnFilledOutListener
 import com.cornellappdev.coffee_chats_android.OnFilledOutObservable
+import com.cornellappdev.coffee_chats_android.PromptsActivity
 import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.adapters.PromptsAdapter
 import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter
+import com.cornellappdev.coffee_chats_android.models.PearUser
 import com.cornellappdev.coffee_chats_android.models.Prompt
 import com.cornellappdev.coffee_chats_android.models.UserField
 import com.cornellappdev.coffee_chats_android.networking.getAllPrompts
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.cornellappdev.coffee_chats_android.networking.updatePrompts
+import com.cornellappdev.coffee_chats_android.singletons.UserSingleton
 import kotlinx.android.synthetic.main.fragment_interests_groups.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +38,8 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
         EDIT_RESPONSE
     }
 
+    private var useSingleton = false
+
     /** position of item currently being edited */
     private var editPosition = -1
 
@@ -46,6 +52,15 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
 
     /** whether the user is on the EDIT_RESPONSE page because they're editing an existing response */
     private var editExistingResponse = true
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            content = it.getSerializable(CONTENT) as Content
+            useSingleton = it.getBoolean(USE_SINGLETON)
+            editPosition = it.getInt(PROMPT_EDIT_POSITION)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,7 +75,23 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
         CoroutineScope(Dispatchers.Main).launch {
             prompts =
                 getAllPrompts().map { p -> UserField(text = p.name, id = p.id) }.toTypedArray()
-            val selectedPrompts = getUser().prompts.map { p ->
+            val user = if (useSingleton) UserSingleton.user else getUser()
+            val selectedPrompts = user.prompts.map { p ->
+                UserField(
+                    text = p.name,
+                    subtext = p.answer,
+                    id = p.id
+                )
+            }.toTypedArray()
+            selectedPrompts.copyInto(responseAdapterArray)
+            setUpPage()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (useSingleton) {
+            val selectedPrompts = UserSingleton.user.prompts.map { p ->
                 UserField(
                     text = p.name,
                     subtext = p.answer,
@@ -75,7 +106,7 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
     private fun setUpPage() {
         when (content) {
             Content.DISPLAY_RESPONSES -> {
-                container.setHeaderText(getString(R.string.prompts_header))
+                container?.setHeaderText(getString(R.string.prompts_header))
                 interests_or_groups.adapter =
                     PromptsAdapter(requireContext(), responseAdapterArray, this)
                 // only move on to next step once at least one prompt has a response
@@ -88,7 +119,7 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
                 }
             }
             Content.DISPLAY_PROMPTS -> {
-                container.setHeaderText(getString(R.string.select_prompt))
+                container?.setHeaderText(getString(R.string.select_prompt))
                 // display only prompts that haven't been selected
                 interests_or_groups.adapter = UserFieldAdapter(
                     requireContext(),
@@ -108,10 +139,13 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
                 }
             }
             Content.EDIT_RESPONSE -> {
-                container.setHeaderText(getString(R.string.enter_response))
-                prompt.text = currentPrompt
+                container?.setHeaderText(getString(R.string.enter_response))
+                prompt.text = if (useSingleton) UserSingleton.user.prompts[editPosition].name else currentPrompt
                 if (!editExistingResponse) {
                     char_count.text = "$MAX_CHARACTERS"
+                }
+                if (useSingleton && editPosition != -1) {
+                    response_edit_text.setText(UserSingleton.user.prompts[editPosition].answer)
                 }
                 if (response_edit_text.text.isNotEmpty()) {
                     callback!!.onFilledOut()
@@ -120,7 +154,11 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
                 }
                 // update character count
                 response_edit_text.addTextChangedListener(object : TextWatcher {
-                    override fun afterTextChanged(s: Editable) {}
+                    override fun afterTextChanged(s: Editable) {
+                        if (useSingleton) {
+                            UserSingleton.updatePromptResponse(editPosition, s.toString().trim())
+                        }
+                    }
 
                     override fun beforeTextChanged(
                         s: CharSequence,
@@ -149,13 +187,13 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
         if (content == Content.EDIT_RESPONSE) {
             interests_or_groups.visibility = View.GONE
             edit_prompt_view.visibility = View.VISIBLE
-            container.setActionButtonText(getString(R.string.save))
+            container?.setActionButtonText(getString(R.string.save))
         } else {
             interests_or_groups.visibility = View.VISIBLE
             edit_prompt_view.visibility = View.GONE
-            container.setActionButtonText(getString(R.string.next))
+            container?.setActionButtonText(getString(R.string.next))
         }
-        container.setActionButtonVisibility(content != Content.DISPLAY_PROMPTS)
+        container?.setActionButtonVisibility(content != Content.DISPLAY_PROMPTS)
     }
 
     fun onBackPressed() {
@@ -178,7 +216,7 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
     }
 
     private var callback: OnFilledOutListener? = null
-    private lateinit var container: PromptsContainer
+    private var container: PromptsContainer? = null
 
     fun setContainer(container: PromptsContainer) {
         this.container = container
@@ -209,14 +247,21 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
     }
 
     override fun onEditPrompt(position: Int) {
-        val field = responseAdapterArray[position]
-        currentPrompt = field.getText()
-        response_edit_text.setText(field.getSubtext())
-        char_count.text = "${MAX_CHARACTERS - field.getSubtext().length}"
-        editPosition = position
-        content = Content.EDIT_RESPONSE
-        editExistingResponse = true
-        setUpPage()
+        if (useSingleton) {
+            val intent = Intent(requireContext(), PromptsActivity::class.java).apply {
+                putExtra(PromptsActivity.EDIT_POSITION, position)
+            }
+            startActivity(intent)
+        } else {
+            val field = responseAdapterArray[position]
+            currentPrompt = field.getText()
+            response_edit_text.setText(field.getSubtext())
+            char_count.text = "${MAX_CHARACTERS - field.getSubtext().length}"
+            editPosition = position
+            content = Content.EDIT_RESPONSE
+            editExistingResponse = true
+            setUpPage()
+        }
     }
 
     interface PromptsContainer {
@@ -229,5 +274,18 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
 
     companion object {
         private const val MAX_CHARACTERS = 150
+        private const val CONTENT = "CONTENT"
+        private const val USE_SINGLETON = "USE_SINGLETON"
+        private const val PROMPT_EDIT_POSITION = "PROMPT_EDIT_POSITION"
+
+        @JvmStatic
+        fun newInstance(content: Content, useSingleton: Boolean = false, editPosition: Int = -1) =
+            PromptsFragment().apply {
+                arguments = Bundle().apply {
+                    putSerializable(CONTENT, content)
+                    putBoolean(USE_SINGLETON, useSingleton)
+                    putInt(PROMPT_EDIT_POSITION, editPosition)
+                }
+            }
     }
 }

@@ -15,7 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
+class ProfileActivity : AppCompatActivity(), OnFilledOutListener, PromptsFragment.PromptsContainer {
 
     enum class State {
         PREVIEW,
@@ -109,7 +109,10 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
                 0 -> EditProfileFragment.newInstance(isOnboarding = false, useSingleton = true)
                 1 -> EditInterestsGroupsFragment.newInstance(isInterest = true)
                 2 -> EditInterestsGroupsFragment.newInstance(isInterest = false)
-                3 -> EditProfileFragment() // TODO replace with PromptsFragment
+                3 -> PromptsFragment.newInstance(
+                    PromptsFragment.Content.DISPLAY_RESPONSES,
+                    useSingleton = true
+                )
                 else -> throw IllegalStateException()
             }
         }
@@ -128,5 +131,17 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
 
     override fun onSelectionEmpty() {
         // TODO: Implement
+    }
+
+    override fun setActionButtonText(text: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun setActionButtonVisibility(isVisible: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    override fun setHeaderText(text: String) {
+        TODO("Not yet implemented")
     }
 }
