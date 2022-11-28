@@ -19,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.cornellappdev.coffee_chats_android.OnFilledOutListener
@@ -28,9 +27,12 @@ import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.dpToPixels
 import com.cornellappdev.coffee_chats_android.models.Demographics
 import com.cornellappdev.coffee_chats_android.models.Major
-import com.cornellappdev.coffee_chats_android.models.UserProfile
-import com.cornellappdev.coffee_chats_android.networking.*
-import com.cornellappdev.coffee_chats_android.viewmodels.UserProfileViewModel
+import com.cornellappdev.coffee_chats_android.models.User
+import com.cornellappdev.coffee_chats_android.networking.getAllMajors
+import com.cornellappdev.coffee_chats_android.networking.getUser
+import com.cornellappdev.coffee_chats_android.networking.updateDemographics
+import com.cornellappdev.coffee_chats_android.networking.updateProfilePic
+import com.cornellappdev.coffee_chats_android.singletons.UserSingleton
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import id.zelory.compressor.Compressor
@@ -53,20 +55,18 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
     private var bitmap: Bitmap? = null
     private lateinit var gradStudent: String
 
-    private val viewModel by activityViewModels<UserProfileViewModel>()
-
-    private lateinit var user: UserProfile
+    private lateinit var user: User
 
     private lateinit var allMajorsList: List<Major>
 
     private var isOnboarding = false
-    private var useViewModel = false
+    private var useSingleton = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             isOnboarding = it.getBoolean(IS_ONBOARDING)
-            useViewModel = it.getBoolean(USE_VIEWMODEL)
+            useSingleton = it.getBoolean(USE_SINGLETON)
         }
     }
 
@@ -95,7 +95,7 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
         classSpinner.adapter = classArrayAdapter
 
         CoroutineScope(Dispatchers.Main).launch {
-            user = if (useViewModel) viewModel.userProfile else getUserProfile()
+            user = if (useSingleton) UserSingleton.user else getUser()
             // pre-fills existing user profile information
             if (!user.profilePicUrl.isNullOrBlank()) {
                 Glide.with(requireContext()).load(user.profilePicUrl).centerInside().circleCrop()
@@ -155,14 +155,14 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
         }
 
         // set on click listeners
-        // save changes to view model if using it
+        // save changes to singleton if using UserSingleton
 
         upload_image.setOnClickListener { uploadImage() }
 
         nameEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                if (useViewModel) {
-                    viewModel.updateName(s.toString().trim())
+                if (useSingleton) {
+                    UserSingleton.updateName(s.toString().trim())
                 }
             }
 
@@ -171,13 +171,13 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
         })
 
-        if (useViewModel) {
+        if (useSingleton) {
             classSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(a: AdapterView<*>?, v: View?, i: Int, l: Long) {
                     val selectedItem = classSpinner.getItemAtPosition(i) as String
                     val graduationYear = if (selectedItem == gradStudent) gradStudent
                     else (i + year).toString()
-                    viewModel.updateGraduationYear(graduationYear)
+                    UserSingleton.updateGraduationYear(graduationYear)
                 }
 
                 override fun onNothingSelected(a: AdapterView<*>?) {}
@@ -187,12 +187,12 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
         // monitor changes in major editText and enable button if both major and hometown != empty
         majorACTV.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                if (useViewModel && this@EditProfileFragment::allMajorsList.isInitialized) {
+                if (useSingleton && this@EditProfileFragment::allMajorsList.isInitialized) {
                     val majorText = s.toString().trim()
                     val major = allMajorsList.firstOrNull {
                         it.name.equals(majorText, ignoreCase = true)
                     }
-                    major?.let { viewModel.updateMajor(it) }
+                    major?.let { UserSingleton.updateMajor(it) }
                 }
             }
 
@@ -207,8 +207,8 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
         // monitor changes in major editText and enable button if both major and hometown != empty
         hometownEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                if (useViewModel) {
-                    viewModel.updateHometown(s.toString().trim())
+                if (useSingleton) {
+                    UserSingleton.updateHometown(s.toString().trim())
                 }
             }
 
@@ -222,8 +222,8 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
 
         pronounEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
-                if (useViewModel) {
-                    viewModel.updatePronouns(s.toString().trim())
+                if (useSingleton) {
+                    UserSingleton.updatePronouns(s.toString().trim())
                 }
             }
 
@@ -304,8 +304,8 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
                         }
                     val byteArray = compressedImageFile.readBytes()
                     bitmap = BitmapFactory.decodeStream(ByteArrayInputStream(byteArray))
-                    if (useViewModel) {
-                        viewModel.updateProfilePic(bitmap!!)
+                    if (useSingleton) {
+                        UserSingleton.updateProfilePic(bitmap!!)
                     }
                 }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
@@ -368,14 +368,14 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
     companion object {
         private const val PICK_IMAGE_CODE = 42
         private const val IS_ONBOARDING = "IS_ONBOARDING"
-        private const val USE_VIEWMODEL = "USE_VIEWMODEL"
+        private const val USE_SINGLETON = "USE_SINGLETON"
 
         @JvmStatic
-        fun newInstance(isOnboarding: Boolean = false, useViewModel: Boolean = false) =
+        fun newInstance(isOnboarding: Boolean = false, useSingleton: Boolean = false) =
             EditProfileFragment().apply {
                 arguments = Bundle().apply {
                     putBoolean(IS_ONBOARDING, isOnboarding)
-                    putBoolean(USE_VIEWMODEL, useViewModel)
+                    putBoolean(USE_SINGLETON, useSingleton)
                 }
             }
     }

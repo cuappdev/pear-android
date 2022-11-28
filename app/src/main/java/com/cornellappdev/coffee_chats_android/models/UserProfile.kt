@@ -1,6 +1,5 @@
 package com.cornellappdev.coffee_chats_android.models
 
-import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
@@ -20,8 +19,7 @@ data class UserProfile(
     @Json(name = "graduation_year")
     val graduationYear: String?,
     val pronouns: String?,
+    val prompts: List<Prompt>,
     val interests: List<Interest>,
     val groups: List<Group>,
-    val prompts: List<Prompt>,
-    val purposes: List<Purpose>
-) : Parcelable
+)

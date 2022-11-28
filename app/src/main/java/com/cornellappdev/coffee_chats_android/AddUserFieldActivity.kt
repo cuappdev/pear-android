@@ -42,7 +42,7 @@ class AddUserFieldActivity : AppCompatActivity(), OnFilledOutListener {
             fragmentContainer.id,
             UserFieldFragment.newInstance(
                 category,
-                useViewModel = true,
+                useSingleton = true,
                 hideSelectedFields = true
             ),
             content.name

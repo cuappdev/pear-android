@@ -8,21 +8,18 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ListView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import com.cornellappdev.coffee_chats_android.*
 import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter
 import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter.ItemColor
 import com.cornellappdev.coffee_chats_android.models.UserField
 import com.cornellappdev.coffee_chats_android.models.UserField.Category
-import com.cornellappdev.coffee_chats_android.viewmodels.UserProfileViewModel
+import com.cornellappdev.coffee_chats_android.singletons.UserSingleton
 import kotlinx.android.synthetic.main.fragment_edit_interests.*
 import kotlinx.android.synthetic.main.fragment_edit_interests.view.*
 import kotlinx.android.synthetic.main.interest_group_list_with_header.view.*
 import kotlin.math.min
 
 class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
-    private val viewModel by activityViewModels<UserProfileViewModel>()
-
     private var isInterest = true
     private lateinit var itemString: String
     private val selectedItems = ArrayList<UserField>()
@@ -66,7 +63,7 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
         super.onResume()
         selectedItems.clear()
         if (isInterest) {
-            val userInterests = viewModel.userProfile.interests
+            val userInterests = UserSingleton.user.interests
             for (interest in userInterests) {
                 val item = UserField(
                     interest.name,
@@ -77,7 +74,7 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
                 selectedItems.add(item)
             }
         } else {
-            val userGroups = viewModel.userProfile.groups
+            val userGroups = UserSingleton.user.groups
             for (group in userGroups) {
                 val item = UserField(group.name, drawableUrl = group.imageUrl, id = group.id)
                 selectedItems.add(item)
@@ -143,9 +140,9 @@ class EditInterestsGroupsFragment : Fragment(), OnFilledOutObservable {
     private fun removeItem(pos: Int) {
         val removedItemId = selectedItems.removeAt(pos).id
         if (isInterest) {
-            viewModel.removeInterest(removedItemId)
+            UserSingleton.removeInterest(removedItemId)
         } else {
-            viewModel.removeGroup(removedItemId)
+            UserSingleton.removeGroup(removedItemId)
         }
         selectedItemsAdapter.notifyDataSetChanged()
         toggleSaveButton()
