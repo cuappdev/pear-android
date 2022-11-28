@@ -2,6 +2,7 @@ package com.cornellappdev.coffee_chats_android
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
@@ -9,6 +10,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.cornellappdev.coffee_chats_android.fragments.*
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.cornellappdev.coffee_chats_android.singletons.UserSingleton
+import com.cornellappdev.coffee_chats_android.viewmodels.UserProfileViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_profile_settings.*
 import kotlinx.coroutines.CoroutineScope
@@ -24,6 +26,7 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener, PromptsFragmen
 
     var state = State.PREVIEW
     private var userId: Int = -1
+    private val viewModel by viewModels<UserProfileViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +44,7 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener, PromptsFragmen
                         setUpPage()
                     }
                     State.EDIT -> {
-                        UserSingleton.saveUserInfo()
+                        viewModel.saveUserInfo()
                         onBackPressed()
                     }
                 }
@@ -82,10 +85,7 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener, PromptsFragmen
                         ProfileFragment.newInstance(userId)
                     )
                 }
-                CoroutineScope(Dispatchers.Main).launch {
-                    val user = getUser()
-                    UserSingleton.initializeUser(user)
-                }
+                viewModel.syncUserProfile()
             }
             State.EDIT -> {
                 save_button.text = getString(R.string.save)
@@ -106,7 +106,7 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener, PromptsFragmen
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> EditProfileFragment.newInstance(isOnboarding = false, useSingleton = true)
+                0 -> EditProfileFragment.newInstance(isOnboarding = false, useViewModel = true)
                 1 -> EditInterestsGroupsFragment.newInstance(isInterest = true)
                 2 -> EditInterestsGroupsFragment.newInstance(isInterest = false)
                 3 -> PromptsFragment.newInstance(

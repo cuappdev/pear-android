@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.cornellappdev.coffee_chats_android.OnFilledOutListener
 import com.cornellappdev.coffee_chats_android.OnFilledOutObservable
 import com.cornellappdev.coffee_chats_android.R
@@ -20,12 +21,9 @@ import com.cornellappdev.coffee_chats_android.models.Group
 import com.cornellappdev.coffee_chats_android.models.Interest
 import com.cornellappdev.coffee_chats_android.models.UserField
 import com.cornellappdev.coffee_chats_android.models.UserField.Category
-import com.cornellappdev.coffee_chats_android.networking.getAllGroups
-import com.cornellappdev.coffee_chats_android.networking.getAllInterests
-import com.cornellappdev.coffee_chats_android.networking.getAllPurposes
-import com.cornellappdev.coffee_chats_android.networking.getUser
-import com.cornellappdev.coffee_chats_android.singletons.UserSingleton
+import com.cornellappdev.coffee_chats_android.networking.*
 import com.cornellappdev.coffee_chats_android.updateUserField
+import com.cornellappdev.coffee_chats_android.viewmodels.UserProfileViewModel
 import kotlinx.android.synthetic.main.fragment_interests_groups.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,8 +33,10 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
 
     private lateinit var category: Category
 
-    /** whether to fetch user info from `UserSingleton` instead of backend */
-    private var useSingleton: Boolean = false
+    /** whether to fetch user info from `UserProfileViewModel` instead of backend */
+    private var useViewModel: Boolean = false
+
+    private val viewModel by activityViewModels<UserProfileViewModel>()
 
     /** whether to hide fields that the user has already selected */
     private var hideSelectedFields: Boolean = false
@@ -58,7 +58,7 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
         super.onCreate(savedInstanceState)
         arguments?.let {
             category = it.getSerializable(CATEGORY_TAG) as Category
-            useSingleton = it.getBoolean(USE_SINGLETON_TAG)
+            useViewModel = it.getBoolean(USE_VIEW_MODEL_TAG)
             hideSelectedFields = it.getBoolean(HIDE_SELECTED_FIELDS_TAG)
         }
     }
@@ -104,7 +104,7 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
             // signup_next is disabled until user has chosen at least one field
             callback!!.onSelectionEmpty()
 
-            val user = if (useSingleton) UserSingleton.user else getUser()
+            val user = if (useViewModel) viewModel.userProfile else getUserProfile()
             // fetch fields already selected by user
             // TODO- refactor to only store IDs?
             userFields = ArrayList(
@@ -230,19 +230,15 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
             group_search.setQuery("", false)
         }
         // save to repository
-        if (useSingleton) {
+        if (useViewModel) {
             if (category == Category.INTEREST) {
                 val interests =
                     items.map { Interest(it.id, it.getText(), it.getSubtext(), it.drawableUrl) }
-                for (interest in interests) {
-                    UserSingleton.addInterest(interest)
-                }
+                viewModel.addInterests(interests)
             }
             if (category == Category.GROUP) {
                 val groups = items.map { Group(it.id, it.getText(), it.drawableUrl) }
-                for (group in groups) {
-                    UserSingleton.addGroup(group)
-                }
+                viewModel.addGroups(groups)
             }
         } else {
             val indices = items.map { it.id }
@@ -256,26 +252,26 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
          * this fragment using the provided parameters.
          *
          * @param category UserField category representing interests, groups, goals, or talking points
-         * @param useSingleton Load user data from `UserRepository`
+         * @param useViewModel Load user data from `UserRepository`
          * @param hideSelectedFields Hides fields already selected by user
          * @return A new instance of fragment UserFieldFragment
          */
         @JvmStatic
         fun newInstance(
             category: Category,
-            useSingleton: Boolean = false,
+            useViewModel: Boolean = false,
             hideSelectedFields: Boolean = false
         ) =
             UserFieldFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(CATEGORY_TAG, category)
-                    putSerializable(USE_SINGLETON_TAG, useSingleton)
+                    putSerializable(USE_VIEW_MODEL_TAG, useViewModel)
                     putSerializable(HIDE_SELECTED_FIELDS_TAG, hideSelectedFields)
                 }
             }
 
         private const val CATEGORY_TAG = "category"
-        private const val USE_SINGLETON_TAG = "useSingleton"
+        private const val USE_VIEW_MODEL_TAG = "useViewModel"
         private const val HIDE_SELECTED_FIELDS_TAG = "hideAddedFields"
     }
 }
