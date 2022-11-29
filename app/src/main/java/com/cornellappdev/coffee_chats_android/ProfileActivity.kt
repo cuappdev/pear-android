@@ -6,14 +6,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.cornellappdev.coffee_chats_android.fragments.*
-import com.cornellappdev.coffee_chats_android.networking.getUser
-import com.cornellappdev.coffee_chats_android.repositories.UserRepository
+import com.cornellappdev.coffee_chats_android.fragments.EditInterestsGroupsFragment
+import com.cornellappdev.coffee_chats_android.fragments.EditProfileFragment
+import com.cornellappdev.coffee_chats_android.fragments.ProfileFragment
+import com.cornellappdev.coffee_chats_android.fragments.PromptsFragment
+import com.cornellappdev.coffee_chats_android.singletons.UserSingleton
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_profile_settings.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
 
@@ -41,7 +40,10 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
                         setUpPage()
                     }
                     State.EDIT -> {
-                        TODO()
+                        val success = UserSingleton.saveUserInfo(this)
+                        if (success) {
+                            onBackPressed()
+                        }
                     }
                 }
             }
@@ -64,6 +66,7 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
         } else {
             super.onBackPressed()
         }
+        hideKeyboard(this, backButton)
     }
 
     /** Sets up page UI based on current state */
@@ -80,14 +83,9 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
                         ProfileFragment.newInstance(userId)
                     )
                 }
+                UserSingleton.syncUser()
             }
             State.EDIT -> {
-                save_button.text = getString(R.string.save)
-                CoroutineScope(Dispatchers.Main).launch {
-                    val user = getUser()
-                    UserRepository.initializeUser(user)
-                }
-                state = State.EDIT
                 save_button.text = getString(R.string.save)
                 tabLayout.visibility = View.VISIBLE
                 viewPager.adapter = ViewPagerAdapter(this)
@@ -106,10 +104,13 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> EditProfileFragment.newInstance(isOnboarding = false)
-                1 -> EditInterestsGroupsFragment.newInstance(true)
-                2 -> EditInterestsGroupsFragment.newInstance(false)
-                3 -> EditProfileFragment() // TODO replace with PromptsFragment
+                0 -> EditProfileFragment.newInstance(isOnboarding = false, useSingleton = true)
+                1 -> EditInterestsGroupsFragment.newInstance(isInterest = true)
+                2 -> EditInterestsGroupsFragment.newInstance(isInterest = false)
+                3 -> PromptsFragment.newInstance(
+                    PromptsFragment.Content.DISPLAY_RESPONSES,
+                    useSingleton = true
+                )
                 else -> throw IllegalStateException()
             }
         }
@@ -122,11 +123,7 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
         const val NUM_FRAGMENTS = 4
     }
 
-    override fun onFilledOut() {
-        // TODO: Implement
-    }
+    override fun onFilledOut() {}
 
-    override fun onSelectionEmpty() {
-        // TODO: Implement
-    }
+    override fun onSelectionEmpty() {}
 }

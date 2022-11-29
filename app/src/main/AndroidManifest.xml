@@ -22,8 +22,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
         <activity
-            android:name=".AddUserFieldActivity"
-            android:exported="false" />
+            android:name=".PromptsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
@@ -39,25 +40,35 @@
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
+            android:name=".AddUserFieldActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ProfileActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MessagingActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/noAnimTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ProfileSettingsActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/noAnimTheme" />
         <activity
             android:name=".SignInActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/noAnimTheme" />
         <activity
             android:name=".OnboardingActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/noAnimTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".SchedulingActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/noAnimTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

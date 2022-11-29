@@ -12,12 +12,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.cornellappdev.coffee_chats_android.fragments.EditProfileFragment
 import com.cornellappdev.coffee_chats_android.fragments.PromptsFragment
-import com.cornellappdev.coffee_chats_android.fragments.SocialMediaFragment
 import com.cornellappdev.coffee_chats_android.fragments.UserFieldFragment
 import com.cornellappdev.coffee_chats_android.models.User
 import com.cornellappdev.coffee_chats_android.models.UserField
-import com.cornellappdev.coffee_chats_android.models.UserSession
 import com.cornellappdev.coffee_chats_android.networking.getUser
+import com.cornellappdev.coffee_chats_android.networking.setUpNetworking
+import com.cornellappdev.coffee_chats_android.networking.updateOnboardingStatus
 import kotlinx.android.synthetic.main.activity_onboarding.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,13 +40,12 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
             Content.INTERESTS,
             Content.GROUPS,
             Content.PROMPTS,
-            Content.GOALS,
-            Content.SOCIAL_MEDIA
+            Content.GOALS
         )
 
     /** Pages that display the Add Later button */
     private val addLaterPages =
-        listOf(Content.GROUPS, Content.GOALS, Content.SOCIAL_MEDIA)
+        listOf(Content.GROUPS, Content.GOALS)
 
     /** All onboarding pages */
     enum class Content {
@@ -54,8 +53,7 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
         INTERESTS,
         GROUPS,
         PROMPTS,
-        GOALS,
-        SOCIAL_MEDIA
+        GOALS
     }
 
     /** Default bottom margin for next button */
@@ -66,7 +64,7 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
         setContentView(R.layout.activity_onboarding)
         CoroutineScope(Dispatchers.Main).launch {
             intent.getStringExtra(ACCESS_TOKEN_TAG)?.let {
-                UserSession.currentAccessToken = it
+                setUpNetworking(it)
             }
             user = getUser()
             val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
@@ -164,13 +162,16 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
                 Content.GROUPS -> UserFieldFragment.newInstance(UserField.Category.GROUP)
                 Content.PROMPTS -> PromptsFragment()
                 Content.GOALS -> UserFieldFragment.newInstance(UserField.Category.GOAL)
-                Content.SOCIAL_MEDIA -> SocialMediaFragment()
             }
             val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
             ft.replace(fragmentContainer.id, fragment, content.name).addToBackStack("ft").commit()
             setUpCurrentPage()
         } else {
-            // onboarding done, launch SchedulingActivity
+            // onboarding done, notify backend + launch SchedulingActivity
+            CoroutineScope(Dispatchers.Main).launch {
+                // let backend know user has finished onboarding
+                updateOnboardingStatus(true)
+            }
             val intent = Intent(this, SchedulingActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             startActivity(intent)
@@ -184,7 +185,6 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
             Content.GROUPS -> getString(R.string.groups_header)
             Content.PROMPTS -> getString(R.string.prompts_header)
             Content.GOALS -> getString(R.string.goals_header)
-            Content.SOCIAL_MEDIA -> getString(R.string.social_media_header)
         }
         back_button.visibility = if (content == Content.CREATE_PROFILE) View.GONE else View.VISIBLE
         add_later.visibility = if (content in addLaterPages) View.VISIBLE else View.GONE

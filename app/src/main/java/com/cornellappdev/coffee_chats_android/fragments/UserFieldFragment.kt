@@ -20,11 +20,8 @@ import com.cornellappdev.coffee_chats_android.models.Group
 import com.cornellappdev.coffee_chats_android.models.Interest
 import com.cornellappdev.coffee_chats_android.models.UserField
 import com.cornellappdev.coffee_chats_android.models.UserField.Category
-import com.cornellappdev.coffee_chats_android.networking.getAllGroups
-import com.cornellappdev.coffee_chats_android.networking.getAllInterests
-import com.cornellappdev.coffee_chats_android.networking.getAllPurposes
-import com.cornellappdev.coffee_chats_android.networking.getUser
-import com.cornellappdev.coffee_chats_android.repositories.UserRepository
+import com.cornellappdev.coffee_chats_android.networking.*
+import com.cornellappdev.coffee_chats_android.singletons.UserSingleton
 import com.cornellappdev.coffee_chats_android.updateUserField
 import kotlinx.android.synthetic.main.fragment_interests_groups.*
 import kotlinx.coroutines.CoroutineScope
@@ -35,8 +32,8 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
 
     private lateinit var category: Category
 
-    /** whether to fetch user info from `UserRepository` instead of backend */
-    private var useRepository: Boolean = false
+    /** whether to fetch user info from `UserSingleton` instead of backend */
+    private var useSingleton: Boolean = false
 
     /** whether to hide fields that the user has already selected */
     private var hideSelectedFields: Boolean = false
@@ -58,7 +55,7 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
         super.onCreate(savedInstanceState)
         arguments?.let {
             category = it.getSerializable(CATEGORY_TAG) as Category
-            useRepository = it.getBoolean(USE_REPOSITORY_TAG)
+            useSingleton = it.getBoolean(USE_SINGLETON_TAG)
             hideSelectedFields = it.getBoolean(HIDE_SELECTED_FIELDS_TAG)
         }
     }
@@ -104,7 +101,7 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
             // signup_next is disabled until user has chosen at least one field
             callback!!.onSelectionEmpty()
 
-            val user = if (useRepository) UserRepository.user else getUser()
+            val user = if (useSingleton) UserSingleton.user else getUserProfile()
             // fetch fields already selected by user
             // TODO- refactor to only store IDs?
             userFields = ArrayList(
@@ -229,20 +226,16 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
         if (category in searchableContent) {
             group_search.setQuery("", false)
         }
-        // save to repository
-        if (useRepository) {
+        // save to singleton
+        if (useSingleton) {
             if (category == Category.INTEREST) {
                 val interests =
                     items.map { Interest(it.id, it.getText(), it.getSubtext(), it.drawableUrl) }
-                for (interest in interests) {
-                    UserRepository.addInterest(interest)
-                }
+                UserSingleton.addInterests(interests)
             }
             if (category == Category.GROUP) {
                 val groups = items.map { Group(it.id, it.getText(), it.drawableUrl) }
-                for (group in groups) {
-                    UserRepository.addGroup(group)
-                }
+                UserSingleton.addGroups(groups)
             }
         } else {
             val indices = items.map { it.id }
@@ -256,26 +249,26 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
          * this fragment using the provided parameters.
          *
          * @param category UserField category representing interests, groups, goals, or talking points
-         * @param useRepository Load user data from `UserRepository`
+         * @param useSingleton Load user data from `UserRepository`
          * @param hideSelectedFields Hides fields already selected by user
          * @return A new instance of fragment UserFieldFragment
          */
         @JvmStatic
         fun newInstance(
             category: Category,
-            useRepository: Boolean = false,
+            useSingleton: Boolean = false,
             hideSelectedFields: Boolean = false
         ) =
             UserFieldFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(CATEGORY_TAG, category)
-                    putSerializable(USE_REPOSITORY_TAG, useRepository)
+                    putSerializable(USE_SINGLETON_TAG, useSingleton)
                     putSerializable(HIDE_SELECTED_FIELDS_TAG, hideSelectedFields)
                 }
             }
 
         private const val CATEGORY_TAG = "category"
-        private const val USE_REPOSITORY_TAG = "useRepository"
+        private const val USE_SINGLETON_TAG = "useSingleton"
         private const val HIDE_SELECTED_FIELDS_TAG = "hideAddedFields"
     }
 }

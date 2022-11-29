@@ -5,6 +5,7 @@ import android.util.Base64
 import android.util.Log
 import com.cornellappdev.coffee_chats_android.models.*
 import com.google.gson.Gson
+import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.MediaType.Companion.toMediaType
@@ -185,6 +186,38 @@ fun Endpoint.Companion.updateOnboardingStatus(hasOnboarded: Boolean): Endpoint {
     )
 }
 
+// EDITING USER PROFILE
+
+fun Endpoint.Companion.updateUserProfile(userProfile: UserProfile): Endpoint {
+    // form request body
+    val adapter: JsonAdapter<UserProfile> = moshi.adapter(UserProfile::class.java)
+    val jsonMap = adapter.toJsonValue(
+        userProfile.copy(
+            majors = emptyList(),
+            interests = emptyList(),
+            groups = emptyList(),
+            purposes = emptyList()
+        )
+    )!! as MutableMap<String, Any>
+    // some lists have to be converted into ids
+    val majorIds = userProfile.majors.map { it.id }
+    val interestIds = userProfile.interests.map { it.id }
+    val groupIds = userProfile.groups.map { it.id }
+    val purposeIds = userProfile.purposes.map { it.id }
+    jsonMap["majors"] = majorIds
+    jsonMap["interests"] = interestIds
+    jsonMap["groups"] = groupIds
+    jsonMap["purposes"] = purposeIds
+    val requestBody = gson.toJson(jsonMap).toString().toRequestBody(MEDIA_TYPE)
+
+    return Endpoint(
+        path = "/me/",
+        headers = authHeader(),
+        body = requestBody,
+        method = EndpointMethod.POST
+    )
+}
+
 // FCM TOKEN
 
 fun Endpoint.Companion.updateFcmToken(fcmToken: String): Endpoint {
@@ -199,9 +232,11 @@ fun Endpoint.Companion.updateFcmToken(fcmToken: String): Endpoint {
 
 // MESSAGE NOTIFICATION
 
-fun Endpoint.Companion.sendMessageNotification(message: String, recipientId : Int): Endpoint {
-    val requestBody = toRequestBody(Message(message = message),
-        Message::class.java)
+fun Endpoint.Companion.sendMessageNotification(message: String, recipientId: Int): Endpoint {
+    val requestBody = toRequestBody(
+        Message(message = message),
+        Message::class.java
+    )
     return Endpoint(
         path = "/users/$recipientId/message/",
         headers = authHeader(),

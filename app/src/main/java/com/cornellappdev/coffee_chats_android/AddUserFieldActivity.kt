@@ -1,16 +1,13 @@
 package com.cornellappdev.coffee_chats_android
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import com.cornellappdev.coffee_chats_android.fragments.EditProfileFragment
-import com.cornellappdev.coffee_chats_android.fragments.PromptsFragment
 import com.cornellappdev.coffee_chats_android.fragments.UserFieldFragment
 import com.cornellappdev.coffee_chats_android.models.UserField
+import com.cornellappdev.coffee_chats_android.singletons.UserSingleton
 import kotlinx.android.synthetic.main.activity_add_user_field.*
-import kotlinx.android.synthetic.main.activity_add_user_field.fragmentContainer
-import kotlinx.android.synthetic.main.activity_onboarding.*
 
 class AddUserFieldActivity : AppCompatActivity(), OnFilledOutListener {
 
@@ -31,9 +28,12 @@ class AddUserFieldActivity : AppCompatActivity(), OnFilledOutListener {
         }
         backButton.setOnClickListener { onBackPressed() }
         primaryActionButton.setOnClickListener {
+            // save changes in the fragment to the singleton
             val currFragment =
                 supportFragmentManager.findFragmentByTag(content.name) as OnFilledOutObservable
             currFragment.saveInformation()
+            // save current profile in the singleton to the backend
+            UserSingleton.saveUserInfo(this)
             onBackPressed()
         }
         val category = when (content) {
@@ -45,7 +45,7 @@ class AddUserFieldActivity : AppCompatActivity(), OnFilledOutListener {
             fragmentContainer.id,
             UserFieldFragment.newInstance(
                 category,
-                useRepository = true,
+                useSingleton = true,
                 hideSelectedFields = true
             ),
             content.name

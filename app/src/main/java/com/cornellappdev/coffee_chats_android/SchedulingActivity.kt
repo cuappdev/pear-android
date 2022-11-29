@@ -63,24 +63,7 @@ class SchedulingActivity :
                         startActivity(intent)
                     } else {
                         setUpDrawerLayout()
-                        val c = this@SchedulingActivity
-                        updateViewPagerAdapter()
-                        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-                            tab.text =
-                                    if (position == 0) c.getText(R.string.match_header)
-                                    else c.getText(R.string.people_header)
-                        }.attach()
-                        // resize tabs so they wrap tab text
-                        tabLayout.apply {
-                            for (i in 0 until NUM_FRAGMENTS) {
-                                val layout =
-                                        (this.getChildAt(0) as LinearLayout).getChildAt(0) as LinearLayout
-                                val layoutParams = layout.layoutParams as LinearLayout.LayoutParams
-                                layoutParams.weight = 0f
-                                layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT
-                                layout.layoutParams = layoutParams
-                            }
-                        }
+                        setUpTabLayout()
                     }
                 } catch (e: Exception) {
                     // login error, prompt user to sign in
@@ -156,6 +139,31 @@ class SchedulingActivity :
         CoroutineScope(Dispatchers.Main).launch {
             user = getUser()
             setUpDrawerLayout()
+            setUpTabLayout()
+        }
+    }
+
+    /**
+     * Sets up TabLayout and ViewPager
+     */
+    private fun setUpTabLayout() {
+        val c = this
+        updateViewPagerAdapter()
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text =
+                if (position == 0) c.getText(R.string.match_header)
+                else c.getText(R.string.people_header)
+        }.attach()
+        // resize tabs so they wrap tab text
+        tabLayout.apply {
+            for (i in 0 until NUM_FRAGMENTS) {
+                val layout =
+                    (this.getChildAt(0) as LinearLayout).getChildAt(0) as LinearLayout
+                val layoutParams = layout.layoutParams as LinearLayout.LayoutParams
+                layoutParams.weight = 0f
+                layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT
+                layout.layoutParams = layoutParams
+            }
         }
     }
 
