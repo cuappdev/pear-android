@@ -240,6 +240,10 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
         } else {
             val indices = items.map { it.id }
             updateUserField(requireContext(), indices, category)
+            CoroutineScope(Dispatchers.Main).launch {
+                // let backend know user has finished onboarding
+                updateOnboardingStatus(true)
+            }
         }
     }
 

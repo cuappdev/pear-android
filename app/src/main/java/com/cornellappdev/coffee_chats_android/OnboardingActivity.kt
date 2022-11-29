@@ -41,13 +41,12 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
             Content.INTERESTS,
             Content.GROUPS,
             Content.PROMPTS,
-            Content.GOALS,
-            Content.SOCIAL_MEDIA
+            Content.GOALS
         )
 
     /** Pages that display the Add Later button */
     private val addLaterPages =
-        listOf(Content.GROUPS, Content.GOALS, Content.SOCIAL_MEDIA)
+        listOf(Content.GROUPS, Content.GOALS)
 
     /** All onboarding pages */
     enum class Content {
@@ -55,8 +54,7 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
         INTERESTS,
         GROUPS,
         PROMPTS,
-        GOALS,
-        SOCIAL_MEDIA
+        GOALS
     }
 
     /** Default bottom margin for next button */
@@ -165,7 +163,6 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
                 Content.GROUPS -> UserFieldFragment.newInstance(UserField.Category.GROUP)
                 Content.PROMPTS -> PromptsFragment()
                 Content.GOALS -> UserFieldFragment.newInstance(UserField.Category.GOAL)
-                Content.SOCIAL_MEDIA -> SocialMediaFragment()
             }
             val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
             ft.replace(fragmentContainer.id, fragment, content.name).addToBackStack("ft").commit()
@@ -185,7 +182,6 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
             Content.GROUPS -> getString(R.string.groups_header)
             Content.PROMPTS -> getString(R.string.prompts_header)
             Content.GOALS -> getString(R.string.goals_header)
-            Content.SOCIAL_MEDIA -> getString(R.string.social_media_header)
         }
         back_button.visibility = if (content == Content.CREATE_PROFILE) View.GONE else View.VISIBLE
         add_later.visibility = if (content in addLaterPages) View.VISIBLE else View.GONE
