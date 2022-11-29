@@ -17,6 +17,7 @@ import com.cornellappdev.coffee_chats_android.models.User
 import com.cornellappdev.coffee_chats_android.models.UserField
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.cornellappdev.coffee_chats_android.networking.setUpNetworking
+import com.cornellappdev.coffee_chats_android.networking.updateOnboardingStatus
 import kotlinx.android.synthetic.main.activity_onboarding.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -166,7 +167,11 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
             ft.replace(fragmentContainer.id, fragment, content.name).addToBackStack("ft").commit()
             setUpCurrentPage()
         } else {
-            // onboarding done, launch SchedulingActivity
+            // onboarding done, notify backend + launch SchedulingActivity
+            CoroutineScope(Dispatchers.Main).launch {
+                // let backend know user has finished onboarding
+                updateOnboardingStatus(true)
+            }
             val intent = Intent(this, SchedulingActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             startActivity(intent)

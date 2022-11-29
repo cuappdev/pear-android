@@ -80,8 +80,6 @@ class SocialMediaFragment : Fragment(), OnFilledOutObservable {
                 Toast.makeText(requireContext(), "Failed to save information", Toast.LENGTH_LONG)
                     .show()
             }
-            // let backend know user has finished onboarding
-            updateOnboardingStatus(true)
         }
     }
 }
