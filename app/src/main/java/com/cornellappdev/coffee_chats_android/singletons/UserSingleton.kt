@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
 import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.models.*
 import com.cornellappdev.coffee_chats_android.networking.getUserProfile
@@ -18,8 +17,6 @@ import java.lang.Integer.max
  * Singleton class for storing user info when editing profile
  */
 object UserSingleton {
-    const val TAG = "UserSingleton"
-
     var user = UserProfile.DUMMY_USER_PROFILE
         private set
 
@@ -167,7 +164,6 @@ object UserSingleton {
             return false
         }
         CoroutineScope(Dispatchers.Main).launch {
-            Log.d(TAG, user.toString())
             profilePic?.let { com.cornellappdev.coffee_chats_android.networking.updateProfilePic(it) }
             updateUserProfile(userProfile = user)
         }
