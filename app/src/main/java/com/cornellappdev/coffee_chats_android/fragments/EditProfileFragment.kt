@@ -305,7 +305,7 @@ class EditProfileFragment : Fragment(), OnFilledOutObservable {
                     val byteArray = compressedImageFile.readBytes()
                     bitmap = BitmapFactory.decodeStream(ByteArrayInputStream(byteArray))
                     if (useSingleton) {
-                        UserSingleton.updateProfilePic(bitmap!!)
+                        UserSingleton.updateProfilePicture(bitmap!!)
                     }
                 }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {

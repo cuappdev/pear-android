@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.models.*
 import com.cornellappdev.coffee_chats_android.networking.getUserProfile
+import com.cornellappdev.coffee_chats_android.networking.updateProfilePic
 import com.cornellappdev.coffee_chats_android.networking.updateUserProfile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +44,7 @@ object UserSingleton {
         }
     }
 
-    fun updateProfilePic(bitmap: Bitmap) {
+    fun updateProfilePicture(bitmap: Bitmap) {
         profilePic = bitmap
     }
 
@@ -164,7 +165,7 @@ object UserSingleton {
             return false
         }
         CoroutineScope(Dispatchers.Main).launch {
-            profilePic?.let { com.cornellappdev.coffee_chats_android.networking.updateProfilePic(it) }
+            profilePic?.let { updateProfilePic(it) }
             updateUserProfile(userProfile = user)
         }
         return true
