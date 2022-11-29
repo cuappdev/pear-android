@@ -1,8 +1,12 @@
 package com.cornellappdev.coffee_chats_android.singletons
 
+import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.util.Log
+import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.models.*
 import com.cornellappdev.coffee_chats_android.networking.*
 import kotlinx.coroutines.CoroutineScope
@@ -119,16 +123,54 @@ object UserSingleton {
         promptsArray[pos] = UserField()
     }
 
-    /** Saves all updated user information to backend */
-    fun saveUserInfo() {
+    /**
+     * Returns: whether input is valid
+     *
+     * Displays an error dialog if not valid
+     */
+    private fun validateInput(c: Context): Boolean {
+        var message = ""
+        if (user.firstName.isBlank() && user.lastName.isBlank()) {
+            message = "Please enter a name."
+        }
+        if (user.interests.isEmpty()) {
+            message = "Please select at least one interest."
+        }
+        if (user.prompts.isEmpty()) {
+            message = "Please answer at least one prompt."
+        }
+        if (message.isNotEmpty()) {
+            (c as Activity).runOnUiThread {
+                AlertDialog.Builder(c)
+                    .setTitle(R.string.unable_save_profile)
+                    .setMessage(message)
+                    .setNeutralButton(android.R.string.ok) { _, _ -> }
+                    .show()
+            }
+            return false
+        }
+        return true
+    }
+
+    /**
+     * Saves all updated user information to backend
+     *
+     * Returns: whether profile passed input validation
+     */
+    fun saveUserInfo(context: Context): Boolean {
+        // input validation
+        val prompts = promptsArray.toList()
+            .map { Prompt(answer = it.getSubtext(), id = it.id) }
+            .filter { it.answer.isNotBlank() }
+        user = user.copy(prompts = prompts)
+        if (!validateInput(context)) {
+            return false
+        }
         CoroutineScope(Dispatchers.Main).launch {
-            val prompts = promptsArray.toList()
-                .map { Prompt(answer = it.getSubtext(), id = it.id) }
-                .filter { it.answer.isNotBlank() }
-            user = user.copy(prompts = prompts)
             Log.d(TAG, user.toString())
             profilePic?.let { com.cornellappdev.coffee_chats_android.networking.updateProfilePic(it) }
             updateUserProfile(userProfile = user)
         }
+        return true
     }
 }

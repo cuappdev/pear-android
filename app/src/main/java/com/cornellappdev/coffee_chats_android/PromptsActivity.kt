@@ -30,7 +30,7 @@ class PromptsActivity : AppCompatActivity(), OnFilledOutListener, PromptsFragmen
             val currFragment =
                 supportFragmentManager.findFragmentByTag(content.name) as OnFilledOutObservable
             currFragment.saveInformation()
-            UserSingleton.saveUserInfo()
+            UserSingleton.saveUserInfo(this)
             onBackPressed()
         }
         ft

@@ -37,8 +37,10 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener, PromptsFragmen
                         setUpPage()
                     }
                     State.EDIT -> {
-                        UserSingleton.saveUserInfo()
-                        onBackPressed()
+                        val success = UserSingleton.saveUserInfo(this)
+                        if (success) {
+                            onBackPressed()
+                        }
                     }
                 }
             }

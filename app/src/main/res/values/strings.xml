@@ -279,6 +279,8 @@
     <string name="image_permission_denied">Permission denied. Please grant permissions to upload profile image.</string>
     <string name="image_upload_failed">Failed to upload image.</string>
 
+    <string name="unable_save_profile">Unable to save profile</string>
+
     <!--ABOUT-->
     <string name="pear_creation_reason">Pear was created to help Cornell students meet new people and form meaningful connections.</string>
     <string name="get_paired"><b>Get paired</b> up with a new Cornell student like you, every week.</string>

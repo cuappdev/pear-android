@@ -34,7 +34,7 @@ class AddUserFieldActivity : AppCompatActivity(), OnFilledOutListener {
                 supportFragmentManager.findFragmentByTag(content.name) as OnFilledOutObservable
             currFragment.saveInformation()
             // save current profile in the singleton to the backend
-            UserSingleton.saveUserInfo()
+            UserSingleton.saveUserInfo(this)
             onBackPressed()
         }
         val category = when (content) {
