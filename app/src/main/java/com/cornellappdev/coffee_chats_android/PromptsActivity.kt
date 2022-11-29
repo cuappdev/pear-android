@@ -20,15 +20,16 @@ class PromptsActivity : AppCompatActivity(), OnFilledOutListener, PromptsFragmen
         val editPosition = intent.extras?.getInt(EDIT_POSITION, -1) ?: -1
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
         content =
-            if (editPosition == -1) PromptsFragment.Content.DISPLAY_PROMPTS
+            if (editPosition == -1 ||
+                UserSingleton.promptsArray[editPosition].getText().isBlank()
+            )
+                PromptsFragment.Content.DISPLAY_PROMPTS
             else PromptsFragment.Content.EDIT_RESPONSE
         backButton.setOnClickListener { onBackPressed() }
         primaryActionButton.setOnClickListener {
-            if (content == PromptsFragment.Content.EDIT_RESPONSE) {
-                val currFragment =
-                    supportFragmentManager.findFragmentByTag(content.name) as OnFilledOutObservable
-                currFragment.saveInformation()
-            }
+            val currFragment =
+                supportFragmentManager.findFragmentByTag(content.name) as OnFilledOutObservable
+            currFragment.saveInformation()
             UserSingleton.saveUserInfo()
             onBackPressed()
         }

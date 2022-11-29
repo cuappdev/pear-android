@@ -100,7 +100,9 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
         super.onResume()
         if (useSingleton) {
             UserSingleton.promptsArray.copyInto(responseAdapterArray)
-            setUpPage()
+            if (content != Content.DISPLAY_PROMPTS || ::prompts.isInitialized) {
+                setUpPage()
+            }
         }
     }
 
@@ -141,15 +143,19 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
             }
             Content.EDIT_RESPONSE -> {
                 container?.setHeaderText(getString(R.string.enter_response))
-                if (useSingleton) {
-                    currentPrompt = UserSingleton.user.prompts[editPosition].name
+                if (useSingleton && currentPrompt.isEmpty()) {
+                    currentPrompt = UserSingleton.promptsArray[editPosition].getText()
                 }
                 prompt.text = currentPrompt
+                if (useSingleton && editPosition != -1) {
+                    val response = UserSingleton.promptsArray[editPosition].getSubtext()
+                    if (response.isNotEmpty()) {
+                        editExistingResponse = true
+                    }
+                    response_edit_text.setText(response)
+                }
                 if (!editExistingResponse) {
                     char_count.text = "$MAX_CHARACTERS"
-                }
-                if (useSingleton && editPosition != -1) {
-                    response_edit_text.setText(UserSingleton.user.prompts[editPosition].answer)
                 }
                 if (response_edit_text.text.isNotEmpty()) {
                     callback!!.onFilledOut()
@@ -244,25 +250,36 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
         }
     }
 
+    private fun startPromptsActivity(position: Int) {
+        val intent = Intent(requireContext(), PromptsActivity::class.java).apply {
+            putExtra(PromptsActivity.EDIT_POSITION, position)
+        }
+        startActivity(intent)
+    }
+
     override fun onAddPrompt(position: Int) {
-        content = Content.DISPLAY_PROMPTS
-        editPosition = position
-        response_edit_text.text.clear()
-        setUpPage()
+        if (usePromptsActivity) {
+            startPromptsActivity(position)
+        } else {
+            content = Content.DISPLAY_PROMPTS
+            editPosition = position
+            response_edit_text.text.clear()
+            setUpPage()
+        }
     }
 
     override fun onClearPrompt(position: Int) {
         prompts.filter { it.getText() == responseAdapterArray[position].getText() }[0].toggleSelected()
         responseAdapterArray[position] = UserField()
+        if (useSingleton) {
+            UserSingleton.removePrompt(position)
+        }
         setUpPage()
     }
 
     override fun onEditPrompt(position: Int) {
         if (usePromptsActivity) {
-            val intent = Intent(requireContext(), PromptsActivity::class.java).apply {
-                putExtra(PromptsActivity.EDIT_POSITION, position)
-            }
-            startActivity(intent)
+            startPromptsActivity(position)
         } else {
             val field = responseAdapterArray[position]
             currentPrompt = field.getText()
