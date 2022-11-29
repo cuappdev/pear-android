@@ -18,6 +18,7 @@ import com.cornellappdev.coffee_chats_android.models.User
 import com.cornellappdev.coffee_chats_android.models.UserField
 import com.cornellappdev.coffee_chats_android.models.UserSession
 import com.cornellappdev.coffee_chats_android.networking.getUser
+import com.cornellappdev.coffee_chats_android.networking.setUpNetworking
 import kotlinx.android.synthetic.main.activity_onboarding.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -66,7 +67,7 @@ class OnboardingActivity : AppCompatActivity(), OnFilledOutListener,
         setContentView(R.layout.activity_onboarding)
         CoroutineScope(Dispatchers.Main).launch {
             intent.getStringExtra(ACCESS_TOKEN_TAG)?.let {
-                UserSession.currentAccessToken = it
+                setUpNetworking(it)
             }
             user = getUser()
             val ft: FragmentTransaction = supportFragmentManager.beginTransaction()

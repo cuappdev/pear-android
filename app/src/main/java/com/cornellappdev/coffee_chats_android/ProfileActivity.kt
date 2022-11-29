@@ -7,14 +7,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.cornellappdev.coffee_chats_android.fragments.*
-import com.cornellappdev.coffee_chats_android.networking.getUser
-import com.cornellappdev.coffee_chats_android.networking.getUserProfile
 import com.cornellappdev.coffee_chats_android.singletons.UserSingleton
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_profile_settings.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class ProfileActivity : AppCompatActivity(), OnFilledOutListener, PromptsFragment.PromptsContainer {
 
@@ -83,10 +78,7 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener, PromptsFragmen
                         ProfileFragment.newInstance(userId)
                     )
                 }
-                CoroutineScope(Dispatchers.Main).launch {
-                    val user = getUserProfile()
-                    UserSingleton.initializeUser(user)
-                }
+                UserSingleton.syncUser()
             }
             State.EDIT -> {
                 save_button.text = getString(R.string.save)

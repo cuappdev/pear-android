@@ -7,25 +7,40 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.cornellappdev.coffee_chats_android.fragments.PromptsFragment
 import com.cornellappdev.coffee_chats_android.fragments.UserFieldFragment
+import com.cornellappdev.coffee_chats_android.singletons.UserSingleton
 import kotlinx.android.synthetic.main.activity_add_user_field.*
 
 class PromptsActivity : AppCompatActivity(), OnFilledOutListener, PromptsFragment.PromptsContainer {
+
+    private var content = PromptsFragment.Content.DISPLAY_PROMPTS
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_user_field)
-        backButton.setOnClickListener { onBackPressed() }
-        primaryActionButton.setOnClickListener { onBackPressed() }
         val editPosition = intent.extras?.getInt(EDIT_POSITION, -1) ?: -1
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+        content =
+            if (editPosition == -1) PromptsFragment.Content.DISPLAY_PROMPTS
+            else PromptsFragment.Content.EDIT_RESPONSE
+        backButton.setOnClickListener { onBackPressed() }
+        primaryActionButton.setOnClickListener {
+            if (content == PromptsFragment.Content.EDIT_RESPONSE) {
+                val currFragment =
+                    supportFragmentManager.findFragmentByTag(content.name) as OnFilledOutObservable
+                currFragment.saveInformation()
+            }
+            UserSingleton.saveUserInfo()
+            onBackPressed()
+        }
         ft
             .replace(
                 fragmentContainer.id,
                 PromptsFragment.newInstance(
-                    PromptsFragment.Content.EDIT_RESPONSE,
+                    content,
                     useSingleton = true,
                     editPosition = editPosition
                 ),
-                PromptsFragment.Content.EDIT_RESPONSE.toString()
+                content.toString()
             )
             .commit()
     }

@@ -40,6 +40,9 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
 
     private var useSingleton = false
 
+    /** whether to use `PromptsActivity` when adding and editing prompts */
+    private var usePromptsActivity = false
+
     /** position of item currently being edited */
     private var editPosition = -1
 
@@ -58,6 +61,7 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
         arguments?.let {
             content = it.getSerializable(CONTENT) as Content
             useSingleton = it.getBoolean(USE_SINGLETON)
+            usePromptsActivity = useSingleton
             editPosition = it.getInt(PROMPT_EDIT_POSITION)
         }
     }
@@ -75,15 +79,19 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
         CoroutineScope(Dispatchers.Main).launch {
             prompts =
                 getAllPrompts().map { p -> UserField(text = p.name, id = p.id) }.toTypedArray()
-            val user = if (useSingleton) UserSingleton.user else getUserProfile()
-            val selectedPrompts = user.prompts.map { p ->
-                UserField(
-                    text = p.name,
-                    subtext = p.answer,
-                    id = p.id
-                )
-            }.toTypedArray()
-            selectedPrompts.copyInto(responseAdapterArray)
+            if (useSingleton) {
+                UserSingleton.promptsArray.copyInto(responseAdapterArray)
+            } else {
+                val user = getUserProfile()
+                val selectedPrompts = user.prompts.map { p ->
+                    UserField(
+                        text = p.name,
+                        subtext = p.answer,
+                        id = p.id
+                    )
+                }.toTypedArray()
+                selectedPrompts.copyInto(responseAdapterArray)
+            }
             setUpPage()
         }
     }
@@ -91,14 +99,7 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
     override fun onResume() {
         super.onResume()
         if (useSingleton) {
-            val selectedPrompts = UserSingleton.user.prompts.map { p ->
-                UserField(
-                    text = p.name,
-                    subtext = p.answer,
-                    id = p.id
-                )
-            }.toTypedArray()
-            selectedPrompts.copyInto(responseAdapterArray)
+            UserSingleton.promptsArray.copyInto(responseAdapterArray)
             setUpPage()
         }
     }
@@ -140,7 +141,10 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
             }
             Content.EDIT_RESPONSE -> {
                 container?.setHeaderText(getString(R.string.enter_response))
-                prompt.text = if (useSingleton) UserSingleton.user.prompts[editPosition].name else currentPrompt
+                if (useSingleton) {
+                    currentPrompt = UserSingleton.user.prompts[editPosition].name
+                }
+                prompt.text = currentPrompt
                 if (!editExistingResponse) {
                     char_count.text = "$MAX_CHARACTERS"
                 }
@@ -154,12 +158,7 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
                 }
                 // update character count
                 response_edit_text.addTextChangedListener(object : TextWatcher {
-                    override fun afterTextChanged(s: Editable) {
-                        if (useSingleton) {
-                            // TODO
-                            // UserSingleton.updatePromptResponse(editPosition, s.toString().trim())
-                        }
-                    }
+                    override fun afterTextChanged(s: Editable) {}
 
                     override fun beforeTextChanged(
                         s: CharSequence,
@@ -228,9 +227,20 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
     }
 
     override fun saveInformation() {
-        CoroutineScope(Dispatchers.Main).launch {
-            updatePrompts(
-                responseAdapterArray.toList().map { Prompt(answer = it.getSubtext(), id = it.id) })
+        if (useSingleton) {
+            val prompt = prompts.filter { it.getText() == currentPrompt }[0]
+            UserSingleton.updatePrompt(
+                editPosition,
+                currentPrompt,
+                response_edit_text.text.toString(),
+                prompt.id
+            )
+        } else {
+            CoroutineScope(Dispatchers.Main).launch {
+                updatePrompts(
+                    responseAdapterArray.toList()
+                        .map { Prompt(answer = it.getSubtext(), id = it.id) })
+            }
         }
     }
 
@@ -248,7 +258,7 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
     }
 
     override fun onEditPrompt(position: Int) {
-        if (useSingleton) {
+        if (usePromptsActivity) {
             val intent = Intent(requireContext(), PromptsActivity::class.java).apply {
                 putExtra(PromptsActivity.EDIT_POSITION, position)
             }
