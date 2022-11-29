@@ -6,7 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.cornellappdev.coffee_chats_android.fragments.*
+import com.cornellappdev.coffee_chats_android.fragments.EditInterestsGroupsFragment
+import com.cornellappdev.coffee_chats_android.fragments.EditProfileFragment
+import com.cornellappdev.coffee_chats_android.fragments.ProfileFragment
+import com.cornellappdev.coffee_chats_android.fragments.PromptsFragment
 import com.cornellappdev.coffee_chats_android.singletons.UserSingleton
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_profile_settings.*

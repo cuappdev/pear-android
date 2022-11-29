@@ -27,9 +27,11 @@ import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.dpToPixels
 import com.cornellappdev.coffee_chats_android.models.Demographics
 import com.cornellappdev.coffee_chats_android.models.Major
-import com.cornellappdev.coffee_chats_android.models.User
 import com.cornellappdev.coffee_chats_android.models.UserProfile
-import com.cornellappdev.coffee_chats_android.networking.*
+import com.cornellappdev.coffee_chats_android.networking.getAllMajors
+import com.cornellappdev.coffee_chats_android.networking.getUserProfile
+import com.cornellappdev.coffee_chats_android.networking.updateDemographics
+import com.cornellappdev.coffee_chats_android.networking.updateProfilePic
 import com.cornellappdev.coffee_chats_android.singletons.UserSingleton
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView

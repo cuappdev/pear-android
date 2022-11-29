@@ -12,11 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.cornellappdev.coffee_chats_android.fragments.EditProfileFragment
 import com.cornellappdev.coffee_chats_android.fragments.PromptsFragment
-import com.cornellappdev.coffee_chats_android.fragments.SocialMediaFragment
 import com.cornellappdev.coffee_chats_android.fragments.UserFieldFragment
 import com.cornellappdev.coffee_chats_android.models.User
 import com.cornellappdev.coffee_chats_android.models.UserField
-import com.cornellappdev.coffee_chats_android.models.UserSession
 import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.cornellappdev.coffee_chats_android.networking.setUpNetworking
 import kotlinx.android.synthetic.main.activity_onboarding.*

@@ -3,12 +3,12 @@ package com.cornellappdev.coffee_chats_android.singletons
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.util.Log
 import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.models.*
-import com.cornellappdev.coffee_chats_android.networking.*
+import com.cornellappdev.coffee_chats_android.networking.getUserProfile
+import com.cornellappdev.coffee_chats_android.networking.updateUserProfile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

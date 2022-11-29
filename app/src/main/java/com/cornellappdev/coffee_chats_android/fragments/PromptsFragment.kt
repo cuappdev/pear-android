@@ -19,7 +19,6 @@ import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter
 import com.cornellappdev.coffee_chats_android.models.Prompt
 import com.cornellappdev.coffee_chats_android.models.UserField
 import com.cornellappdev.coffee_chats_android.networking.getAllPrompts
-import com.cornellappdev.coffee_chats_android.networking.getUser
 import com.cornellappdev.coffee_chats_android.networking.getUserProfile
 import com.cornellappdev.coffee_chats_android.networking.updatePrompts
 import com.cornellappdev.coffee_chats_android.singletons.UserSingleton
