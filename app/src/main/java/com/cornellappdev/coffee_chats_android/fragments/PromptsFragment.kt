@@ -16,11 +16,11 @@ import com.cornellappdev.coffee_chats_android.PromptsActivity
 import com.cornellappdev.coffee_chats_android.R
 import com.cornellappdev.coffee_chats_android.adapters.PromptsAdapter
 import com.cornellappdev.coffee_chats_android.adapters.UserFieldAdapter
-import com.cornellappdev.coffee_chats_android.models.PearUser
 import com.cornellappdev.coffee_chats_android.models.Prompt
 import com.cornellappdev.coffee_chats_android.models.UserField
 import com.cornellappdev.coffee_chats_android.networking.getAllPrompts
 import com.cornellappdev.coffee_chats_android.networking.getUser
+import com.cornellappdev.coffee_chats_android.networking.getUserProfile
 import com.cornellappdev.coffee_chats_android.networking.updatePrompts
 import com.cornellappdev.coffee_chats_android.singletons.UserSingleton
 import kotlinx.android.synthetic.main.fragment_interests_groups.*
@@ -75,7 +75,7 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
         CoroutineScope(Dispatchers.Main).launch {
             prompts =
                 getAllPrompts().map { p -> UserField(text = p.name, id = p.id) }.toTypedArray()
-            val user = if (useSingleton) UserSingleton.user else getUser()
+            val user = if (useSingleton) UserSingleton.user else getUserProfile()
             val selectedPrompts = user.prompts.map { p ->
                 UserField(
                     text = p.name,
@@ -156,7 +156,8 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
                 response_edit_text.addTextChangedListener(object : TextWatcher {
                     override fun afterTextChanged(s: Editable) {
                         if (useSingleton) {
-                            UserSingleton.updatePromptResponse(editPosition, s.toString().trim())
+                            // TODO
+                            // UserSingleton.updatePromptResponse(editPosition, s.toString().trim())
                         }
                     }
 

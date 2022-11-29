@@ -20,10 +20,7 @@ import com.cornellappdev.coffee_chats_android.models.Group
 import com.cornellappdev.coffee_chats_android.models.Interest
 import com.cornellappdev.coffee_chats_android.models.UserField
 import com.cornellappdev.coffee_chats_android.models.UserField.Category
-import com.cornellappdev.coffee_chats_android.networking.getAllGroups
-import com.cornellappdev.coffee_chats_android.networking.getAllInterests
-import com.cornellappdev.coffee_chats_android.networking.getAllPurposes
-import com.cornellappdev.coffee_chats_android.networking.getUser
+import com.cornellappdev.coffee_chats_android.networking.*
 import com.cornellappdev.coffee_chats_android.singletons.UserSingleton
 import com.cornellappdev.coffee_chats_android.updateUserField
 import kotlinx.android.synthetic.main.fragment_interests_groups.*
@@ -104,7 +101,7 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
             // signup_next is disabled until user has chosen at least one field
             callback!!.onSelectionEmpty()
 
-            val user = if (useSingleton) UserSingleton.user else getUser()
+            val user = if (useSingleton) UserSingleton.user else getUserProfile()
             // fetch fields already selected by user
             // TODO- refactor to only store IDs?
             userFields = ArrayList(
@@ -229,20 +226,16 @@ class UserFieldFragment : Fragment(), OnFilledOutObservable {
         if (category in searchableContent) {
             group_search.setQuery("", false)
         }
-        // save to repository
+        // save to singleton
         if (useSingleton) {
             if (category == Category.INTEREST) {
                 val interests =
                     items.map { Interest(it.id, it.getText(), it.getSubtext(), it.drawableUrl) }
-                for (interest in interests) {
-                    UserSingleton.addInterest(interest)
-                }
+                UserSingleton.addInterests(interests)
             }
             if (category == Category.GROUP) {
                 val groups = items.map { Group(it.id, it.getText(), it.drawableUrl) }
-                for (group in groups) {
-                    UserSingleton.addGroup(group)
-                }
+                UserSingleton.addGroups(groups)
             }
         } else {
             val indices = items.map { it.id }

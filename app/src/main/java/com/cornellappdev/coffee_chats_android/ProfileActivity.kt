@@ -8,6 +8,7 @@ import androidx.fragment.app.commit
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.cornellappdev.coffee_chats_android.fragments.*
 import com.cornellappdev.coffee_chats_android.networking.getUser
+import com.cornellappdev.coffee_chats_android.networking.getUserProfile
 import com.cornellappdev.coffee_chats_android.singletons.UserSingleton
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_profile_settings.*
@@ -83,7 +84,7 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener, PromptsFragmen
                     )
                 }
                 CoroutineScope(Dispatchers.Main).launch {
-                    val user = getUser()
+                    val user = getUserProfile()
                     UserSingleton.initializeUser(user)
                 }
             }

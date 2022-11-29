@@ -6,6 +6,7 @@ import com.cornellappdev.coffee_chats_android.models.*
 import com.cornellappdev.coffee_chats_android.networking.updateDemographics
 import com.cornellappdev.coffee_chats_android.networking.updateGroups
 import com.cornellappdev.coffee_chats_android.networking.updateInterests
+import com.cornellappdev.coffee_chats_android.networking.updateUserProfile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,14 +18,14 @@ import java.lang.Integer.max
 object UserSingleton {
     const val TAG = "UserSingleton"
 
-    var user = User.DUMMY_USER
+    var user = UserProfile.DUMMY_USER_PROFILE
         private set
 
     /** new profile picture set by user, if any */
     var profilePic: Bitmap? = null
         private set
 
-    fun initializeUser(userInfo: User) {
+    fun initializeUser(userInfo: UserProfile) {
         user = userInfo
     }
 
@@ -71,26 +72,26 @@ object UserSingleton {
         user = user.copy(groups = groups)
     }
 
-    fun addInterest(interest: Interest) {
-        val interests = ArrayList<Interest>(user.interests)
-        if (interests.contains(interest)) {
-            return
+    /** Requires: no interest in `interests` is in userProfile.interests */
+    fun addInterests(interests: List<Interest>) {
+        val currInterests = ArrayList<Interest>(user.interests)
+        // insert interests, preserving alphabetical order
+        for (interest in interests) {
+            val index = max(currInterests.indexOfLast { it.name < interest.name } + 1, 0)
+            currInterests.add(index, interest)
         }
-        // find insertion index that preserves alphabetical order
-        val index = max(interests.indexOfLast { it.name < interest.name } + 1, 0)
-        interests.add(index, interest)
-        user = user.copy(interests = interests)
+        user = user.copy(interests = currInterests)
     }
 
-    fun addGroup(group: Group) {
-        val groups = ArrayList<Group>(user.groups)
-        if (groups.contains(group)) {
-            return
+    /** Requires: no group in `groups` is in userProfile.groups */
+    fun addGroups(groups: List<Group>) {
+        val currGroups = ArrayList<Group>(user.groups)
+        // insert groups, preserving alphabetical order
+        for (group in groups) {
+            val index = max(currGroups.indexOfLast { it.name < group.name } + 1, 0)
+            currGroups.add(index, group)
         }
-        // find insertion index that preserves alphabetical order
-        val index = max(groups.indexOfLast { it.name < group.name } + 1, 0)
-        groups.add(index, group)
-        user = user.copy(groups = groups)
+        user = user.copy(groups = currGroups)
     }
 
     /** Saves all updated user information to backend */
@@ -98,18 +99,7 @@ object UserSingleton {
         CoroutineScope(Dispatchers.Main).launch {
             Log.d(TAG, user.toString())
             profilePic?.let { com.cornellappdev.coffee_chats_android.networking.updateProfilePic(it) }
-            val demographics = Demographics(
-                user.firstName,
-                user.lastName,
-                user.pronouns ?: "",
-                user.graduationYear ?: "",
-                user.majors.map { it.id },
-                user.hometown ?: "",
-                null // profilePictureUrl
-            )
-            updateDemographics(demographics)
-            updateInterests(user.interests.map { it.id })
-            updateGroups(user.groups.map { it.id })
+            updateUserProfile(userProfile = user)
         }
     }
 }
