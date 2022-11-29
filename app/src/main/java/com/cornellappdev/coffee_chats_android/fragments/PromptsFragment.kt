@@ -124,9 +124,11 @@ class PromptsFragment : Fragment(), OnFilledOutObservable, PromptsAdapter.Prompt
             Content.DISPLAY_PROMPTS -> {
                 container?.setHeaderText(getString(R.string.select_prompt))
                 // display only prompts that haven't been selected
+                val selectedPromptIds =
+                    responseAdapterArray.filter { it.getText().isNotEmpty() }.map { it.id }
                 interests_or_groups.adapter = UserFieldAdapter(
                     requireContext(),
-                    prompts.filterNot { it.isSelected() },
+                    prompts.filterNot { selectedPromptIds.contains(it.id) },
                     UserFieldAdapter.ItemColor.WHITE,
                     resizeCell = true
                 )
