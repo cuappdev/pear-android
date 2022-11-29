@@ -11,7 +11,7 @@ import com.cornellappdev.coffee_chats_android.singletons.UserSingleton
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_profile_settings.*
 
-class ProfileActivity : AppCompatActivity(), OnFilledOutListener, PromptsFragment.PromptsContainer {
+class ProfileActivity : AppCompatActivity(), OnFilledOutListener {
 
     enum class State {
         PREVIEW,
@@ -120,23 +120,7 @@ class ProfileActivity : AppCompatActivity(), OnFilledOutListener, PromptsFragmen
         const val NUM_FRAGMENTS = 4
     }
 
-    override fun onFilledOut() {
-        // TODO: Implement
-    }
+    override fun onFilledOut() {}
 
-    override fun onSelectionEmpty() {
-        // TODO: Implement
-    }
-
-    override fun setActionButtonText(text: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun setActionButtonVisibility(isVisible: Boolean) {
-        TODO("Not yet implemented")
-    }
-
-    override fun setHeaderText(text: String) {
-        TODO("Not yet implemented")
-    }
+    override fun onSelectionEmpty() {}
 }

@@ -56,7 +56,7 @@ class PromptsActivity : AppCompatActivity(), OnFilledOutListener, PromptsFragmen
     }
 
     override fun setActionButtonText(text: String) {
-        // TODO implement
+        primaryActionButton.text = text
     }
 
     override fun setActionButtonVisibility(isVisible: Boolean) {
@@ -68,11 +68,11 @@ class PromptsActivity : AppCompatActivity(), OnFilledOutListener, PromptsFragmen
     }
 
     override fun onFilledOut() {
-        // TODO Implement
+        primaryActionButton.isEnabled = true
     }
 
     override fun onSelectionEmpty() {
-        // TODO Implement
+        primaryActionButton.isEnabled = false
     }
 
     companion object {
