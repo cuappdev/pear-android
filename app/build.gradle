@@ -8,13 +8,13 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     defaultConfig {
         applicationId "com.cornellappdev.coffee_chats_android"
         minSdkVersion 23
-        targetSdkVersion 30
-        versionCode 3
-        versionName "3.0"
+        targetSdkVersion 31
+        versionCode 4
+        versionName "4.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "web_client_id", keyProperties['web_client_id'])
         buildConfigField("String", "PHOTO_SERVER_URI", keyProperties['PHOTO_SERVER_URI'])

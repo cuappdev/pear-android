@@ -38,6 +38,7 @@
 
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:exported="false"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
             android:name=".AddUserFieldActivity"
@@ -55,19 +56,23 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ProfileSettingsActivity"
+            android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/noAnimTheme" />
         <activity
             android:name=".SignInActivity"
+            android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/noAnimTheme" />
         <activity
             android:name=".OnboardingActivity"
+            android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/noAnimTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".SchedulingActivity"
+            android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/noAnimTheme">
             <intent-filter>
